@@ -1,0 +1,108 @@
+.table100.ver1 th {
+    font-size: 16px;
+    color: #fff;
+    line-height: 1.4;
+    background-color: #313193;
+}
+.table100-head th {
+    padding-top: 18px;
+    padding-bottom: 18px;
+}
+
+.single-report {
+    background: #fff;
+    overflow: hidden;
+    position: relative;
+    width: 75%;
+    border-radius: 3%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
+
+  .s-report-inner {
+    padding-left: 85px;
+  }
+
+  .single-report .icon {
+    font-size: 32px;
+    color: #fff;
+    background: #4336FB;
+    height: 95px;
+    width: 100px;
+    text-align: right;
+    padding-top: 40px;
+    padding-right: 22px;
+    border-radius: 50%;
+    position: absolute;
+    left: -39px;
+    top: -30px;
+  }
+
+  .s-report-title {
+    margin-bottom: 25px;
+  }
+
+  .header-title {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0;
+    color: #333;
+    text-transform: capitalize;
+    margin-bottom: 17px;
+  }
+
+  .single-report p {
+    font-size: 12px;
+    font-weight: 700;
+    color: #565656;
+    background: #ececec;
+    letter-spacing: 0;
+    padding: 0 9px;
+    height: 20px;
+    line-height: 20px;
+  }
+
+  .single-report span {
+    font-size: 15px;
+    font-weight: 600;
+    color: #565656;
+    letter-spacing: 0;
+  }
+
+
+.s-report-inner {
+    padding-left: 73px;
+}
+.s-report-title {
+    margin-bottom: 17px;
+}
+.s-report-title .card-title {
+    font-size: 20px;
+}
+
+
+
+.pt--20 {
+    padding-top: 20px
+}
+
+.pt--30 {
+    padding-top: 30px
+}
+
+
+.pr--20 {
+    padding-right: 20px;
+}
+
+.pr--30 {
+    padding-right: 30px;
+}
+
+tr{
+    border-bottom: 1px solid #eef0f3;
+}
+
+.upper{
+  border-radius: 3%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}

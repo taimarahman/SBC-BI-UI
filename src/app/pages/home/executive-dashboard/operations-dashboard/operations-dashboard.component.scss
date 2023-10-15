@@ -1,0 +1,36 @@
+.pie-charts{
+    min-height: 16rem;
+
+  .chart{
+        .view-btn{
+            height: 0;
+            overflow: hidden;
+            position: relative;
+            transition: height 0.2s ease;
+            .btn{
+                font-size: 0.625rem;
+                position: absolute;
+                background-color: #00005a;
+                color: #fff;
+                height: 1.5rem;
+                right: 0;
+                transform: translateX(200%);
+                transition: transform 0.2s 0.1s ease;
+            }
+        }
+
+        &:hover .view-btn{
+            height: 1.5rem;
+            .btn{
+                transform: translateX(0%);}
+        }
+    }
+    
+}
+.close-btn{
+    position: absolute;
+    top: 2%;
+    right: 0%;
+    cursor: pointer;
+}
+

@@ -1,0 +1,42 @@
+
+
+<div class="sidebar-wrapper" (mouseenter)="sidebarCollapse.click  && sidebarCollapse.hover ? toggleCollapse() : ''" (mouseleave)="sidebarCollapse.click && !sidebarCollapse.hover ? toggleCollapse() : ''" >
+<!-- <div class="sidebar-wrapper" > -->
+  <div class="py-0 brand-logo px-1 px-lg-2 px-xl-4">
+    <a href="/dashboard-general"> <img
+      [src]="iconBasePath + 'logo-w.svg'"
+      alt="logo"
+      class="img-fluid py-1"
+    /></a>
+  </div>
+  <ul class="list-unstyled side-navbar px-2 px-xl-4 mb-0">
+    <li *ngFor="let menu of menus" class="mb-1">
+      <ng-container *ngIf="menu.subMenus.length > 0; else linkMenu">
+        <a (click)="collapse.toggle()" [attr.aria-expanded]="!menu.collapse" [ngClass]="{'active': menu.active}">
+          <img [src]="iconBasePath + menu.icon" alt=""  class="img-fluid"/>
+          {{ menu.menuName }}
+        </a>
+        <div #collapse="ngbCollapse" [(ngbCollapse)]="menu.collapse" class="">
+          <ul class="list-unstyled ">
+            <li *ngFor="let subMenu of menu.subMenus" [ngClass]="{'d-none': subMenu.activeYn == 'N'}">
+              <a
+                *ngIf="subMenu.activeYn == 'Y'"
+                routerLink="{{ subMenu.routeName }}"
+                routerLinkActive="active"
+                >{{ subMenu.submenuName }}</a
+              >
+            </li>
+          </ul>
+        </div>
+      </ng-container>
+      <ng-template #linkMenu
+        ><a [routerLink]="menu.basePath"><img [src]="iconBasePath + menu.icon" alt="" />{{ menu.menuName }}</a></ng-template
+      >
+    </li>
+
+    <a id="collapseBtn" class="bg-theme shadow-sm" (click)="collapseSidebar()" placement="top" [ngbTooltip]="sidebarCollapse.click ? 'expand' : 'collapse'" >
+      <img [src]="sidebarCollapse.click ? iconBasePath + 'arrows-expand-vertical.svg' : iconBasePath + 'arrows-collapse-vertical.svg'" alt="" class="img-fluid">
+    </a>
+  </ul>
+</div>
+

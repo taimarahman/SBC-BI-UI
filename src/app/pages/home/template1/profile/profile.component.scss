@@ -1,0 +1,40 @@
+$theme: #3939aa;
+
+.profile-img {
+  border: 2px solid #fff;
+}
+
+.profile-info {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    width: 5rem;
+    height: 0.5px;
+    background-color: rgba(97, 97, 97, 0.4901960784);
+    bottom: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+.profile-details {
+  .row {
+    align-items: center;
+    text-align: left;
+  }
+  input {
+    // border border-1  border-dark-subtle rounded-1 px-2 py-1 text-black-50
+    border: 1px solid #969595ad;
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+    color: #616161;
+
+    &:focus {
+      outline: 1px solid $theme;
+      // box-shadow:  0 .125rem .25rem rgba(#969595, .075);
+      box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+  }
+}

@@ -1,0 +1,83 @@
+// claim piechart
+.claim-chart{
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 1px;
+    height: 80%;
+    background-color: #33333337;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+.ml-claim-total{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+
+  > div:nth-child(1){
+  background-color: #07999260;
+ }
+ > div:nth-child(2){
+  background-color: #574b9060;
+ }
+ > div:nth-child(3){
+  background-color: #c4456960;
+ }
+ > div:nth-child(4){
+  background-color: #34ace060;
+ }
+}
+
+
+.ml-claim {
+  div{
+    p.h6 {
+      display: flex;
+      justify-content: space-between;
+      align-items: stretch;
+      color: #222f3e;
+
+      b{
+        color: #576574;
+      }
+
+     
+    }
+
+    p.h3{
+      margin-bottom: 1rem;
+      color: #222f3e;
+    }
+  }
+}
+.single-card {
+  small{
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    color: #576574;
+  }
+}
+.summary-card-2{
+  small {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    color: #576574;
+  
+  }
+}
+
+.table-wrapper {
+  background-color: #63ccda32;
+  height: min(16rem, 40vh);
+  overflow-y: scroll;
+}
+.table{
+  --bs-table-bg: transparent;
+}

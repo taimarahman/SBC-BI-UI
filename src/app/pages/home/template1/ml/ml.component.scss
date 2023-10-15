@@ -1,0 +1,12 @@
+.scroll-table {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  width: auto;
+}
+
+.input-td input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+}
+

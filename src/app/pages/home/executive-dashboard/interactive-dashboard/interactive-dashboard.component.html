@@ -1,0 +1,60 @@
+<app-page-layout>
+  <form (ngSubmit)="onSubmit()">
+    <div class="d-flex flex-column ms-4 mb-5">
+      <div class="col-md-6">
+        <div class="input-group">
+          <span class="input-group-text col-5">START DATE</span>
+          <input
+            name="dateRangeStart"
+            ngbDatepicker
+            #dStart="ngbDatepicker"
+            [ngModelOptions]="{ standalone: true }"
+            [(ngModel)]="formData.dateRangeStart"
+            [minDate]="{ year: 2015, month: 07, day: 01 }"
+            [maxDate]="{ year: 2030, month: 06, day: 31 }"
+            class="form-control"
+            placeholder="DD/MM/YYYY"
+            id="dateRangeStart"
+            autocomplete="off"
+          />
+          <button
+            class="btn btn-outline-secondary bi bi-calendar3"
+            (click)="dStart.toggle()"
+            type="button"
+          ></button>
+        </div>
+
+        <div class="input-group mt-2">
+          <span class="input-group-text col-5">END DATE</span>
+          <input
+            name="dateRangeEnd"
+            ngbDatepicker
+            #dEnd="ngbDatepicker"
+            [ngModelOptions]="{ standalone: true }"
+            [(ngModel)]="formData.dateRangeEnd"
+            [minDate]="{ year: 2015, month: 07, day: 01 }"
+            [maxDate]="{ year: 2030, month: 06, day: 31 }"
+            class="form-control"
+            placeholder="DD/MM/YYYY"
+            id="dateRangeEnd"
+            autocomplete="off"
+          />
+          <button
+            class="btn btn-outline-secondary bi bi-calendar3"
+            (click)="dEnd.toggle()"
+            type="button"
+          ></button>
+        </div>
+      </div>
+      <div class="mt-2">
+        <button type="submit" class="btn btn bg-theme shadow me-3">
+          Submit
+        </button>
+      </div>
+    </div>
+  </form>
+
+
+  <!-- <app-operations-dashboard></app-operations-dashboard> -->
+  <app-fraud-detection [fromDate]="fromDate" [toDate]="toDate"></app-fraud-detection>
+</app-page-layout>

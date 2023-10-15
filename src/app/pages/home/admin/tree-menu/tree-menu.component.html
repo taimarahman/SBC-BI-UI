@@ -1,0 +1,58 @@
+<div>
+  <ul id="myUL">
+    <li *ngFor="let menu of menus; let i = index">
+      <div>
+        <input
+          type="checkbox"
+          class="form-check-input cursor-pointer"
+          [id]="'menu_' + menu.menuId"
+          [name]="'menu_' + menu.menuId"
+          [value]="menu.menuId"
+          [checked]="menu.checked"
+          (click)="addToReqAccessList($event, menu, i)"
+        />
+        {{ menu.menuName }}
+      </div>
+      <ul
+        *ngIf="menu.subMenus.length > 0"
+        [ngClass]="{ active: menu.checked }"
+        class="nested"
+      >
+        <li *ngFor="let subMenu of menu.subMenus">
+          <div>
+            <input
+              type="checkbox"
+              class="form-check-input cursor-pointer"
+              [id]="'sub_menu_' + subMenu.submenuId"
+              [(ngModel)]="subMenu.permitted"
+              [name]="'sub_menu' + subMenu.submenuId"
+              [value]="subMenu.submenuId"
+              [checked]="subMenu.checked"
+              (click)="addSubMenuAccess($event, menu.menuId, subMenu)"
+            />
+            {{ subMenu.submenuName }}
+          </div>
+          <!-- <ul
+            *ngIf="subMenu.submenus.length > 0"
+            [ngClass]="{ active: sub_menu.permitted }"
+            class="nested"
+          >
+            <li *ngFor="let submenu of sub_menu.submenus">
+              <div>
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  [id]="'submenu_' + submenu.submenu_id"
+                  [(ngModel)]="submenu.permitted"
+                  name="'submenu' + submenu.submenu_id"
+                  [value]="true"
+                />
+                {{ submenu.submenu_name }}
+              </div>
+            </li>
+          </ul> -->
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>

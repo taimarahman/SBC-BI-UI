@@ -1,0 +1,329 @@
+<app-page-layout>
+  <div class="content-wrapper">
+    <div class="content-body">
+      <div class="card">
+        <div class="card-header bg-theme text-white">Reports</div>
+        <div class="card-body border">
+          <div>
+            <div class="row row-cols-2 row-cols-lg-3 g-2 g-lg-4 align-items-center">
+              <div class="col">
+                <div class="form-group requiredField">
+                  <label for="reportName" class="col-form-label requiredField"
+                    >REPORT NAME</label
+                  >
+                  <input
+                    id="reportName"
+                    class="form-control"
+                    [(ngModel)]="formData.reportName"
+                    name="reportName"
+                    autocomplete="off"
+                    #reportName="ngModel"
+                    required
+                    [class.is-valid]="
+                      reportName.valid &&
+                      (reportName.dirty || reportName.touched)
+                    "
+                    [class.is-invalid]="
+                      reportName.invalid &&
+                      (reportName.dirty || reportName.touched)
+                    "
+                  />
+                </div>
+              </div>
+
+              <div class="col">
+                <div class="form-group requiredField">
+                  <label for="reportXdoPath" class="col-form-label"
+                    >REPORT XDO PATH</label
+                  >
+                  <input
+                    id="reportXdoPath"
+                    class="form-control"
+                    [(ngModel)]="formData.reportXdoPath"
+                    name="reportXdoPath"
+                    autocomplete="off"
+                    #reportXdoPath="ngModel"
+                    required
+                    [class.is-valid]="
+                      reportXdoPath.valid &&
+                      (reportXdoPath.dirty || reportXdoPath.touched)
+                    "
+                    [class.is-invalid]="
+                      reportXdoPath.invalid &&
+                      (reportXdoPath.dirty || reportXdoPath.touched)
+                    "
+                  />
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-group">
+                  <label for="reportRtfPath" class="col-form-label"
+                    >REPORT RTF PATH</label
+                  >
+                  <input
+                    id="reportRtfPath"
+                    class="form-control"
+                    [(ngModel)]="formData.reportRtfPath"
+                    name="reportRtfPath"
+                    autocomplete="off"
+                  />
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-group">
+                  <label for="userId" id="userId" class="col-form-label">Sub-Module</label>
+                  <select2
+                    name="parentModuleId"
+                    id=""
+                    class="mt-4"
+                    class="form-control p-0 border-0"
+                    placeholder="Select Sub-Module"
+                    [(ngModel)]="formData.parentModuleId"
+                    [data]="subModuleList"
+                  >
+                  </select2>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-group">
+                  <div class="row">
+                    <label class="col-form-label">REPORT TYPE</label>
+                  </div>
+                  <div class="col">
+                    <label class="form-check-label me-4">
+                      <input
+                        type="radio"
+                        class="form-check-input"
+                        name="ml"
+                        [(ngModel)]="formData.reportType"
+                        value="M"
+                      />
+                      ML
+                    </label>
+                    <label class="form-check-label">
+                      <input
+                        type="radio"
+                        class="form-check-input"
+                        name="parameterized"
+                        [(ngModel)]="formData.reportType"
+                        value="P"
+                      />
+                      PARAMETERIZED
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="col" *ngIf="formData.reportType === 'P'">
+                <button class="btn bg-theme shadow text-capitalize" (click)="toggleParam()" *ngIf="paramList.length == 0; else removeBtn"><i class="bi bi-plus-lg"></i> add param</button>
+              </div>
+            </div>
+            <ng-template #removeBtn>
+              <button class="btn bg-theme shadow text-capitalize" (click)="toggleParam()"><i class="bi bi-dash-lg"></i> delete param</button>
+            </ng-template>
+
+            <div *ngIf="formData.reportType === 'P' && paramList.length > 0">
+              <div class="row mt-4 param-heading">
+                <div class="col-lg-1">
+                  <label>SL</label>
+                </div>
+                <div class="col-lg-3">
+                  <label>PARAM NAME</label>
+                </div>
+                <div class="col-lg-3">
+                  <label>PARAM LABEL NAME</label>
+                </div>
+                <div class="col-lg-2">
+                  <label>PARAM DEFAULT VALUE</label>
+                </div>
+                <div class="col-lg-1 text-center">
+                  <label>TYPE</label>
+                </div>
+                <div class="col-lg-1 text-center">
+                  <label>REQUIRED</label>
+                </div>
+                <div class="col-lg-1 text-center">
+                  <label>ACTION</label>
+                </div>
+              </div>
+
+              <div *ngFor="let param of paramList; let i = index;">
+                <div class="row mt-3 text-center">
+                  <div class="col-lg-1 text-start">
+                    {{i + 1}}
+                  </div>
+                  <div class="col-lg-3">
+                    <input
+                      id="paramName"
+                      class="form-control"
+                      placeholder="Name"
+                      name="paramName"
+                      [(ngModel)] = param.paramName
+                      autocomplete="off"
+                    />
+                  </div>
+                  <div class="col-lg-3">
+                    <input
+                      id="paramLabel"
+                      class="form-control"
+                      placeholder="Label Name"
+                      name="paramparamLabel"
+                      [(ngModel)] = param.paramLabel
+                      autocomplete="off"
+                    />
+                  </div>
+                  <div class="col-lg-2">
+                    <input
+                      id="defaultValue"
+                      class="form-control"
+                      placeholder="Default Value"
+                      name="defaultValue"
+                      [(ngModel)] = param.defaultValue
+                      autocomplete="off"
+                    />
+                  </div>
+                  <div class="col-lg-1">
+                    <select2
+                      name="dataType"
+                      class="mt-4"
+                      class="form-control p-1 border-1"
+                      placeholder=""
+                      [data]="typeList"
+                      [(ngModel)] = param.dataType
+                    >
+                    </select2>
+                  </div>
+                  <div class="col-lg-1">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      name="requiredYn"
+                      [checked]="param.requiredYn"
+                      [(ngModel)]="param.requiredYn"
+
+                    />
+                  </div>
+                  <div class="col-lg-1">
+                    <a class="ms-2" (click)="deleteParameter(param,i)">
+                      <i class="bi bi-trash3 cursor-pointer text-danger"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <button
+                type="button"
+                class="btn btn bg-theme shadow me-3 mt-4"
+                (click)="addParamCount()"
+              >
+                Add
+              </button>
+
+            </div>
+            <div class="row mt-4">
+              <div class="col d-flex justify-content-end">
+                <button
+                  *ngIf="!edit"
+                  type="button"
+                  class="btn btn bg-theme shadow me-3"
+                  (click)="onSubmit()"
+                >
+                  Save
+                </button>
+                <button
+                  *ngIf="edit"
+                  type="button"
+                  class="btn btn bg-theme shadow me-3"
+                  (click)="onSubmit()"
+                >
+                  Update
+                </button>
+                <button
+                  type="button"
+                  class="btn btn btn-outline-theme"
+                  (click)="onReset()"
+                >
+                  Reset
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header bg-theme text-white">Reports List</div>
+        <div class="card-body border">
+          <div class="d-flex justify-content-between p-2">
+            <select
+              class="custom-select"
+              style="width: auto"
+              name="pageSize"
+              [(ngModel)]="pageSize"
+              (ngModelChange)="onChangePageSize()"
+            >
+              <option *ngFor="let size of tableSizes" [ngValue]="size">
+                {{ size }} items per page
+              </option>
+              <!-- <option [ngValue]="2">2 items per page</option> -->
+            </select>
+            <div class="col-md-4">
+              <input
+                type="text"
+                [(ngModel)]="searchReport"
+                name="searchItemValue"
+                autocomplete="off"
+                placeholder="Search here.."
+                (input)="searchReports()"
+                (keydown.enter)="searchReports()"
+                (change)="searchReports()"
+                class="form-control form-control-sm"
+              />
+            </div>
+          </div>
+
+          <table class="table table-striped nowrap" style="width: 100%">
+            <thead>
+              <tr>
+                <th
+                  *ngFor="let field of fields; let i = index"
+                  class="text-start"
+                >
+                  {{ field.label }}
+                </th>
+                <th class="text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of showReportList; let i = index">
+                <td>{{ reportList.indexOf(data) + 1 }}</td>
+                <td class="d-none">{{ data.reportId }}</td>
+                <td>{{ data.reportName }}</td>
+                <td>{{ data.reportXdoPath }}</td>
+                <td>{{ data.reportRtfPath }}</td>
+                <!-- <td>{{ data.parentModuleName }}</td> -->
+                <td class="text-center">
+                  <a (click)="enableEdit(data)">
+                    <i class="bi bi-pencil-square cursor-pointer"></i>
+                  </a>
+                  <a (click)="deleteReport(data.reportId)" class="ms-2">
+                    <i class="bi bi-trash3 cursor-pointer text-danger"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <ngb-pagination
+            [collectionSize]="reportList.length"
+            [(page)]="currentPage"
+            [maxSize]="3"
+            [rotate]="true"
+            [ellipses]="false"
+            [boundaryLinks]="true"
+            [pageSize]="pageSize"
+            (pageChange)="onChangePage($event)"
+          ></ngb-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-page-layout>

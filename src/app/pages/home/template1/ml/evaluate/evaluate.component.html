@@ -1,0 +1,34 @@
+<div class="card mt-5">
+  <div class="card-header bg-theme text-white">{{ "EVALUATION OF " + reportName + " MODELS"}}</div>
+  <div class="card-body border scroll-table">
+    <table class="table table-striped nowrap" style="width: 100%">
+      <thead>
+      <tr>
+        <th class="text-start">Sl</th>
+        <th class="text-start">Model For</th>
+        <th class="text-start">Metric</th>
+        <th class="text-start">Model Name 1</th>
+        <th class="text-start">Score-1</th>
+        <th class="text-start">Model Name 2</th>
+        <th class="text-start">Score-2</th>
+        <th class="text-start">Model Name 3</th>
+        <th class="text-start">Score-3</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let data of modelList; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ replaceUnderscoresWithSpaces(data.modelFor )}}</td>
+        <td>{{ data.metric }}</td>
+        <td>{{ data.name1 }}</td>
+        <td>{{ data.score1 | number:'1.1-4' }}</td>
+        <td>{{ data.name2 }}</td>
+        <td>{{ data.score2 | number:'1.1-4' }}</td>
+        <td>{{ data.name3 }}</td>
+        <td>{{ data.score3 | number:'1.1-4' }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+

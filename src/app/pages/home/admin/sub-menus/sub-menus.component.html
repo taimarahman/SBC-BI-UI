@@ -1,0 +1,342 @@
+<app-page-layout>
+  <div class="content-wrapper">
+    <div class="content-body">
+      <div class="card">
+        <div *ngIf="!update" class="card-header bg-theme text-white">
+          Create Sub-Menu
+        </div>
+        <div *ngIf="update" class="card-header bg-theme text-white">
+          Update Sub-Menu
+        </div>
+        <div class="card-body border">
+          <form #subMenuForm="ngForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3 requiredField">
+                  <label for="submenuName" class="form-label"
+                    >Submenu Name</label
+                  >
+                  <input
+                    id="submenuName"
+                    class="form-control"
+                    [(ngModel)]="formData.submenuName"
+                    name="submenuName"
+                    autocomplete="off"
+                    #submenuName="ngModel"
+                    required
+                    [class.is-valid]="
+                      submenuName.valid &&
+                      (submenuName.dirty || submenuName.touched)
+                    "
+                    [class.is-invalid]="
+                      submenuName.invalid &&
+                      (submenuName.dirty || submenuName.touched)
+                    "
+                  />
+                </div>
+                <div
+                  class="form-control-feedback"
+                  *ngIf="
+                    submenuName.errors &&
+                    (submenuName.dirty || submenuName.touched)
+                  "
+                >
+                  <!--                  <p class="messageFixDLFC" *ngIf="submenuName.errors['required']"></p>-->
+                </div>
+
+                <div class="mb-3 requiredField">
+                  <label for="submenuTextEng" class="form-label"
+                    >Submenu Text</label
+                  >
+                  <input
+                    type="text"
+                    id="submenuTextEng"
+                    class="form-control"
+                    [(ngModel)]="formData.submenuTextEng"
+                    name="submenuTextEng"
+                  />
+                  <!--                  <div class="invalid-feedback" *ngIf="formData.submenu_text_eng?.length === 0">Submenu Text is required!</div>-->
+                </div>
+
+                <div class="mb-3">
+                  <label for="submenuTextBng" class="form-label"
+                    >Submenu Text (Bengali)</label
+                  >
+                  <input
+                    type="text"
+                    id="submenuTextBng"
+                    class="form-control"
+                    [(ngModel)]="formData.submenuTextBng"
+                    name="submenuTextBng"
+                  />
+                </div>
+
+                <!--                <div class="form-group">-->
+                <!--                  <label for="parentSubmenuId" id="parentSubmenuId" class="col-md-3 col-form-label">Parent Submenu</label>-->
+                <!--                  <div class="col-md-3">-->
+                <!--                    <select class="form-control" [(ngModel)]="selectedParentSubmenu" name="parentSubmenuId" required>-->
+                <!--                      <option [value]="option" *ngFor="let option of parentSubmenuOptions">{{ option.submenuName | uppercase }}</option>-->
+                <!--                    </select>-->
+                <!--                    <div class="invalid-feedback d-block" *ngIf="!formData.parent_submenu_id.required">Parent Submenu is required!</div>-->
+                <!--                  </div>-->
+                <!--                </div>-->
+
+                <div class="form-group requiredField">
+                  <label
+                    for="menuId"
+                    id="menuId"
+                    class="col-md-3 col-form-label"
+                    >Menu</label
+                  >
+                  <div class="col-md-12">
+                    <select2
+                      *ngIf="menuOptions.length"
+                      name="menuOptions"
+                      id=""
+                      class="mt-4"
+                      class="form-control p-0 border-0"
+                      placeholder="Select Menu"
+                      [(ngModel)]="selectedMenu.menuId"
+                      [data]="menuOptions"
+                    >
+                    </select2>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="controllerName" class="form-label"
+                    >Controller Name</label
+                  >
+                  <input
+                    type="text"
+                    id="controllerName"
+                    class="form-control"
+                    [(ngModel)]="formData.controllerName"
+                    name="controllerName"
+                  />
+                  <!--                  <div class="invalid-feedback" *ngIf="formData.controller_name?.length === 0">Controller Name is required!</div>-->
+                </div>
+
+                <div class="mb-3">
+                  <label for="actionName" class="form-label">Action Name</label>
+                  <input
+                    type="text"
+                    id="actionName"
+                    class="form-control"
+                    [(ngModel)]="formData.actionName"
+                    name="actionName"
+                  />
+                  <!--                  <div class="invalid-feedback" *ngIf="formData.action_name?.length === 0">Action Name is required!</div>-->
+                </div>
+
+                <div class="mb-3 requiredField">
+                  <label for="routeName" class="form-label"  >Route Name</label>
+                  <input
+                    type="text"
+                    id="routeName"
+                    class="form-control"
+                    [(ngModel)]="formData.routeName"
+                    name="routeName"
+                    autocomplete="off"
+                    #routeName="ngModel"
+                    required
+                    [class.is-valid]="
+                      routeName.valid &&
+                      (routeName.dirty || routeName.touched)
+                    "
+                    [class.is-invalid]="
+                      routeName.invalid &&
+                      (routeName.dirty || routeName.touched)
+                    "
+                  />
+                  <!--                  <div class="invalid-feedback" *ngIf="formData.route_name?.length === 0">Route Name is required!</div>-->
+                </div>
+
+                <div class="mb-3 requiredField">
+                  <label for="menuOrderNo" class="form-label"
+                    >Order Number</label
+                  >
+                  <input
+                    id="menuOrderNo"
+                    class="form-control"
+                    [(ngModel)]="formData.menuOrderNo"
+                    name="menuOrderNo"
+                    autocomplete="off"
+                    #menuOrderNo="ngModel"
+                    required
+                    [class.is-valid]="
+                      menuOrderNo.valid &&
+                      (menuOrderNo.dirty || menuOrderNo.touched)
+                    "
+                    [class.is-invalid]="
+                      menuOrderNo.invalid &&
+                      (menuOrderNo.dirty || menuOrderNo.touched)
+                    "
+                  />
+                </div>
+                <div
+                  class="form-control-feedback"
+                  *ngIf="
+                    menuOrderNo.errors &&
+                    (menuOrderNo.dirty || menuOrderNo.touched)
+                  "
+                >
+                  <!--                  <p class="messageFixDLFC" *ngIf="menuOrderNo.errors['required']"></p>-->
+                </div>
+
+                <div class="form-group row requiredField">
+                  <label class="col-md-4 col-form-label py-0"
+                    >Active Status</label
+                  >
+                  <div class="col-md-8">
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input
+                          type="radio"
+                          class="form-check-input"
+                          name="activeYn"
+                          [(ngModel)]="formData.activeYn"
+                          value="Y"
+                        />
+                        YES
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input
+                          type="radio"
+                          class="form-check-input"
+                          name="activeYn"
+                          [(ngModel)]="formData.activeYn"
+                          value="N"
+                        />
+                        NO
+                      </label>
+                    </div>
+                    <div
+                      class="invalid-feedback d-block"
+                      *ngIf="formData.activeYn === null"
+                    >
+                      Active status is required!
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 d-flex justify-content-end">
+                <button
+                  *ngIf="!update"
+                  type="submit"
+                  [disabled]="subMenuForm.invalid"
+                  class="btn btn-primary me-1"
+                >
+                  Save
+                </button>
+                <button
+                  *ngIf="update"
+                  type="submit"
+                  [disabled]="subMenuForm.invalid"
+                  class="btn btn-primary me-1"
+                >
+                  Update
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="onReset()"
+                >
+                  Reset
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header bg-theme text-white">Sub-Menus</div>
+        <div class="card-body border">
+          <div class="d-flex justify-content-between p-2">
+            <select
+              class="custom-select"
+              style="width: auto"
+              name="pageSize"
+              [(ngModel)]="pageSize"
+              (ngModelChange)="onChangePageSize()"
+            >
+              <option *ngFor="let size of tableSizes" [ngValue]="size">
+                {{ size }} items per page
+              </option>
+              <!-- <option [ngValue]="2">2 items per page</option> -->
+            </select>
+            <div class="col-md-4">
+              <input
+                type="text"
+                [(ngModel)]="searchItemValue"
+                name="searchItemValue"
+                autocomplete="off"
+                placeholder="Search here.."
+                (input)="searchItem()"
+                (keydown.enter)="searchItem()"
+                (change)="searchItem()"
+                class="form-control form-control-sm"
+              />
+            </div>
+          </div>
+
+          <table class="table table-striped nowrap" style="width: 100%">
+            <thead>
+              <tr>
+                <th
+                  *ngFor="let field of fields; let i = index"
+                  class="text-start"
+                >
+                  {{ field.label }}
+                </th>
+                <th class="text-center">Active Status</th>
+                <th class="text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of showSubMenuList; let i = index">
+                <td>{{ subMenuList.indexOf(data) + 1 }}</td>
+                <td class="d-none">{{ data.submenuId }}</td>
+                <td>{{ data.submenuName }}</td>
+                <td>{{ data.submenuTextEng }}</td>
+                <td>{{ data.submenuTextBng }}</td>
+                <td>{{ data.menuName }}</td>
+                <td class="text-start">{{ data.menuOrderNo }}</td>
+                <td
+                  *ngIf="data.activeYn == 'Y'; else inactive"
+                  class="text-center"
+                >
+                  <i class="bi bi-check2 text-success"></i>
+                </td>
+                <ng-template #inactive>
+                  <td class="text-center">
+                    <i class="bi bi-x-circle text-danger"></i>
+                  </td>
+                </ng-template>
+                <td class="text-center" (click)="enableEdit(data)">
+                  <i class="bi bi-pencil-square clickable"></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <ngb-pagination
+            [collectionSize]="subMenuList.length"
+            [(page)]="currentPage"
+            [maxSize]="3"
+            [rotate]="true"
+            [ellipses]="false"
+            [boundaryLinks]="true"
+            [pageSize]="pageSize"
+            (pageChange)="onChangePage($event)"
+          ></ngb-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-page-layout>

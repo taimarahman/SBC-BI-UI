@@ -1,0 +1,139 @@
+
+  <div class="content-wrapper">
+    <div class="">
+      <div class="row">
+        <ul class="nav nav-tabs">
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              [class.active]="activeTab === 'Train'"
+              (click)="setActiveTab('Train')"
+              >Train</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              [class.active]="activeTab === 'Predict'"
+              (click)="setActiveTab('Predict')"
+              >Predict</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              [class.active]="activeTab === 'Evaluate'"
+              (click)="setActiveTab('Evaluate')"
+              >Evaluate</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div
+      *ngIf="
+        (activeTab === 'Train' || activeTab === 'Predict') &&
+        mlReport.reportId
+      "
+      class="card mt-5"
+    >
+      <div *ngIf="activeTab=='Train'" class="card-header bg-theme text-white">{{ "DATASET OF " +  mlReport.reportName }}</div>
+      <div *ngIf="activeTab=='Predict'" class="card-header bg-theme text-white">{{ "PREDICT OF " +  mlReport.reportName }}</div>
+      <div class="card-body border scroll-table">
+        <table
+          *ngIf="activeTab === 'Train'"
+          class="table table-striped nowrap"
+          style="width: 100%"
+        >
+          <thead>
+            <tr>
+              <th
+                *ngFor="let field of fields; let i = index"
+                class="text-start"
+              >
+                {{ field }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of dataList">
+              <td *ngFor="let f of fields; let i = index">{{ data[f]  }}</td>
+            </tr>
+
+            <tr *ngFor="let data of inputDataList">
+              <td *ngFor="let f of fields; let i = index" class="input-td">
+                <input type="text" [name]="f" [(ngModel)]="data[f]" />
+              </td>
+            </tr>
+            <button
+              *ngIf="mlReport.reportId"
+              type="button"
+              class="btn btn bg-theme shadow me-3 mt-4"
+              (click)="addDataCount()"
+            >
+              Add
+            </button>
+            <button
+              *ngIf="mlReport.reportId"
+              type="button"
+              class="btn btn bg-theme shadow me-3 mt-4"
+              (click)="submitData()"
+            >
+              Submit
+            </button>
+          </tbody>
+          <div>
+            <p class="mt-3">Showing {{dataList.length}} of {{totalNumberOfData}} rows</p>
+              <ngb-pagination
+              [collectionSize]="totalNumberOfData"
+              [(page)]="currentPage"
+              [maxSize]="3"
+              [rotate]="true"
+              [ellipses]="false"
+              [boundaryLinks]="true"
+              (pageChange)="loadPaginationData(currentPage)"
+            ></ngb-pagination>
+          </div>
+        </table>
+        
+
+
+        <app-predict
+          *ngIf="activeTab === 'Predict'"
+          [fields]="fields"
+          [selectedReport]="mlReport"
+          [dataList]="dataList"
+          [predictResDataFromCsv] = "predictResDataFromCsv"
+        ></app-predict>
+      </div>
+    </div>
+    <app-evaluate *ngIf="activeTab === 'Evaluate'" [modelList]="modelList" [reportName]="mlReport.reportName"></app-evaluate>
+    <div
+      *ngIf="
+        (activeTab === 'Train' || activeTab === 'Predict')  &&
+        mlReport.reportId
+      "
+    >
+      <div class="row">
+        <div class="col-md-6">
+          <h5>Choose a CSV File</h5>
+          <div class="input-group">
+            <input
+              type="file"
+              class="form-control"
+              (change)="onFileSelected($event)"
+              accept=".csv"
+            />
+          </div>
+          <small class="form-text text-muted"
+            >Please select a valid CSV file.</small
+          >
+        </div>
+      </div>
+      <div class="col-md-4 mt-3">
+        <button type="button" class="btn btn-secondary" [disabled]="!csvFile" (click)="pushCsvFile()">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>

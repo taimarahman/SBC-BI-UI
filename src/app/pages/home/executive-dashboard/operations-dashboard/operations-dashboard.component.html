@@ -1,0 +1,157 @@
+<div class="content-wrapper">
+    <div *ngIf="!hideSpinner" class="d-flex justify-content-center">
+        <div  class="spinner-border text-secondary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+
+    <div class="row row-cols-1 row-cols-3 g-1 g-lg-2 mx-0 mb-5 pie-charts">
+        <div *ngIf="showSBCChart" class="col">
+            <div  class="chart bg-light shadow rounded cursor-pointer p-3 clearfix">
+                <div class="mb-3">
+                    <p class="h6 fw-bold text-capitalize">Shadharon Bima Corporation</p>
+                    <p class="h6 text-secondary">No. of Customers (Location based)</p>
+                </div>
+                <div>
+                    <apx-chart
+                    [series]="sbcPieChart.series"
+                    [chart]="sbcPieChart.chart"
+                    [colors]="sbcPieChart.colors"
+                    [labels]="sbcPieChart.labels"
+                    [legend]="sbcPieChart.legend"
+                    [title]="sbcPieChart.title"
+                    [responsive]="sbcPieChart.responsive"
+                    ></apx-chart>
+                </div>
+                <div class="view-btn">
+                    <button type="button"  (click)="showSBCBarChart=true; scroll(sbcBar)" class="btn btn-sm float-end">View Details</button>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="showJBCChart" class="col ">
+            <div class="chart bg-light shadow rounded cursor-pointer p-3 clearfix">
+                <div class="mb-3">
+                    <p class="h6 fw-bold text-capitalize">Jibon Bima Corporation</p>
+                    <!-- <small class="h6 text-secondary">Operation Statistics</small> -->
+                    <p class="h6 text-secondary">No. of Customers (Location based)</p>
+                </div>
+                <div>
+                    <apx-chart
+                    [series]="jbcPieChart.series"
+                    [chart]="jbcPieChart.chart"
+                    [colors]="jbcPieChart.colors"
+                    [labels]="jbcPieChart.labels"
+                    [legend]="jbcPieChart.legend"
+                    [title]="jbcPieChart.title"
+                    [responsive]="jbcPieChart.responsive"
+                    ></apx-chart>
+                </div>
+                <div class="view-btn">
+                    <button type="button" (click)="scroll(jbcBar); showJBCBarChart=true" class="btn btn-sm float-end">View Details</button>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="showBIAChart" class="col ">
+            <div class="chart bg-light shadow rounded cursor-pointer p-3 clearfix">
+                <div class="mb-3">
+                    <p class="h6 fw-bold text-capitalize">Bangladesh Insurance Academy</p>
+                    <!-- <small class="h6 text-secondary">Operation Statistics</small> -->
+                    <p class="h6 text-secondary">No. of Trainees (Institution based)</p>
+                </div>
+                <div>
+                    <apx-chart
+                        [series]="biaPieChart.series"
+                        [chart]="biaPieChart.chart"
+                        [colors]="biaPieChart.colors"
+                        [labels]="biaPieChart.labels"
+                        [legend]="biaPieChart.legend"
+                        [title]="biaPieChart.title"
+                        [responsive]="biaPieChart.responsive"
+                    ></apx-chart>
+                </div>
+                <div class="view-btn">
+                    <button type="button" (click)="scroll(biaBar); showBIABarChart =true" class="btn btn-sm float-end">View Details</button>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="showBIAChart" class="col ">
+            <div class=" bg-light shadow rounded cursor-pointer" >
+
+            </div>
+        </div>
+
+    </div>
+    <div class="row g-2 g-lg-4 mx-0 mb-5 px-4 bg-light shadow rounded justify-content-center" #sbcBar>
+        <div class="py-4" *ngIf="showSBCBarChart">
+            <div class="mb-4 position-relative">
+                <p class="h4 fw-bold mb-3">Shadharon Bima Corporation (SBC)</p>
+                <p class="h5 text-secondary">Operation Statistics (Location based)</p>
+                <span class="close-btn" (click)="hideEl(sbcBar, 'sbc')"><i class="bi bi-x-lg"></i></span>
+            </div>
+            <div>
+                <apx-chart 
+                [series]="sbcBarChart.series"
+                [chart]="sbcBarChart.chart"
+                [colors]="sbcBarChart.colors"
+                [labels]="sbcBarChart.labels"
+                [title]="sbcBarChart.title"
+                [yaxis]="sbcBarChart.yaxis"
+                [plotOptions]="sbcBarChart.plotOptions"
+                [responsive]="sbcBarChart.responsive"
+                [dataLabels]="sbcBarChart.dataLabels"
+
+                ></apx-chart>
+            </div>
+        </div>
+      </div>
+    <div class="row g-2 g-lg-4 mx-0 mb-5 px-4 bg-light shadow rounded justify-content-center" #jbcBar>
+        <div class="py-4"  *ngIf="showJBCBarChart">
+            <div class="mb-4 position-relative">
+                <p class="h4 fw-bold mb-3">Jibon Bima Corporation (JBC)</p>
+                <p class="h5 text-secondary">Operation Statistics (Location based)</p>
+                <span class="close-btn" (click)="hideEl(jbcBar, 'jbc')"><i class="bi bi-x-lg"></i></span>
+            </div>
+            <div>
+                <apx-chart
+                [series]="jbcBarChart.series"
+                [chart]="jbcBarChart.chart"
+                [colors]="jbcBarChart.colors"
+                [labels]="jbcBarChart.labels"
+                [title]="jbcBarChart.title"
+                [yaxis]="jbcBarChart.yaxis"
+                [plotOptions]="jbcBarChart.plotOptions"
+                [responsive]="jbcBarChart.responsive"
+                [dataLabels]="jbcBarChart.dataLabels"
+                ></apx-chart>
+            </div>
+        </div>
+
+    </div>
+    <div class="row g-2 g-lg-4 mx-0 mb-5 px-4 bg-light shadow rounded justify-content-center" #biaBar>
+        <div class="py-4"  *ngIf="showBIABarChart">
+            <div class="mb-4 position-relative">
+                <p class="h4 fw-bold mb-3">Bangladesh Insurance Academy (BIA)</p>
+                <p class="h5 text-secondary">Operation Statistics (Institution based)</p>
+                <span class="close-btn" (click)="hideEl(biaBar, 'bia')"><i class="bi bi-x-lg"></i></span>
+            </div>
+            <div>
+                <apx-chart *ngIf="showBIABarChart"
+                    [series]="biaBarChart.series"
+                    [chart]="biaBarChart.chart"
+                    [colors]="biaBarChart.colors"
+                    [labels]="biaBarChart.labels"
+                    [title]="biaBarChart.title"
+                    [yaxis]="biaBarChart.yaxis"
+                    [plotOptions]="jbcBarChart.plotOptions"
+                    [responsive]="jbcBarChart.responsive"
+                    [dataLabels]="jbcBarChart.dataLabels"
+                ></apx-chart>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+</div>

@@ -1,0 +1,84 @@
+.navbar-brand {
+  img {
+    width: 38px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .title-wrapper {
+    vertical-align: middle;
+    display: inline-block;
+    border-left: 1px solid #adadad;
+    padding-left: 15px;
+    margin-left: 15px;
+    span {
+      display: block;
+      &.subtitle {
+        font-size: 71%;
+      }
+    }
+  }
+}
+
+.logo-title {
+  flex: 1; /* Allow the title to take up remaining space */
+  display: flex;
+  align-items: center; /* Vertically center align content within title */
+}
+
+.logo-title h3 {
+  margin-right: 10px; /* Add some spacing between h3 and button */
+}
+.navbar-dark .nav-item .nav-link {
+  color: #fff;
+}
+
+.navbar-dark .nav-item .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  border-radius: 0.25rem;
+  color: #fff;
+}
+
+.fa-li {
+  position: relative;
+  left: 0;
+}
+
+.bgColor {
+  background-color: #00005a;
+  // background-color: #d7d7df;
+}
+.dropdownColor {
+  background-color: white;
+  right: 0;
+  left: auto;
+  border-radius: 6px;
+  border: 1px solid rgba(154, 165, 187, 0.55);
+
+  a {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    border-radius: 6px;
+
+    &:active,
+    &:focus {
+      color: #000;
+      background-color: #f8f9fa;
+    }
+  }
+}
+.avatar {
+  vertical-align: middle;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+.dropdownMenu{
+  top: 100%;
+  right: 0 !important;
+}
+
+.custom-border{
+  border: 2px solid white;
+}

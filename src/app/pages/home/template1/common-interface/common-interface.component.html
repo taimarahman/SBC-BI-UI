@@ -1,0 +1,36 @@
+<app-page-layout>
+  
+  <div class="content-wrapper mt-3">
+    <div class="row row-cols-2 mb-5 bg-light shadow rounded p-4 mx-0">
+        <div class="col">
+            <label for="userId" id="userId" class="col-form-label text-capitalize">{{currentRoute}} Report</label>
+            <select2
+              name="parentModuleId"
+              id=""
+              class="mt-4"
+              class="form-control p-0 border-0"
+              placeholder="Select Report"
+              [(ngModel)]="selectedReport.reportId"
+              [data]="reportList"
+              (update)="loadInterface(selectedReport.reportId)"
+            >
+            </select2>
+          </div>
+    </div>
+
+
+    <div *ngIf="selectedReport.reportId != null">
+      <app-reports [paramReport]="selectedReport"></app-reports>
+    </div>
+    <div *ngIf="selectedReportType=='M' && viewPermission">
+        <app-ml [mlReport]="selectedReport"></app-ml>
+    </div>
+
+  </div>
+  <app-claim-dashboard *ngIf="pathId == 1"></app-claim-dashboard>
+  <app-operations-dashboard *ngIf="pathId == 2"></app-operations-dashboard>
+  <app-financial-dashboard *ngIf="pathId == 3"></app-financial-dashboard>
+  <app-motor-road-accident *ngIf="pathId == 19"></app-motor-road-accident>
+  <app-fraud-detection *ngIf="pathId == 20"></app-fraud-detection>
+ 
+</app-page-layout>

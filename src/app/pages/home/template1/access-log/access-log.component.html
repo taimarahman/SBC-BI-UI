@@ -1,0 +1,57 @@
+<app-page-layout>
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">Login History</h1>
+        </div><!-- /.col -->
+      </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </div>
+  <div class="board" id="excel-table">
+    <div class="card">
+      <div class="card-body">
+
+        <table class="table" width="100%">
+          <thead>
+          <tr class="text-center">
+            <th>Name</th>
+            <th>Email</th>
+            <th>UserName</th>
+            <th>Designation</th>
+            <th>Login Time</th>
+            <th>Logout Time</th>
+            <th>User IP Address</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let item of dataValue" class="text-center">
+            <td>{{item.empName}}</td>
+            <td>{{item.email}}</td>
+            <td>{{item.username}}</td>
+            <td>{{item.designation}}</td>
+            <td>{{item.login | date: 'MMM d, y, h:mm:ss a'}}</td>
+            <td [ngClass]="{'pulse fw-bold': !item.logout}">
+              <!-- <i class="fas fa-circle icon" [ngClass]="{'text-success': item.status, 'light': !item.status}" style="font-size: 0.6rem;"></i>-->
+              {{!item.logout ? 'Logged In' : (item.logout | date: 'MMM d, y, h:mm:ss a')}}
+              <!-- <ng-container *ngIf="item.lastLogoutTime != null; else loggedIn">
+                {{item.lastLogoutTime | date: 'MMM d, y, h:mm:ss a'}}
+              </ng-container>
+              <ng-template #loggedIn>
+                <i class="fas fa-circle text-success pulse icon" style="font-size: 0.6rem; border-radius: circle;"></i> Logged In
+              </ng-template> -->
+            </td>
+            <td>{{item.userIp ? item.userIp : 'No IP Found'}}</td>
+          </tr>
+          <tr *ngIf="!dataValue || dataValue.length === 0" class="text-center fw-bold">
+            <td colspan="8">No data found</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-warning float-end" (click)="back()">Back</button>
+      </div>
+    </div>
+  </div>
+</app-page-layout>

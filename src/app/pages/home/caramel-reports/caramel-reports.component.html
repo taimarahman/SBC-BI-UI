@@ -1,0 +1,67 @@
+<app-page-layout>
+  
+    <div class="content-wrapper mt-3">
+      <div class="row row-cols-2 mb-5 bg-light shadow rounded p-4 mx-0">
+          <div class="col">
+              <label for="userId" id="userId" class="col-form-label text-capitalize">Caramel Report</label>
+              <select2
+                name="parentModuleId"
+                id=""
+                class="mt-4"
+                class="form-control p-0 border-0"
+                placeholder="Select Report"
+                [(ngModel)]="selectedReport.reportId"
+                [data]="reportList"
+                (update)="loadInterface(selectedReport.reportId)"
+              >
+              </select2>
+            </div>
+      </div>
+      <div *ngIf="selectedReport.reportId && !hideSpinner" class="d-flex justify-content-center">
+        <div  class="spinner-border text-secondary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+      <div *ngIf="selectedReport.reportId && hideSpinner" class="row mx-0 px-4 py-4 py-xl-5  bg-light rounded shadow">
+        <div class="text-center mb-5">
+            <p class="h3 d-inline-block fw-semibold text-uppercase text-center border-bottom pb-4">Report on {{selectedReport.reportName}}</p>
+        </div>
+        <div class="mb-5">
+            <div class="scroll-table">
+                <table class="table nowrap w-100">
+                    <thead >
+                        <tr> 
+                            <th>Company Name</th>
+                            <th *ngFor="let f of fields" (click)="openReport(f)" class="cursor-pointer"> {{convertToTitleCase(f)}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let data of selectedReportDetails">
+                      <td class="text-center">{{data.companyName}}</td>
+                      <td *ngFor="let f of fields" class="text-center cursor-pointer" (click)="openReport(f)">{{data[f]}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+       
+        
+        <div class="scroll-table">
+            <apx-chart 
+                [series]="reportBarChart.series"
+                [chart]="reportBarChart.chart"
+                [colors]="reportBarChart.colors"
+                [labels]="reportBarChart.labels"
+                [title]="reportBarChart.title"
+                [yaxis]="reportBarChart.yaxis"
+                [plotOptions]="reportBarChart.plotOptions"
+                [responsive]="reportBarChart.responsive"
+                [dataLabels]="reportBarChart.dataLabels"
+
+                ></apx-chart>
+        </div>
+      </div>
+    </div>
+
+
+</app-page-layout>

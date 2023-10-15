@@ -1,0 +1,200 @@
+<app-page-layout>
+  <div class="content-wrapper">
+    <div class="content-body">
+      <div class="card">
+        <div class="card-header bg-theme text-white">Role Entry</div>
+        <div class="card-body border">
+          <form #roleForm="ngForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+              <div class="col-4">
+                <div class="form-group requiredField">
+                  <label for="roleName" class="col-form-label requiredField"
+                    >ROLE NAME</label
+                  >
+                  <input
+                    id="roleName"
+                    class="form-control"
+                    [(ngModel)]="formData.roleName"
+                    name="roleName"
+                    autocomplete="off"
+                    #roleName="ngModel"
+                    required
+                    [class.is-valid]="
+                      roleName.valid && (roleName.dirty || roleName.touched)
+                    "
+                    [class.is-invalid]="
+                      roleName.invalid && (roleName.dirty || roleName.touched)
+                    "
+                    (input)="updateRoleKey()"
+                  />
+                </div>
+              </div>
+
+              <div class="col-4">
+                <div class="form-group requiredField">
+                  <label for="roleKey" class="col-form-label">ROLE KEY</label>
+                  <input
+                    id="roleKey"
+                    class="form-control"
+                    [(ngModel)]="formData.roleKey"
+                    name="roleKey"
+                    autocomplete="off"
+                    #roleKey="ngModel"
+                    required
+                    [class.is-valid]="
+                      roleKey.valid && (roleKey.dirty || roleKey.touched)
+                    "
+                    [class.is-invalid]="
+                      roleKey.invalid && (roleKey.dirty || roleKey.touched)
+                    "
+                    [readonly]="true"
+                  />
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="form-group row">
+                  <label class="col-form-label">IS ACTIVE</label>
+                  <div class="col">
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input
+                          type="radio"
+                          class="form-check-input"
+                          name="activeYn"
+                          [(ngModel)]="formData.activeYn"
+                          value="Y"
+                        />
+                        YES
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input
+                          type="radio"
+                          class="form-check-input"
+                          name="activeYn"
+                          [(ngModel)]="formData.activeYn"
+                          value="N"
+                        />
+                        NO
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-4">
+              <div class="col d-flex justify-content-end">
+                <button
+                  *ngIf="!edit"
+                  type="submit"
+                  [disabled]="roleForm.invalid"
+                  class="btn btn bg-theme shadow me-3"
+                >
+                  Save
+                </button>
+                <button
+                  *ngIf="edit"
+                  type="submit"
+                  [disabled]="roleForm.invalid"
+                  class="btn btn bg-theme shadow me-3"
+                >
+                  Update
+                </button>
+                <button
+                  type="button"
+                  class="btn btn btn-outline-theme"
+                  (click)="onReset()"
+                >
+                  Reset
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header bg-theme text-white">Role List</div>
+        <div class="card-body border">
+          <div class="d-flex justify-content-between p-2">
+            <select
+              class="custom-select"
+              style="width: auto"
+              name="pageSize"
+              [(ngModel)]="pageSize"
+              (ngModelChange)="onChangePageSize()"
+            >
+              <option *ngFor="let size of tableSizes" [ngValue]="size">
+                {{ size }} items per page
+              </option>
+              <!-- <option [ngValue]="2">2 items per page</option> -->
+            </select>
+            <div class="col-md-4">
+              <input
+                type="text"
+                [(ngModel)]="searchRole"
+                name="searchItemValue"
+                autocomplete="off"
+                placeholder="Search here.."
+                (input)="searchRoles()"
+                (keydown.enter)="searchRoles()"
+                (change)="searchRoles()"
+                class="form-control form-control-sm"
+              />
+            </div>
+          </div>
+
+          <table class="table table-striped nowrap" style="width: 100%">
+            <thead>
+              <tr>
+                <th
+                  *ngFor="let field of fields; let i = index"
+                  class="text-start"
+                >
+                  {{ field.label }}
+                </th>
+                <th class="text-center">Active Status</th>
+                <th class="text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of showRoleList; let i = index">
+                <td>{{ roleList.indexOf(data) + 1 }}</td>
+                <td class="d-none">{{ data.roleId }}</td>
+                <td>{{ data.roleName }}</td>
+                <td>{{ data.roleKey }}</td>
+                <td
+                  *ngIf="data.activeYn == 'Y'; else inactive"
+                  class="text-center"
+                >
+                  <i class="bi bi-check2 text-success"></i>
+                </td>
+                <ng-template #inactive>
+                  <td class="text-center">
+                    <i class="bi bi-x-circle text-danger"></i>
+                  </td>
+                </ng-template>
+                <td class="text-center" (click)="enableEdit(data)">
+                  <i class="bi bi-pencil-square clickable cursor-pointer"></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <ngb-pagination
+            [collectionSize]="roleList.length"
+            [(page)]="currentPage"
+            [maxSize]="3"
+            [rotate]="true"
+            [ellipses]="false"
+            [boundaryLinks]="true"
+            [pageSize]="pageSize"
+            (pageChange)="onChangePage($event)"
+          ></ngb-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-page-layout>

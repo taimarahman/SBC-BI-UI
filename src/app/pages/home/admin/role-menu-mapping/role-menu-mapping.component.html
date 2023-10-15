@@ -1,0 +1,147 @@
+    <div class="content-wrapper">
+        <div id="content-body">
+          <!-- <assign-role (reinitiate-roles)="loadRole()"></assign-role> -->
+          <div class="card bg-transparent">
+            <div class="card-header text-white bg-theme">
+              <span class="pr-4">Application Access Control Management</span>
+              <!-- Add button code here -->
+            </div>
+            <div class="card-body">
+              <div class="card">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="form-group requiredField">
+<!--                        <label for="role_name">Please select a role</label>-->
+<!--                        <select class="form-control" [(ngModel)]="selectedRole" (ngModelChange)="getControl()" name="role_id" required>-->
+<!--                          <option [ngValue]="role" *ngFor="let role of roleList">{{ role.role_name }}</option>-->
+<!--                        </select>-->
+                        <label for="roleId" id="roleId" class="col-form-label">Please Select a Role</label>
+                          <select2 name="menuOptions" id="" class="mt-4" class="form-control p-0 border-0"
+                                   placeholder="Select Role" [(ngModel)]="selectedRole.roleId" [data]="roleList" (ngModelChange)="loadRolePermissions()">
+                          </select2>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row" *ngIf="show">
+                <div class="col-md-3 col-sm-12 pr-md-0">
+                  <div class="card h-100">
+                    <div class="card-body">
+                      <ul class="nav nav-pills flex-column text-center text-md-left">
+                        <li class="nav-item">
+                          <a class="nav-link d-flex align-items-center" [ngClass]="{'active': tab==='menu'}" (click)="tab='menu'">
+                            <i class="bx bx-cog"></i>
+                            <span> Application Menus </span>
+                          </a>
+                        </li>
+                        <!-- <li class="nav-item">
+                          <a class="nav-link d-flex align-items-center" [ngClass]="{'active': tab==='permission'}" (click)="tab='permission'">
+                            <i class="bx bx-cog"></i>
+                            <span> Permissions </span>
+                          </a>
+                        </li> -->
+                        <li class="nav-item">
+                          <a class="nav-link d-flex align-items-center" [ngClass]="{'active': tab==='report'}" (click)="tab='report'">
+                            <i class="bx bx-cog"></i>
+                            <span> Reports </span>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link d-flex align-items-center" [ngClass]="{'active': tab==='user'}" (click)="tab='user'">
+                            <i class="bx bx-cog"></i>
+                            <span> Users </span>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-9 col-sm-12">
+                  <div class="card" *ngIf="tab==='menu'">
+                    <div class="card-body">
+                      <h4>Application Menus <button type="button" class="btn btn-success btn-sm" (click)="saveMenuAccess()">Save</button></h4>
+                      <app-tree-menu [menus]="menuTree" [permittedList]="roleWisePermissionList" (saveEvent)="setMenuSaveData($event)"></app-tree-menu>
+                    </div>
+                  </div>
+                  <!-- PERMISSIONS -->
+                  <div *ngIf="tab === 'permission'" class="card h-100">
+                    <div class="card-body">
+                      <h4>Resource Permission <button class="btn btn-success btn-sm">Save</button></h4>
+                      <div >
+                        <div>
+                          <div class="headerModule">PMIS</div>
+                          <div class="form-group">
+                            <div>
+                              <div class="form-check">
+                                <input
+                                  type="checkbox"
+                                  class="form-check-input"
+                                />
+                                <label class="form-check-label" >CAN CREATE EMPLOYEE</label>
+                              </div>
+                            </div>
+                            <div>
+                              <div class="form-check">
+                                <input
+                                  type="checkbox"
+                                  class="form-check-input"
+                                />
+                                <label class="form-check-label" >CAN CREATE EMPLOYEE</label>
+                              </div>
+                            </div>
+                            <div>
+                              <div class="form-check">
+                                <input
+                                  type="checkbox"
+                                  class="form-check-input"
+                                />
+                                <label class="form-check-label" >CAN CREATE EMPLOYEE</label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- REPORTS -->
+                  <div *ngIf="tab === 'report'" class="card h-100">
+                    <div class="card-body">
+                      <h4>Report Permission <button class="btn btn-success btn-sm" (click)="saveReport()" [disabled]="reportReqData.reportId.length == 0">Save</button></h4>
+                      <div *ngFor="let moduleReports of allReportGrouped; let i=index">
+                          <div *ngIf="moduleReports" class="headerModule">{{moduleReports[0]?.parentModuleName}}</div>
+                          <div class="form-group">
+                            <div *ngFor="let report of moduleReports">
+                              <div class="form-check">
+                                <input
+                                  type="checkbox"
+                                  class="form-check-input"
+                                  value="report.reportId"
+                                  [checked]="report.checked"
+                                  (click)="toggleToReportAccess($event,report)"
+                                />
+                                <label class="form-check-label" >{{report.reportName}}</label>
+                              </div>
+                            </div>
+                            
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                  <!-- USER -->
+                  <div *ngIf="tab === 'user'" class="card h-100">
+                    <div class="card-body">
+                      <h6 class="card-title ">Assigned Users</h6>
+                      <app-user-table [userList]="roleUserList" (unassignEvent)="unassignUser($event)"></app-user-table>
+                      
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+

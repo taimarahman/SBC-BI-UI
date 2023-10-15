@@ -1,0 +1,127 @@
+<div class="content-wrapper">
+  <div class="card shadow mb-5">
+    <div class="card-header bg-theme text-white">{{paramReport.reportName}}</div>
+    <div class="card-body pt-5" >
+      <div *ngIf="paramReport.reportParam.length > 0" class="row row-cols-1 row-cols-lg-2 m-0 mb-5">
+        <div class="col" *ngFor="let param of paramReport.reportParam">
+          <div class="input-group" *ngIf="param.dataType == 'text'; else datePicker">
+            <span class="input-group-text col-4" id="basic-addon1">{{param.paramLabel}}</span>
+            <input type="text" class="form-control" [name]="param.paramName" [(ngModel)]="param.value">
+          </div>
+          <ng-template #datePicker>
+            <div class="input-group">
+              <span class="input-group-text col-4">{{param.paramLabel}}</span>
+              <input
+                name="dateRangeStart"
+                ngbDatepicker
+                #dStart="ngbDatepicker"
+                [ngModelOptions]="{ standalone: true }"
+                [(ngModel)]="param.value"
+                [minDate]="{ year: 2015, month: 07, day: 01 }"
+                [maxDate]="{ year: 2030, month: 06, day: 31 }"
+                class="form-control"
+                placeholder="DD/MM/YYYY"
+                id="dateRangeStart"
+                autocomplete="off"
+              />
+              <button
+                class="btn btn-outline-secondary bi bi-calendar3"
+                (click)="dStart.toggle()"
+                type="button"
+              ></button>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+      <div class="row row-cols-1 m-0 mb-4">
+        <div class="col d-flex align-items-center">
+          <p class="col-2 h6 mb-0">Report Format</p>
+          <div class="input-group">
+            <select2
+              name="fileFormat"
+              id=""
+              class="col-md-6"
+              placeholder="Select Format"
+              [(ngModel)]="selectedFileFormat"
+              [data]="fileFormat"
+            >
+            </select2>
+            <a
+              (click)="selectedFileFormat && onSubmit()"
+              href="javascript:void(0)"
+              class="text-black input-group-append"
+            >
+              <button class="btn btn-info ms-2 " type="button" [disabled]="!selectedFileFormat"
+              style="height: 30px;padding-top: 2px"
+            >
+                Generate&nbsp;Report
+              </button>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+  <!-- <div class="card">
+    <div class="card-body">
+      <form (ngSubmit)="onSubmit()"> -->
+<!--        <div class=" card">-->
+<!--          <div class="card-body">-->
+<!--            <h5 class="card-title">BI INSURANCE REPORTS</h5>-->
+
+<!--            <div class="input-group">-->
+<!--              &lt;!&ndash; <label for="userId" id="userId" class="col-form-label card-title"-->
+<!--                >BI INSURANCE REPORTS</label-->
+<!--              > &ndash;&gt;-->
+<!--              <select2-->
+<!--                name="reportList"-->
+<!--                id=""-->
+<!--                class="col-md-4 p-0 border-0"-->
+<!--                placeholder="Select Report"-->
+<!--                [(ngModel)]="reportId"-->
+<!--                [data]="reportList"-->
+<!--              >-->
+<!--              </select2>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+
+
+        <!-- <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Select Format</h5>
+            <div class="input-group">
+              <select2
+                name="fileFormat"
+                id=""
+                class="col-md-4 border-0 align-self-stretch "
+                placeholder="Select Format"
+                [(ngModel)]="selectedFileFormat"
+                [data]="fileFormat"
+              >
+              </select2>
+
+              <a
+                (click)="openTab(paramReport.reportId, 'print-report')"
+                href="javascript:void(0)"
+                class="text-black input-group-append"
+              >
+                <button class="btn btn-info ms-2 " type="submit"
+                style="height: 30px;padding-top: 2px"
+            >
+
+                  Generate&nbsp;Report
+                </button>
+              </a>
+            </div>
+          </div>
+          <div class="row"></div>
+        </div>
+
+      </form>
+    </div>
+  </div> -->

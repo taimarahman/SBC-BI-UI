@@ -1,0 +1,118 @@
+<div class="card">
+  <div class="card-header text-white bg-theme">
+    <span class="pr-4">Assign roles to user</span>
+    <!-- Add button code here -->
+  </div>
+  <div class="card-body">
+    <form (ngSubmit)="onSubmit()" *ngIf="show">
+      <div class="row">
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for="userId" id="userId" class="col-form-label">User</label>
+            <select2
+              [disabled]="userIdFromSearch"
+              name="userList"
+              id=""
+              class="mt-4"
+              class="form-control p-0 border-0"
+              placeholder="Select User"
+              [(ngModel)]="selectedUser.userId"
+              [data]="userList"
+              (ngModelChange)="getRolesOfUser()"
+            >
+            </select2>
+          </div>
+
+          <div *ngIf="employee" class="text-dark small mt-4">
+            <div *ngIf="employee.employeeName">
+              Name: {{ employee.employeeName }}
+            </div>
+            <div *ngIf="employee.username">Code: {{ employee.username }}</div>
+            <div *ngIf="employee.designationName">
+              Designation: {{ employee.designationName }}
+            </div>
+            <div *ngIf="employee.departmentName">
+              Department: {{ employee.departmentName }}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-10" *ngIf="userSelected">
+          <div class="row role-container">
+            <div class="col-md-2">
+              <div>
+                <div class="col-md-12 p-2 bg-theme">
+                  <h6 class="text-white mb-1">Assigned Roles</h6>
+                </div>
+              </div>
+              <div *ngIf="assignedRoles.length; else notAssigned">
+                <div
+                  class="col-md-12 border p-1"
+                  *ngFor="let assignedRole of assignedRoles; let index = index"
+                >
+                  <strong>{{ index + 1 }} . {{ assignedRole.roleName }}</strong>
+                </div>
+              </div>
+              <ng-template #notAssigned>
+                <div class="col-md-12 border p-1">
+                  <strong>Not assigned yet!</strong>
+                </div>
+              </ng-template>
+            </div>
+            <div class="col-md-10">
+              <div class="form-group" [attr.labelFor]="'roles'">
+                <div class="form-check" *ngIf="userSelected">
+                  <div class="row">
+                    <div class="col-md-12 pt-2 pb-2 bg-theme">
+                      <div class="row">
+                        <div class="col-md-8">
+                          <h5 class="text-white">Roles</h5>
+                        </div>
+                        <div class="col-md-4">
+                          <input
+                            type="text"
+                            [(ngModel)]="searchRole"
+                            name="searchRole"
+                            autocomplete="off"
+                            placeholder="Search Role.."
+                            (input)="searchRoles()"
+                            (keydown.enter)="searchRoles()"
+                            (change)="searchRoles()"
+                            class="form-control form-control-sm"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="col-4 col-lg-2 border p-1"
+                      *ngFor="let role of roleList; let i = index"
+                      [attr.key]="role.value"
+                    >
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          [value]="role.value"
+                          name="roleChecked"
+                          [checked]="role.checked"
+                          (click)="changeCheck(i)"
+                        />
+                        <label class="form-check-label">
+                          {{ role.label }}</label
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-secondary col-md-3 mt-3">
+              Assign Selected Roles to User
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

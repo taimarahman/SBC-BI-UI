@@ -1,0 +1,326 @@
+<div class="content-wrapper">
+  <div class="content-body">
+    <div class="card">
+      <div class="card-header bg-theme text-white">{{ formTitle }}</div>
+      <div class="card-body border">
+        <form (ngSubmit)="onSubmit()">
+          <div class="row">
+            <div
+              class="form-group col-lg-4 mt-2 d-flex justify-content-between"
+            >
+              <label>USER TYPE</label>
+              <div class="row">
+                <div class="form-check form-check-inline">
+                  <label class="form-check-label">
+                    <input
+                      type="radio"
+                      class="form-check-input"
+                      name="userTypeId"
+                      [(ngModel)]="formData.user.userTypeId"
+                      value="1"
+                      [disabled]="disableOnEdit"
+                    />
+                    INTERNAL
+                  </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <label class="form-check-label">
+                    <input
+                      type="radio"
+                      class="form-check-input"
+                      name="userTypeId"
+                      [(ngModel)]="formData.user.userTypeId"
+                      value="2"
+                      [disabled]="disableOnEdit"
+                    />
+                    EXTERNAL
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div
+              *ngIf="formData.user.userTypeId === '1'"
+              class="form-group col-lg-4"
+            >
+              <label for="employee" id="employee" class="col-form-label"
+                >EMPLOYEE</label
+              >
+              <select2
+                name="employeeList"
+                id="employeeList"
+                class="mt-4"
+                class="form-control p-0 border-0"
+                [disabled]="disableOnEdit"
+                placeholder="Select Employee"
+                [(ngModel)]="formData.user.empId"
+                [data]="employeeList"
+                (update)="onEmployeeSelected(formData.user.empId)"
+              >
+              </select2>
+            </div>
+
+            <div
+              *ngIf="formData.user.userTypeId === '1'"
+              class="form-group col-lg-4"
+            >
+              <label for="usernameI" class="col-form-label">USER NAME</label>
+              <input
+                id="usernameI"
+                class="form-control"
+                name="usernameI"
+                [(ngModel)]="formData.user.username"
+                [value]="selectedEmployee?.details?.empCode"
+                readonly
+                disabled
+                required
+                aria-required="true"
+              />
+            </div>
+
+            <div
+              *ngIf="formData.user.userTypeId === '2'"
+              class="form-group col-lg-4"
+            >
+              <label for="usernameE" class="col-form-label">USER NAME</label>
+              <input
+                id="usernameE"
+                class="form-control"
+                name="usernameE"
+                [(ngModel)]="formData.user.username"
+                required
+                [disabled]="disableOnEdit"
+              />
+            </div>
+
+            <div class="form-group col-lg-4">
+              <label for="userPass" class="col-form-label">USER PASSWORD</label>
+              <input
+                type="password"
+                id="userPass"
+                class="form-control"
+                name="userPass"
+                [(ngModel)]="formData.user.userPass"
+                autocomplete="one-time-code"
+                #userPass="ngModel"
+                [disabled]="disableOnEdit"
+                required
+                [class.is-valid]="
+                  userPass.valid && (userPass.dirty || userPass.touched)
+                "
+                [class.is-invalid]="
+                  userPass.invalid && (userPass.dirty || userPass.touched)
+                "
+              />
+            </div>
+
+            <div class="form-group col-lg-4">
+              <label for="retypePassword" class="col-form-label"
+                >RETYPE PASSWORD</label
+              >
+              <input
+                type="password"
+                id="retypePassword"
+                class="form-control"
+                name="retypePassword"
+                [(ngModel)]="formData.user.retypePassword"
+                autocomplete="one-time-code"
+                #retypePassword="ngModel"
+                [disabled]="disableOnEdit"
+                required
+                [class.is-valid]="
+                  retypePassword.valid &&
+                  retypePassword.value == userPass.value &&
+                  (retypePassword.dirty || retypePassword.touched)
+                "
+                [class.is-invalid]="
+                  (retypePassword.invalid ||
+                    retypePassword.value != userPass.value) &&
+                  (retypePassword.dirty || retypePassword.touched)
+                "
+              />
+            </div>
+
+            <div class="form-group col-lg-4">
+              <label for="email" class="col-form-label">EMAIL</label>
+              <input
+                type="email"
+                id="email"
+                class="form-control"
+                name="email"
+                [(ngModel)]="formData.user.email"
+                autocomplete="one-time-code"
+                #email="ngModel"
+                required
+                [class.is-valid]="email.valid && (email.dirty || email.touched)"
+                [class.is-invalid]="
+                  email.invalid && (email.dirty || email.touched)
+                "
+              />
+            </div>
+
+            <div
+              *ngIf="formData.user.userTypeId === '1'"
+              class="form-group col-lg-4"
+            >
+              <label for="depertment" class="col-form-label">DEPARTMENT</label>
+              <input
+                id="depertment"
+                class="form-control"
+                name="depertment"
+                [(ngModel)]="formData.user.depertment"
+                [value]="selectedEmployee?.details?.departmentName"
+                required
+                readonly
+                disabled
+                aria-required="true"
+              />
+            </div>
+
+            <div
+              *ngIf="formData.user.userTypeId === '1'"
+              class="form-group col-lg-4"
+            >
+              <label for="designation" class="col-form-label"
+                >DESIGNATION</label
+              >
+              <input
+                id="designation"
+                class="form-control"
+                name="designation"
+                [(ngModel)]="formData.user.designation"
+                [value]="selectedEmployee?.details?.designation"
+                required
+                readonly
+                disabled
+                aria-required="true"
+              />
+            </div>
+
+            <div
+              *ngIf="formData.user.userTypeId === '1'"
+              class="form-group col-lg-4"
+            >
+              <label for="division" class="col-form-label">DIVISION</label>
+              <input
+                id="division"
+                class="form-control"
+                name="division"
+                [(ngModel)]="formData.user.division"
+                [value]="selectedEmployee?.details?.divisionName"
+                required
+                readonly
+                disabled
+                aria-required="true"
+              />
+            </div>
+
+            <div class="form-group col-lg-4 mt-4">
+              <label>STATUS</label>
+              <div>
+                <div class="form-check form-check-inline">
+                  <label class="form-check-label">
+                    <input
+                      type="radio"
+                      class="form-check-input"
+                      name="isActive"
+                      [(ngModel)]="formData.user.isActive"
+                      value="Y"
+                    />
+                    ACTIVE
+                  </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <label class="form-check-label">
+                    <input
+                      type="radio"
+                      class="form-check-input"
+                      name="isActive"
+                      [(ngModel)]="formData.user.isActive"
+                      value="N"
+                    />
+                    INACTIVE
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div
+              *ngIf="formData.user.userTypeId === '2'"
+              class="form-group col-lg-4"
+            >
+              <label for="organization" id="organization" class="col-form-label"
+                >ORGANIZATION</label
+              >
+              <select2
+                name="organizationList"
+                id=""
+                class="mt-4"
+                class="form-control p-0 border-0"
+                placeholder="Select Organization"
+                [(ngModel)]="formData.user.userReferenceId"
+                [data]="organizationList"
+              >
+              </select2>
+            </div>
+
+            <div
+              *ngIf="
+                formData.user.userTypeId === '2' &&
+                formData.user.userReferenceId
+              "
+              class="form-group col-lg-4"
+            >
+              <label for="reference" class="col-form-label">REFERENCE</label>
+              <input
+                id="reference"
+                class="form-control"
+                name="reference"
+                [(ngModel)]="formData.user.reference"
+                autocomplete="off"
+                #reference="ngModel"
+                required
+                [class.is-valid]="
+                  reference.valid && (reference.dirty || reference.touched)
+                "
+                [class.is-invalid]="
+                  reference.invalid && (reference.dirty || reference.touched)
+                "
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col d-flex justify-content-end">
+              <button
+                type="submit"
+                (click)="onSearchClick()"
+                class="btn bg-theme me-2"
+              >
+                Search User
+              </button>
+              <button
+                type="submit"
+                [disabled]="formData.invalid"
+                *ngIf="!isEditing"
+                class="btn bg-theme me-2"
+              >
+                Save
+              </button>
+              <button type="submit" *ngIf="isEditing" class="btn bg-theme me-2">
+                Update
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-theme"
+                (click)="onReset()"
+              >
+                RESET
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

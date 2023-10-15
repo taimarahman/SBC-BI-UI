@@ -1,0 +1,31 @@
+<table class="table table-striped">
+    <thead>
+    <tr>
+      <th scope="col">SL</th>
+      <th scope="col">Menu Name</th>
+      <th scope="col">#</th>
+      <th scope="col">#</th>
+      <th scope="col">#</th>
+      <!-- <th sortable="name" scope="col" (sort)="onSort($event)">Country</th>
+      <th scope="col" sortable="area" (sort)="onSort($event)">Area</th>
+      <th scope="col" sortable="population" (sort)="onSort($event)">Population</th> -->
+    </tr>
+    </thead>
+    <tbody>
+    <!-- <tr *ngFor="let country of countries$ | async"> -->
+    <tr *ngFor="let data of tableData">
+        <td>{{data.menuName}}</td>
+        <td>sd</td>
+        <td>sd</td>
+        <td>sd</td>
+        <td>sd</td>
+      <!-- <th scope="row">{{ country.id }}</th> -->
+      <!-- <td>
+        <img [src]="'https://upload.wikimedia.org/wikipedia/commons/' + country.flag" class="mr-2" style="width: 20px">
+        <ngb-highlight [result]="country.name" [term]="service.searchTerm"></ngb-highlight>
+      </td> -->
+      <!-- <td><ngb-highlight [result]="country.area | number" [term]="service.searchTerm"></ngb-highlight></td>
+      <td><ngb-highlight [result]="country.population | number" [term]="service.searchTerm"></ngb-highlight></td> -->
+    </tr>
+    </tbody>
+  </table>

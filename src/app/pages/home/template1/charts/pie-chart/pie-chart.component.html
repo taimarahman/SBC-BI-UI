@@ -1,0 +1,9 @@
+<div  class="w-75 mx-auto">
+  <canvas baseChart
+          [data]="chartData"
+          [type]="chartType"
+          (chartHover)="chartHovered($event)"
+          (chartClick)="chartClicked($event)"
+          >
+  </canvas>
+</div>

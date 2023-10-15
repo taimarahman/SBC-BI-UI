@@ -1,0 +1,113 @@
+<app-page-layout>
+  <app-create-user
+    *ngIf="show.createUser"
+    (searchEvent)="onClickSearchUser($event)"
+    [editData]="editData"
+  ></app-create-user>
+  <app-assign-role-to-user
+    *ngIf="show.assignRole"
+    [userIdFromSearch]="userId"
+  ></app-assign-role-to-user>
+  <app-search-user
+    *ngIf="show.searchUser"
+    (createEvent)="onClickSearchUser($event)"
+    (searchUserEvent)="loadSearchUserList($event)"
+  ></app-search-user>
+  <div class="content-wrapper" *ngIf="show.userTable">
+    <div class="card">
+      <div class="card-header bg-theme text-white">User List</div>
+      <div class="card-body border">
+        <div class="d-flex justify-content-between p-2">
+          <select
+            class="custom-select"
+            style="width: auto"
+            name="pageSize"
+            [(ngModel)]="pageSize"
+            (ngModelChange)="onChangePageSize()"
+          >
+            <option *ngFor="let size of tableSizes" [ngValue]="size">
+              {{ size }} items per page
+            </option>
+          </select>
+          <div class="col-md-4">
+            <input
+              type="text"
+              [(ngModel)]="searchItemValue"
+              name="searchItemValue"
+              autocomplete="off"
+              placeholder="Search here.."
+              (input)="searchItem()"
+              (keydown.enter)="searchItem()"
+              (change)="searchItem()"
+              class="form-control form-control-sm"
+            />
+          </div>
+        </div>
+
+        <table class="table table-striped nowrap" style="width: 100%">
+          <thead>
+            <tr>
+              <th
+                *ngFor="let field of fields; let i = index"
+                class="text-start"
+              >
+                {{ field.label }}
+              </th>
+              <th class="text-center">Active Status</th>
+              <th class="text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of showSearchUserList; let i = index">
+              <td>{{ searchUserList.indexOf(data) + 1 }}</td>
+              <!--                    <td class="d-none">{{ data.username }}</td>-->
+              <td>{{ data.username }}</td>
+              <td>{{ data.userType }}</td>
+              <td>{{ data.employeeName }}</td>
+              <td>{{ data.departmentName }}</td>
+              <td class="text-start">{{ data.designationName }}</td>
+              <td>{{ data.email }}</td>
+              <td
+                *ngIf="data.isActive == 'Y'; else inactive"
+                class="text-center"
+              >
+                <i class="bi bi-check2 text-success"></i>
+              </td>
+
+              <ng-template #inactive>
+                <td class="text-center">
+                  <i class="bi bi-x-circle text-danger"></i>
+                </td>
+              </ng-template>
+              <td class="text-center">
+                <i
+                  class="bi bi-pencil-square clickable"
+                  (click)="editUser(data)"
+                ></i>
+                <i
+                  class="bi bi-person-check-fill clickable ps-2 pe-2"
+                  (click)="assignUserRole(data)"
+                ></i>
+                <i
+                  class="bi bi-key-fill clickable"
+                  (click)="resetPassword(data.username)"
+                ></i>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <ngb-pagination
+          [collectionSize]="searchUserList.length"
+          [(page)]="currentPage"
+          [maxSize]="3"
+          [rotate]="true"
+          [ellipses]="false"
+          [boundaryLinks]="true"
+          [pageSize]="pageSize"
+          (pageChange)="onChangePage($event)"
+        ></ngb-pagination>
+      </div>
+    </div>
+  </div>
+</app-page-layout>

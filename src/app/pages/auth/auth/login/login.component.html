@@ -1,0 +1,109 @@
+<div class="content-wrapper">
+  <div class="backdrop"></div>
+  <div class="d-flex flex-column flex-lg-row overflow-hidden login-container">
+    <!-- <div class="d-flex"></div> -->
+    <div class="col-12 col-lg-6 login-content-wrapper mb-4 mb-lg-0">
+      <a href="#" class="mb-2"
+        ><img
+          src="../../../../../assets/img/project/logo-w.svg"
+          alt=""
+          class="img-fluid"
+      /></a>
+      <h1 class="display-5 fw-bold text-capitalize">
+        insurance Development  <br class="d-block d-md-none d-lg-block" />
+        and regulary authority <br class="d-block d-md-none d-lg-block" />
+        (IDRA)
+      </h1>
+    </div>
+    <div
+      class="col-12 col-lg-6 login-form-wrapper align-items-start align-items-lg-end"
+    >
+      <div class="w-100 wrapper">
+        <div class="mb-3 mb-lg-4 mb-xl-5">
+          <p class="h1 fw-bold text-capitalize">BI Portal</p>
+        </div>
+        <form [formGroup]="formGroup" (ngSubmit)="onClickSubmit()">
+          <div class="form-data">
+            <div class="forms-inputs mb-3 mb-xl-4">
+              <p class="mb-2">Username</p>
+              <input
+                autocomplete="off"
+                type="text"
+                class="form-control"
+                formControlName="userId"
+              />
+              <div
+                *ngIf="
+                  formGroup.get('userId')?.invalid &&
+                  formGroup.get('userId')?.touched
+                "
+              >
+                <div
+                  *ngIf="formGroup.get('userId')?.errors?.['required']"
+                  class="text-danger text-end"
+                >
+                  Username is required.
+                </div>
+              </div>
+            </div>
+            <div class="forms-inputs mb-3 mb-xl-4">
+              <div>
+                <p class="mb-2">Password</p>
+                <div class="position-relative">
+                  <input
+                    autocomplete="off"
+                    formControlName="password"
+                    [type]="password"
+                    class="form-control position-relative"
+                    id="password"
+                  />
+                  <a (click)="onClick()" class="password-show text-black">
+                    <i *ngIf="show" class="bi bi-eye clickable"></i>
+                    <i *ngIf="!show" class="bi bi-eye-slash clickable"></i>
+                  </a>
+                </div>
+              </div>
+              <div
+                *ngIf="
+                  formGroup.get('password')?.invalid &&
+                  formGroup.get('password')?.touched
+                "
+                class="text-danger text-end"
+              >
+                <div *ngIf="formGroup.get('password')?.errors?.['required']">
+                  Password is required.
+                </div>
+              </div>
+            </div>
+            <p class="mb-2">
+              <a href="#" class="text-muted cursor-pointer text-decoration-none"
+                >Forgot Password?</a
+              >
+            </p>
+            <button
+              type="submit"
+              class="btn bg-theme w-100 login-btn"
+              [disabled]="formGroup.invalid || loginCheckLoader"
+            >
+              Login
+            </button>
+          </div>
+        </form>
+      </div>
+<!--      <div class="col-md-12 mt-2">-->
+<!--        <div class="alert alert-danger" *ngIf="login && loginFailure">-->
+<!--          Username or Password is Incorrect. Try Again...-->
+<!--        </div>-->
+<!--      </div>-->
+      <p class="text-light mb-0">
+        Design & Developed by
+        <a href="https://site.cnsbd.com/"
+          ><img
+            src="../../../../../assets/img/project/cns-logo.svg"
+            alt=""
+            class="img-fluid"
+        /></a>
+      </p>
+    </div>
+  </div>
+</div>

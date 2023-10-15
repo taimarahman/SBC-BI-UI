@@ -1,0 +1,235 @@
+<!-- <app-page-layout>
+  <div class="content-container ">
+    <div class="content-body text-uppercase">
+      <div class="row m-5">
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body text-center">
+              <img *ngIf="profilePicture == null"
+                   src="assets/img/project/navbar/avatar2.svg"
+                   alt="Employee Photo"
+                   class="rounded-circle border-0"
+                   width="200"
+                   height="200"
+                   style="border: 2px solid #000;"
+              />
+              <img *ngIf="profilePicture != null"
+                [src] = employee.employeeImage
+                alt="Employee Photo"
+                class="rounded-circle"
+                width="200"
+                height="200"
+                style="border: 2px solid #000;"
+              />
+            </div>
+            <div class="card-body">
+              <div class="form-group row">
+                <label for="empCode" class="col-md-4 col-form-label">Employee Code</label>
+                <div class="col-md-8">
+                  <input
+                    type="text"
+                    id="empCode"
+                    class="form-control"
+                    name="empCode"
+                    [(ngModel)]="employee.empCode"
+                    disabled
+                  />
+                </div>
+              </div>
+              <div style="height: 1em;"></div>
+              <div class="form-group row">
+                <label for="employeeName" class="col-md-4 col-form-label">Name</label>
+                <div class="col-md-8">
+                  <input
+                    type="text"
+                    id="employeeName"
+                    class="form-control"
+                    name="employeeName"
+                    [(ngModel)]="employee.employeeName"
+                    disabled
+                  />
+                </div>
+              </div>
+              <div style="height: 1em;"></div>
+              <div class="form-group row">
+                <label for="userType" class="col-md-4 col-form-label">User Type</label>
+                <div class="col-md-8">
+                  <input
+                    type="text"
+                    id="userType"
+                    class="form-control"
+                    name="userType"
+                    [(ngModel)]="employee.userType"
+                    disabled
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="text-center">POSITION</h4>
+              <hr/>
+              <div class="row">
+                <div class="col-md-6">
+                  <div style="height: 1em;"></div>
+                  <div class="form-group row">
+                    <label for="division" class="col-md-4 col-form-label">Division</label>
+                    <div class="col-md-8">
+                      <input
+                        type="text"
+                        id="division"
+                        class="form-control"
+                        name="division"
+                        [(ngModel)]="employee.division"
+                        disabled
+                      />
+                    </div>
+                  </div>
+                  <div style="height: 1em;"></div>
+                  <div class="form-group row">
+                    <label for="currDept" class="col-md-4 col-form-label">Current Department</label>
+                    <div class="col-md-8">
+                      <input
+                        type="text"
+                        id="currDept"
+                        class="form-control"
+                        name="currDept"
+                        [(ngModel)]="employee.currDept"
+                        disabled
+                      />
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="col-md-6">
+                  <div style="height: 1em;"></div>
+                  <div class="form-group row">
+                    <label for="designation" class="col-md-4 col-form-label">Designation</label>
+                    <div class="col-md-8">
+                      <input
+                        type="text"
+                        id="designation"
+                        class="form-control"
+                        name="designation"
+                        [(ngModel)]="employee.designation"
+                        disabled
+                      />
+                    </div>
+                  </div>
+                  <div style="height: 1em;"></div>
+                  <div class="form-group row">
+                    <label for="email" class="col-md-4 col-form-label">Email</label>
+                    <div class="col-md-8">
+                      <input
+                        type="text"
+                        id="email"
+                        class="form-control"
+                        name="email"
+                        [(ngModel)]="employee.email"
+                        disabled
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-page-layout> -->
+<app-page-layout>
+  <div class="p-4 pt-3 w-100 h-100">
+    <!-- <h3 class="mb-4">Profile</h3> -->
+    <div class="bg-light rounded-1 text-center">
+      <p class="h4 pb-4 text-uppercase border-bottom border-light-subtle">
+        Employee Details
+      </p>
+      <div class="d-flex flex-column flex-lg-row">
+        <div class="col-lg-4 py-4 ps-lg-3 ps-xxl-5 rounded-start-2">
+          <div class="text-center">
+            <img
+              *ngIf="profilePicture == null"
+              src="assets/img/project/navbar/avatar2.svg"
+              alt="Employee Photo"
+              class="rounded-circle profile-img shadow-sm"
+              width="200"
+              height="200"
+            />
+            <img
+              *ngIf="profilePicture != null"
+              [src]="employee.employeeImage"
+              alt="Employee Photo"
+              class="rounded-circle profile-img shadow"
+              width="200"
+              height="200"
+            />
+            <div class="profile-info mt-4">
+              <p class="h5 fw-bold">{{ employee.employeeName }}</p>
+              <p class="h6">{{ employee.designation }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-8 py-4 px-3 px-xxl-4 rounded-end-2">
+          <div class="w-100 profile-details text-center px-3 px-xxl-5">
+            <div class="row mb-3">
+              <label for="empcode" class="col-4">Employee Code:</label>
+              <input
+                type="text"
+                class="col-8"
+                readonly
+                id="empcode"
+                [value]="employee.empCode"
+              />
+            </div>
+            <div class="row mb-3">
+              <label for="division" class="col-4">Division:</label>
+              <input
+                type="text"
+                class="col-8"
+                readonly
+                id="division"
+                [value]="employee.division"
+              />
+            </div>
+            <div class="row mb-3">
+              <label for="currDept" class="col-4">Current Department:</label>
+              <input
+                type="text"
+                class="col-8"
+                readonly
+                id="currDept"
+                [value]="employee.currDept"
+              />
+            </div>
+            <div class="row mb-3">
+              <label for="userType" class="col-4">User Type:</label>
+              <input
+                type="text"
+                class="col-8"
+                readonly
+                id="userType"
+                [value]="employee.userType"
+              />
+            </div>
+            <div class="row mb-3">
+              <label for="division" class="col-4">Email address:</label>
+              <input
+                type="text"
+                class="col-8"
+                readonly
+                id="division"
+                [value]="employee.email"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-page-layout>

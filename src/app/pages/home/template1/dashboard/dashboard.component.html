@@ -1,0 +1,277 @@
+<app-page-layout>
+
+  <div class="content-wrapper">
+
+    <div class="bg-light shadow rounded py-5 mb-5">
+      <div class="px-5 pb-4">
+        <p class="h4 text-capitalize sec-title">Forcast Loss & Claim Reserve Data &nbsp;<span class="border-bottom"></span> &nbsp;<b>{{currentYear}} - {{currentYear + 1}}</b></p>
+      </div>
+      <div *ngIf="foreCastClaimValue.length > 0" class="row row-cols-1 row-cols-lg-2 g-2 g-lg-4">
+        <div class="col">
+          <div class="ml-claim-total bg-light rounded-3 ps-5">
+            <div class="p-3 rounded border shadow-sm cursor-pointer" (click)="resetChartView(); claimBarChart.CA = true">
+              <p class="h6">Total Claim Amount</p>
+              <p class="h3 fw-bold ">{{ foreCastClaimValue[0]?.Total_Claim_Amount | currency : "BDT" : "৳ " : "0.0" }}&nbsp;</p>
+            </div>
+            <div class="p-3 rounded border shadow-sm cursor-pointer" (click)="resetChartView(); claimBarChart.CR = true">
+              <p class="h6">Claim Reserve</p>
+              <p class="h3 fw-bold ">{{ foreCastClaimValue[0]?.Claim_Reserve | currency : "BDT" : "৳ " : "0.0" }}&nbsp;</p>
+            </div>
+            <div class="p-3 rounded border shadow-sm cursor-pointer" (click)="resetChartView(); claimBarChart.FL = true">
+              <p class="h6">Forecasted Losses</p>
+              <p class="h3 fw-bold ">{{ foreCastClaimValue[0]?.Forecasted_Losses | currency : "BDT" : "৳ " : "0.0" }}&nbsp;</p>
+            </div>
+            <div class="p-3 rounded border shadow-sm cursor-pointer" (click)="resetChartView(); claimBarChart.AP = true">
+              <p class="h6">Average Premium</p>
+              <p class="h3 fw-bold "> {{ foreCastClaimValue[0]?.Average_Premium  | number:'1.0-0' }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="px-5">
+            <!-- TOTAL CLAIM AMOUNT -->
+            <apx-chart
+            *ngIf="claimBarChart.CA"
+            [series]="FCClaimAmountBarChart.series"
+            [chart]="FCClaimAmountBarChart.chart"
+            [colors]="FCClaimAmountBarChart.colors"
+            [labels]="FCClaimAmountBarChart.labels"
+            [title]="FCClaimAmountBarChart.title"
+            [responsive]="FCClaimAmountBarChart.responsive"
+          ></apx-chart>
+          <!-- CLAIM RESERVE  -->
+            <apx-chart
+            *ngIf="claimBarChart.CR"
+            [series]="FCReserveBarChart.series"
+            [chart]="FCReserveBarChart.chart"
+            [colors]="FCReserveBarChart.colors"
+            [labels]="FCReserveBarChart.labels"
+            [title]="FCReserveBarChart.title"
+            [responsive]="FCReserveBarChart.responsive"
+          ></apx-chart>
+          <!-- FORCASTED LOSSES -->
+            <apx-chart
+            *ngIf="claimBarChart.FL"
+            [series]="FCLossBarChart.series"
+            [chart]="FCLossBarChart.chart"
+            [colors]="FCLossBarChart.colors"
+            [labels]="FCLossBarChart.labels"
+            [title]="FCLossBarChart.title"
+            [responsive]="FCLossBarChart.responsive"
+          ></apx-chart>
+          <!-- AVERAGE PREMIUM -->
+            <apx-chart
+            *ngIf="claimBarChart.AP"
+            [series]="FCPremiumBarChart.series"
+            [chart]="FCPremiumBarChart.chart"
+            [colors]="FCPremiumBarChart.colors"
+            [labels]="FCPremiumBarChart.labels"
+            [title]="FCPremiumBarChart.title"
+            [responsive]="FCPremiumBarChart.responsive"
+          ></apx-chart>
+          </div>
+        </div>
+       
+      </div>
+    </div>
+    
+
+    <!--  -->
+    <div *ngIf="foreCastClaimValue.length > 0" class="row g-2 g-lg-4 mb-5">
+      <!-- <div class="col">
+        <div class="ml-claim bg-light rounded-3 shadow px-5 py-4">
+          <div class="my-3 border-bottom">
+            <p class="h6">Total Claim Amount  <b>{{currentYear}} - {{currentYear + 1}}</b></p>
+            <p class="h3 fw-bold ">{{ foreCastClaimValue[0]?.totalClaimAmount | currency : "BDT" : "৳ " : "0.0" }}&nbsp;</p>
+          </div>
+          <div class="my-3 border-bottom">
+            <p class="h6">Claim Reserve  <b>{{currentYear}} - {{currentYear + 1}}</b></p>
+            <p class="h3 fw-bold ">{{ foreCastClaimValue[0]?.claimReserve | currency : "BDT" : "৳ " : "0.0" }}&nbsp;</p>
+          </div>
+          <div class="my-3 border-bottom">
+            <p class="h6">Forecasted Losses  <b>{{currentYear}} - {{currentYear + 1}}</b></p>
+            <p class="h3 fw-bold ">{{ foreCastClaimValue[0]?.foreCastedLosses | currency : "BDT" : "৳ " : "0.0" }}&nbsp;</p>
+          </div>
+          <div class="mt-3">
+            <p class="h6">Average Premium  <b>{{currentYear}} - {{currentYear + 1}}</b></p>
+            <p class="h3 fw-bold "> {{ foreCastClaimValue[0]?.averagePremium | number: '1.0-0'}}&nbsp;</p>
+          </div>
+        </div>
+      </div> -->
+      <!-- <div class="col">csdc</div> -->
+      <div class="col">
+        <div class="h-100 row row-cols-1 row-cols-lg-2">
+          <div class="row row-cols-1 row-cols-lg-2">
+            <div class="col">
+              <div class="py-4 px-4 bg-light shadow rounded-3 single-card cursor-pointer" (click)="scroll(accidentR)">
+                <p class="h6 mb-4">Total No. of Accidents</p>
+                <p class="h3 fw-bold mb-3">{{ this.totalAccident | number : "1.0-0" }}</p>
+                <small> Region Wise <b>{{currentYear}} - {{currentYear + 1}}</b></small>
+              </div>
+            </div>
+            <div class="col">
+              <div class="py-4 px-4 bg-light shadow rounded-3 single-card cursor-pointer" (click)="scroll(premium)">
+                <p class="h6 mb-4 text-end">Total Premium Income</p>
+                <p class="h3 fw-bold mb-3 text-end">{{ this.agencyWiseTotalPremiumIncome | currency : "BDT" : "৳ " : "0.0" }}&nbsp;</p>
+                <small> Agency Wise <b>{{currentYear}} - {{currentYear + 1}}</b></small>
+              </div>
+            </div>
+            
+          </div>
+          <div class="py-4 px-5 bg-light shadow rounded-3 summary-card-2">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <p class="h6 mb-3">Total Compansation</p>
+                <p class="h3 fw-bold mb-3">{{ this.totalCompensationAmount | currency : "BDT" : "৳ " : "0.0" }}&nbsp;</p>
+              </div>
+              <div>
+                <p class="h6 mb-3 text-end">Total No. of Claims</p>
+                <p class="h3 fw-bold mb-3 text-end">{{this.totalClaim}}</p>
+              </div>
+            </div>
+            <small class="h6 pt-2 mb-0 border-top">Geography Wise <b>{{currentYear}} - {{currentYear + 1}}</b></small>
+          </div>
+          
+        </div>
+        
+      </div>
+    </div>
+
+    <!-- AREA-WISE CLAIM -->
+    <div class="row align-items-center mx-0 my-5 bg-light p-5 rounded-3 shadow">
+      <p class="h4 pb-3 fw-semibold text-center border-bottom mb-4">
+        Area-wise Claim Summary
+      </p>
+      <div class="col-lg-5 px-0 claim-chart pe-4">
+        <div>
+          <p class="h5 py-3 text-center">
+            {{ claimPieChart.title.text }}
+          </p>
+          <div>
+            <apx-chart
+              *ngIf="showPieChart"
+              [series]="claimPieChart.series"
+              [chart]="claimPieChart.chart"
+              [colors]="claimPieChart.colors"
+              [labels]="claimPieChart.labels"
+              [responsive]="claimPieChart.responsive"
+              [legend]="claimPieChart.legend"
+              [plotOptions]="claimPieChart.plotOptions"
+            ></apx-chart>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="col-1"></div> -->
+      <div class="col-lg-7 px-0">
+        <div class="ps-4">
+          <p class="h5 pb-3 text-center">Area-wise Claim Status</p>
+          <div class="table-wrapper px-3 rounded-3">
+            <table class="table table-hover nowrap w-100 p-5">
+              <thead>
+                <tr>
+                  <th
+                    *ngFor="let field of claimDataFields; let i = index"
+                    class="text-start"
+                  >
+                    {{ field.label }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of claimAnalysisData; let idx = index">
+                  <td>{{ idx + 1 }}</td>
+                  <td *ngFor="let f of claimDataFields.slice(1); let i = index">
+                    {{ data[f.key] }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-lg-2 g-2 g-lg-4 my-5">
+      <div class="col">
+        <div class="bg-light rounded-3 px-3 px-lg-4 py-5 shadow" #premium>
+          <p class="h5 py-3 fw-semibold text-center">Agent Performance Summary</p>
+          <table class="table table-light table-hover nowrap w-100">
+            <thead>
+              <tr>
+                <th
+                  *ngFor="let field of agencyDataFields; let i = index"
+                  class="text-start"
+                >
+                  {{ field.label }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of agencyWisePerformance; let idx = index">
+                <td>{{ idx + 1 }}</td>
+                <td *ngFor="let f of agencyDataFields.slice(1); let i = index">
+                  {{ data[f.key] }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col">
+        <div class="bg-light rounded-3  px-3 py-5 shadow">
+          <p class="h5 py-3 fw-semibold text-center">Territory based Claim Summary</p>
+          <div>
+            <apx-chart *ngIf="showBarChart"
+              [series]="highestClaimBarChart.series"
+              [chart]="highestClaimBarChart.chart"
+              [xaxis]="highestClaimBarChart.xaxis"
+              [yaxis]="highestClaimBarChart.yaxis"
+              [fill]="highestClaimBarChart.fill"
+              [legend]="highestClaimBarChart.legend"
+              [plotOptions]="highestClaimBarChart.plotOptions"
+            ></apx-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACCIDENT ANALYSIS -->
+    <div class="row row-cols-1 g-2 g-lg-4 my-5 ">
+      <div class="col">
+        <div class="bg-light  px-3 rounded-3 py-5 shadow" #accidentR>
+          <p class="h5 py-3 fw-semibold text-center">Region based Accident Summary</p>
+          <div>
+            <apx-chart *ngIf="showBarChart"
+              [series]="accidentByRegionBarChart.series"
+              [chart]="accidentByRegionBarChart.chart"
+              [xaxis]="accidentByRegionBarChart.xaxis"
+              [yaxis]="accidentByRegionBarChart.yaxis"
+              [colors]="accidentByRegionBarChart.colors"
+              [legend]="accidentByRegionBarChart.legend"
+              [plotOptions]="accidentByRegionBarChart.plotOptions"
+              [dataLabels]="accidentByRegionBarChart.dataLabels"
+            ></apx-chart>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="bg-light  px-3 rounded-3 py-5 shadow">
+          <p class="h5 py-3 fw-semibold text-center">Vehicle type based Accident Summary</p>
+          <div>
+            <apx-chart *ngIf="showBarChart"
+              [series]="accidentByVehicleBarChart.series"
+              [chart]="accidentByVehicleBarChart.chart"
+              [xaxis]="accidentByVehicleBarChart.xaxis"
+              [yaxis]="accidentByVehicleBarChart.yaxis"
+              [colors]="accidentByVehicleBarChart.colors"
+              [legend]="accidentByVehicleBarChart.legend"
+              [plotOptions]="accidentByVehicleBarChart.plotOptions"
+              [dataLabels]="accidentByVehicleBarChart.dataLabels"
+            ></apx-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-page-layout>

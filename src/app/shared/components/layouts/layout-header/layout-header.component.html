@@ -1,0 +1,166 @@
+<!-- <div class="header2">
+
+  <div class="logo-title display-float bg-theme text-white">
+    <h3>Business Intelligence (BI) Portal</h3>
+    <div class="flex-grow-1"></div>
+  <div>
+    <button (click)="onClickLogout()" class="btn btn-outline-theme align-right border text-white me-3 ">LOGOUT</button>
+  </div>
+  </div>
+
+</div>
+
+
+ -->
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg bgColor py-0 h-100">
+  <div class="w-100 px-4 px-lg-5">
+    <div class="d-flex justify-content-between align-items-center w-100">
+      <!-- Left side content -->
+      <a class="navbar-brand fs-4 text-white text-uppercase"
+        >Business Intelligence (BI) Portal</a
+      >
+
+      <!-- Right side content -->
+      <div>
+        <button
+          class="navbar-toggler"
+          type="button"
+          (click)="isCollapsed = !isCollapsed"
+          aria-controls="dropdownManual"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div
+          id="dropdownManual"
+          [ngClass]="{ collapse: isCollapsed, 'navbar-collapse': true }"
+        >
+          <ul class="navbar-nav align-items-center">
+            <!-- <li class=" me-3 "><img src="../../../../../assets/img/project/navbar/brightness.svg" alt="brightness"></li> -->
+            <li
+              class="me-3 clickable"
+              id="myvideo"
+              (click)="toggleFullScreen()"
+            >
+              <img [src]="fullScreenIcon" alt="Minimize" />
+            </li>
+            <li class="me-3">
+              <div ngbDropdown autoClose="true">
+                <p class="text-white mt-3">
+                  <img
+                    src="../../../../../assets/img/project/navbar/Notification.svg"
+                    alt="Notification"
+                    ngbDropdownToggle
+                    id="dropdownConfig"
+                  />
+                  <span
+                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                  >
+                    0
+                  </span>
+                </p>
+
+                <div
+                  ngbDropdownMenu
+                  aria-labelledby="dropdownConfig"
+                  class="dropdownColor"
+                >
+                  <p ngbDropdownItem>No notification found!</p>
+                </div>
+              </div>
+            </li>
+            <li class="me-3 text-white">
+              <p class="mb-0">{{ username }}</p>
+            </li>
+
+            <!-- avatar -->
+            <li class="me-2 text-white clickable">
+              <div
+                ngbDropdown
+                placement="bottom-start"
+                class="d-inline-block"
+                autoClose="true"
+              >
+                <img
+                  *ngIf="profilePicture === null"
+                  src="../../../../../assets/img/project/navbar/avatar2.svg"
+                  alt="Avatar"
+                  class="avatar custom-border"
+                  ngbDropdownToggle
+                  id="dropdownConfig"
+                />
+                <img
+                  *ngIf="profilePicture != null"
+                  [src]="profilePicture"
+                  alt="Avatar"
+                  class="avatar"
+                  ngbDropdownToggle
+                  id="dropdownConfig"
+                />
+
+                <div
+                  ngbDropdownMenu
+                  aria-labelledby="dropdownConfig"
+                  class="dropdownColor px-0"
+                >
+                  <a
+                    class="d-flex px-3 py-2 cursor-pointer"
+                    ngbDropdownItem
+                    routerLink="/my-account/profile"
+                  >
+                    <img
+                      src="../../../../../assets/img/project/navbar/profile.svg"
+                      alt=""
+                    />
+                    Profile
+                  </a>
+                  <hr class="ngbDropdownDivider m-0" />
+                  <a
+                    class="d-flex px-3 py-2 cursor-pointer"
+                    ngbDropdownItem
+                    routerLink="/activity-log"
+                  >
+                    <img
+                      src="../../../../../assets/img/project/navbar/activity-log.svg"
+                      alt=""
+                    />
+                    Activity Log
+                  </a>
+                  <hr class="ngbDropdownDivider m-0" />
+                  <a
+                    class="d-flex px-3 py-2 cursor-pointer"
+                    ngbDropdownItem
+                    routerLink="/change-password"
+                  >
+                    <img
+                      src="../../../../../assets/img/project/navbar/reset-password.svg"
+                      alt=""
+                    />
+                    Change Password
+                  </a>
+                  <hr class="ngbDropdownDivider m-0" />
+                  <a
+                    class="d-flex px-3 py-2 cursor-pointer"
+                    ngbDropdownItem
+                    (click)="onClickLogout()"
+                  >
+                    <img
+                      src="../../../../../assets/img/project/navbar/logout.svg"
+                      alt=""
+                    />
+                    Log Out
+                  </a>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Navbar -->

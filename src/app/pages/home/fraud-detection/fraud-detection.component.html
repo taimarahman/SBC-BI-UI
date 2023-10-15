@@ -1,0 +1,135 @@
+
+<div class="content-wrapper mt-3">
+    
+    <div class="row row-cols-2 mx-0 g-2 g-xl-4">
+        <div class="col">
+            <div class="bg-light shadow rounded p-4 p-xl-5">
+                <div class="mb-3">
+                    <p class="h4">Fraud Basis Liability Assessment Summary</p>
+                </div>
+                <div class="col-10 mx-auto">
+                    <apx-chart *ngIf="showRatioChart" class="cursor-pointer"
+                        [series]="ratioPieChart.series"
+                        [chart]="ratioPieChart.chart"
+                        [colors]="ratioPieChart.colors"
+                        [labels]="ratioPieChart.labels"
+                        [legend]="ratioPieChart.legend"
+                        [title]="ratioPieChart.title"
+                        [responsive]="ratioPieChart.responsive"
+                    ></apx-chart>
+                </div>
+            </div>
+            
+        </div>
+        <div class="col">
+            <div class="bg-light shadow rounded p-4 p-xl-5">
+                <div class="mb-3">
+                    <p class="h4">Claim Refusal Basis Premium Collection Summary</p>
+                </div>
+                <div class="col-10 mx-auto">
+                    <apx-chart *ngIf="showRatioChart" class="cursor-pointer"
+                        [series]="premiumPieChart.series"
+                        [chart]="premiumPieChart.chart"
+                        [colors]="premiumPieChart.colors"
+                        [labels]="premiumPieChart.labels"
+                        [legend]="premiumPieChart.legend"
+                        [title]="premiumPieChart.title"
+                        [responsive]="premiumPieChart.responsive"
+                    ></apx-chart>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="d-flex flex-wrap mx-0 p-4 ">
+        <div [ngClass]="{'col-6': showYesChart}" #yesChart>
+            <div class="bg-light shadow rounded p-4 p-xl-5 mb-3 me-3" *ngIf="showYesChart">
+                <div class="mb-3 position-relative">
+                    <p class="h5">Liability Assessment <br> <span class="text-danger">(Fraud)</span></p>
+                    <span class="close-btn" (click)="hideEl(yesChart, 'fraud')"><i class="bi bi-x-lg"></i></span>
+                </div>
+                <div>
+                    <apx-chart  *ngIf="showYesChart"
+                        [series]="fraudBarChart.series"
+                        [chart]="fraudBarChart.chart"
+                        [colors]="fraudBarChart.colors"
+                        [labels]="fraudBarChart.labels"
+                        [title]="fraudBarChart.title"
+                        [yaxis]="fraudBarChart.yaxis"
+                        [plotOptions]="fraudBarChart.plotOptions"
+                        [responsive]="fraudBarChart.responsive"
+                        [dataLabels]="fraudBarChart.dataLabels"
+                    ></apx-chart>
+                </div>
+            </div>
+        </div>
+        <div [ngClass]="{'col-6': showNoChart}" #noChart>
+            <div class="bg-light shadow rounded p-4 p-xl-5 mb-3" *ngIf="showNoChart">
+                <div class="mb-3 position-relative">
+                    <p class="h5">Liability Assessment <br><span class="text-success">(Not Fraud)</span></p>
+                    <span class="close-btn" (click)="hideEl(noChart, 'not fraud')"><i class="bi bi-x-lg"></i></span>
+                </div>
+                <div>
+                    <apx-chart  *ngIf="showNoChart"
+                        [series]="notFraudBarChart.series"
+                        [chart]="notFraudBarChart.chart"
+                        [colors]="notFraudBarChart.colors"
+                        [labels]="notFraudBarChart.labels"
+                        [title]="notFraudBarChart.title"
+                        [yaxis]="notFraudBarChart.yaxis"
+                        [plotOptions]="notFraudBarChart.plotOptions"
+                        [responsive]="notFraudBarChart.responsive"
+                        [dataLabels]="notFraudBarChart.dataLabels"
+                    ></apx-chart>
+                </div>
+            </div>
+            
+        </div>
+        <div [ngClass]="{'col-6': showRefuseYesChart}" #yesRefuse>
+            <div class="bg-light shadow rounded p-4 p-xl-5 mb-3 me-3" *ngIf="showRefuseYesChart">
+                <div class="mb-3 position-relative">
+                    <p class="h5">Premium Collection Data <br> <span class="text-danger">(Claim Refused)</span></p>
+                    <span class="close-btn" (click)="hideEl(yesRefuse, 'refuse')"><i class="bi bi-x-lg"></i></span>
+                </div>
+                <div>
+                    <apx-chart  *ngIf="showRefuseYesChart"
+                        [series]="refuseBarChart.series"
+                        [chart]="refuseBarChart.chart"
+                        [colors]="refuseBarChart.colors"
+                        [labels]="refuseBarChart.labels"
+                        [title]="refuseBarChart.title"
+                        [yaxis]="refuseBarChart.yaxis"
+                        [plotOptions]="refuseBarChart.plotOptions"
+                        [responsive]="refuseBarChart.responsive"
+                        [dataLabels]="refuseBarChart.dataLabels"
+                    ></apx-chart>
+                </div>
+            </div>
+        </div>
+        <div [ngClass]="{'col-6': showRefuseNoChart}" #noRefuse>
+            <div class="bg-light shadow rounded p-4 p-xl-5 mb-3" *ngIf="showRefuseNoChart">
+                <div class="mb-3 position-relative">
+                    <p class="h5">Premium Collection Data <br><span class="text-success">(Claim Not Refused)</span> </p>
+                    <span class="close-btn" (click)="hideEl(noRefuse, 'not refused')"><i class="bi bi-x-lg"></i></span>
+                </div>
+                <div>
+                    <apx-chart  *ngIf="showRefuseNoChart"
+                        [series]="notRefuseBarChart.series"
+                        [chart]="notRefuseBarChart.chart"
+                        [colors]="notRefuseBarChart.colors"
+                        [labels]="notRefuseBarChart.labels"
+                        [title]="notRefuseBarChart.title"
+                        [yaxis]="notRefuseBarChart.yaxis"
+                        [plotOptions]="notRefuseBarChart.plotOptions"
+                        [responsive]="notRefuseBarChart.responsive"
+                        [dataLabels]="notRefuseBarChart.dataLabels"
+                    ></apx-chart>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+ 
+</div>
+

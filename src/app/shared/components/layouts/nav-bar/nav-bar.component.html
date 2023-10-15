@@ -1,0 +1,37 @@
+<div class="page_nav" style="border-bottom: 2px solid hsla(0,0%,89%,.68)">
+    <div class="col-md-12">
+        <nav class="navbar navbar-expand-lg navbar-light " tabindex="0">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item" *ngFor="let menu of getParents();">
+                        <a [ngClass]="isParentActive(menu.id)?'active':''" class="nav-link  "
+                            routerLink="{{menu.link}}">
+                            {{menu.name}}
+                        </a>
+                    </li>
+                </ul>
+                <!-- <div v-if="isLoading" class="float-right mb-2" title="Loading...">
+                    <span class="spinner-border spinner-border-sm"></span>
+                </div> -->
+            </div>
+        </nav>
+    </div>
+</div>
+<span class="border_bottom"></span>
+<div>
+    <nav class="navbar navbar-expand-lg navbar-light childMenu" *ngIf="getChilds()">
+        <div class="collapse navbar-collapse" id="">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item" *ngFor="let menu of getChilds();">
+                    <a [ngClass]="isChildActive(menu.id)?'active-child active':''" class=" nav-link"
+                        routerLink="{{menu.link}}">
+                        {{menu.name}}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<!--<div >-->
+<app-progress-bar *ngIf="isLoading"></app-progress-bar>

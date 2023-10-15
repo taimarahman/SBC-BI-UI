@@ -1,0 +1,102 @@
+<div class="content-wrapper">
+  <div *ngIf="!hideSpinner" class="d-flex justify-content-center">
+    <div  class="spinner-border text-secondary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  
+  <div class="d-grid mb-5 gap-3">
+    <div class="">
+      <div class="bg-light rounded shadow px-4 px-xl-5 py-4">
+          <div class="mb-3 position-relative">
+            <p class="h5 text-capitalize">{{dataLabel['main_business_income']}}</p>
+            <p class="text-secondary">{{currentYear}} - {{currentYear + 1}}</p>
+            <i class="bi bi-question-circle text-secondary cursor-pointer" placement="left" [ngbTooltip]="keyDescriptionObject['main_business_income']"></i>
+          </div>
+          <p class="h4 fw-bold text-uppercase" [innerHTML]="toTextLg(sbcFinancialData?.main_business_income)"></p>
+      </div>
+    </div>
+    <div class="">
+      <div class="bg-light rounded shadow px-4 px-xl-5 py-4">
+          <div class="mb-3 position-relative">
+            <p class="h5 text-capitalize">{{dataLabel['profit_principal_operations']}}</p>
+            <p class="text-secondary">{{currentYear}} - {{currentYear + 1}}</p>
+            <i class="bi bi-question-circle text-secondary cursor-pointer" placement="left" [ngbTooltip]="keyDescriptionObject['profit_principal_operations']"></i>
+          </div>
+          <p class="h4 fw-bold text-uppercase" [innerHTML]="toTextLg(sbcFinancialData?.profit_principal_operations)"></p>
+      </div>
+    </div>
+    <div class="bg-light rounded shadow px-3 py-4 d-flex flex-column align-items-center justify-content-center">
+      <div class="text-center position-relative">
+          <p class="display-3 fw-bold text-uppercase mb-0">{{sbcFinancialData?.acc_rece_turnover | number:'1.0-0'}}</p>
+          <p class="h5 text-capitalize text-center">{{dataLabel['acc_rece_turnover']}}</p>
+          <p class="text-secondary mb-0">{{currentYear}} - {{currentYear + 1}}</p>   
+          <i class="bi bi-question-circle text-secondary cursor-pointer" placement="left" [ngbTooltip]="keyDescriptionObject['acc_rece_turnover']"></i>  
+        </div>
+    </div>
+  </div>
+
+  <div class="row mx-0 mb-5 g-2">
+    <div class="col-xl-6">
+      <div class="py-4 px-5 bg-light shadow rounded-3 summary-card-2">
+        <p class="h3 text-capitalize mb-4 d-flex align-items-end justify-content-between pb-2 border-bottom">Profit Margin <span class="h4 mb-0 text-secondary">{{currentYear}} - {{currentYear + 1}}</span></p>
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <p class="h5 fw-medium text-uppercase" [innerHTML]="toTextMd(sbcFinancialData?.profit_margin)"></p>
+             <p class="h6 text-secondary text-capitalize cursor-pointer" placement="bottom" [ngbTooltip]="keyDescriptionObject['profit_margin']">{{dataLabel['profit_margin']}}</p>
+          </div>
+          <div class="text-end">
+            <p class="h5 fw-medium text-uppercase" [innerHTML]="toTextMd(sbcFinancialData?.operating_profit_margin)"></p>
+            <p class="h6 text-secondary" placement="bottom" [ngbTooltip]="keyDescriptionObject['operating_profit_margin']">{{dataLabel['operating_profit_margin']}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="bg-light rounded shadow px-2 pt-4 d-flex flex-column align-items-center justify-content-center">
+        <div class="position-relative">
+          <p class="h5 text-capitalize text-center mb-0">{{dataLabel['cash_ratio']}} <br> <small class="h6 text-secondary">(in percentage)</small> </p>
+          <apx-chart *ngIf="showCRRadial" [series]="sbcCRRadialChart.series" [chart]="sbcCRRadialChart.chart" [plotOptions]="sbcCRRadialChart.plotOptions" [stroke]="sbcCRRadialChart.stroke" [fill]="sbcCRRadialChart.fill"
+            ></apx-chart>
+            <i class="bi bi-question-circle text-secondary cursor-pointer" placement="left" [ngbTooltip]="keyDescriptionObject['cash_ratio']"></i>
+        </div>
+        
+      </div>
+    </div>
+    <div class="col">
+      <div class="bg-light rounded shadow px-2 pt-4 d-flex flex-column align-items-center justify-content-center">
+        <div class="position-relative">
+          <p class="h5 text-capitalize text-center mb-0">{{dataLabel['core_solvency_ratio']}} <br> <small class="h6 text-secondary">(in percentage)</small> </p>
+          <apx-chart *ngIf="showCRRadial" [series]="sbcCSRRadialChart.series" [chart]="sbcCSRRadialChart.chart" [plotOptions]="sbcCSRRadialChart.plotOptions" [stroke]="sbcCSRRadialChart.stroke" [fill]="sbcCSRRadialChart.fill"></apx-chart>
+          <i class="bi bi-question-circle text-secondary cursor-pointer" placement="left" [ngbTooltip]="keyDescriptionObject['core_solvency_ratio']"></i>
+        </div>
+        
+      </div>
+    </div>
+   </div>
+    
+ 
+</div>
+
+
+
+<!-- <div class="col">
+  <div class="ml-claim bg-light rounded-3 shadow px-5 py-4">
+    <div class="my-3 border-bottom">
+      <p class="h6">Total Claim Amount  <b>{{currentYear}} - {{currentYear + 1}}</b></p>
+      <p class="h3 fw-bold ">{{ currentYear | currency : "BDT" : "৳ " : "0.0" }}&nbsp;</p>
+    </div>
+    <div class="my-3 border-bottom">
+      <p class="h6">Claim Reserve  <b>{{currentYear}} - {{currentYear + 1}}</b></p>
+      <p class="h3 fw-bold ">{{ currentYear | currency : "BDT" : "৳ " : "0.0" }}&nbsp;</p>
+    </div>
+    <div class="my-3 border-bottom">
+      <p class="h6">Forecasted Losses  <b>{{currentYear}} - {{currentYear + 1}}</b></p>
+      <p class="h3 fw-bold ">{{ currentYear | currency : "BDT" : "৳ " : "0.0" }}&nbsp;</p>
+    </div>
+    <div class="mt-3">
+      <p class="h6">Average Premium  <b>{{currentYear}} - {{currentYear + 1}}</b></p>
+      <p class="h3 fw-bold "> {{ currentYear | number: '1.0-0'}}&nbsp;</p>
+    </div>
+  </div>
+</div> -->

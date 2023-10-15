@@ -1,0 +1,73 @@
+<div class="content-wrapper">
+  <div class="card">
+    <div class="card-header bg-theme text-white">User List</div>
+    <div class="card-body border">
+      <div class="d-flex justify-content-between p-2">
+        <select
+          class="custom-select"
+          style="width: auto"
+          name="pageSize"
+          [(ngModel)]="pageSize"
+          (ngModelChange)="onChangePageSize()"
+        >
+          <option *ngFor="let size of tableSizes" [ngValue]="size">
+            {{ size }} items per page
+          </option>
+        </select>
+        <div class="col-md-4">
+          <input
+            type="text"
+            [(ngModel)]="searchItemValue"
+            name="searchItemValue"
+            autocomplete="off"
+            placeholder="Search here.."
+            (input)="searchItem()"
+            (keydown.enter)="searchItem()"
+            (change)="searchItem()"
+            class="form-control form-control-sm"
+          />
+        </div>
+      </div>
+
+      <table class="table table-striped nowrap" style="width: 100%">
+        <thead>
+          <tr>
+            <th *ngFor="let field of fields; let i = index" class="text-start">
+              {{ field.label }}
+            </th>
+            <th class="text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of showSearchUserList; let i = index">
+            <td>{{ userList.indexOf(data) + 1 }}</td>
+            <td>{{ data.employeeName }}</td>
+            <td>{{ data.departmentName }}</td>
+            <td>{{ data.designationName }}</td>
+            <td>{{ data.username }}</td>
+            <td class="text-center">
+              <button
+                type="button"
+                class="btn btn-primary"
+                (click)="unassignEvent.emit(data.userId)"
+              >
+                Unassign
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <ngb-pagination
+        [collectionSize]="searchUserList.length"
+        [(page)]="currentPage"
+        [maxSize]="3"
+        [rotate]="true"
+        [ellipses]="false"
+        [boundaryLinks]="true"
+        [pageSize]="pageSize"
+        (pageChange)="onChangePage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

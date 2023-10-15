@@ -1,0 +1,154 @@
+
+<table class="table table-striped nowrap w-100">
+  <thead>
+    <!-- <tr>
+      <th *ngFor="let field of fields; let i = index" class="text-start">
+        {{ field }}
+      </th>
+    </tr> -->
+    <tr *ngIf="selectedReport.reportId == 18">
+      <th>Incident City</th>
+      <th>Year</th>
+    </tr>
+    <tr *ngIf="selectedReport.reportId == 19">
+      <th>Vehicle Type</th>
+      <th>Year</th>
+    </tr>
+    <tr *ngIf="selectedReport.reportId == 66 || selectedReport.reportId == 67">
+      <th>Institute Name</th>
+      <th>Year</th>
+    </tr>
+    <tr *ngIf="![18,19,66,67].includes(selectedReport.reportId)" >
+      <th *ngFor="let field of fields; let i = index" class="text-start">
+        {{ field }}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngIf="![18,19,66,67].includes(selectedReport.reportId)">
+      <tr *ngFor="let data of inputDataList">
+        <td *ngFor="let f of fields; let i = index">
+          <input type="text" [name]="f" [(ngModel)]="data[f]" />
+        </td>
+      </tr>
+    </ng-container>
+
+    <tr *ngIf="selectedReport.reportId == 18">
+      <td>
+        <input type="text" name="incidentCity" [(ngModel)]="incidentCity" />
+      </td>
+      <td>
+        <input type="text" name="year" [(ngModel)]="year" />
+      </td>
+    </tr>
+    <tr *ngIf="selectedReport.reportId == 19">
+      <td>
+        <input type="text" name="vehicleType" [(ngModel)]="vehicleType" />
+      </td>
+      <td>
+        <input type="text" name="year" [(ngModel)]="year" />
+      </td>
+    </tr>
+    <tr *ngIf="selectedReport.reportId == 66 || selectedReport.reportId == 67">
+      <td>
+        <input type="text" name="instituteName" [(ngModel)]="instituteName" />
+      </td>
+      <td>
+        <input type="text" name="year" [(ngModel)]="year" />
+      </td>
+    </tr>
+
+    <!-- <button
+      *ngIf="selectedReport.reportId"
+      type="button"
+      class="btn btn bg-theme shadow me-3 mt-4"
+      (click)="addDataCount()"
+    >
+      Add
+    </button> -->
+    <button
+      *ngIf="selectedReport.reportId"
+      type="button"
+      class="btn btn bg-theme shadow me-3 mt-4"
+      (click)="submitData()"
+    >
+      Submit
+    </button>
+  </tbody>
+</table>
+<table *ngIf="showPredictRes && ( selectedReport.reportId == 18 || selectedReport.reportId == 19 || selectedReport.reportId == 66 || selectedReport.reportId == 67)"
+       class="table table-striped nowrap w-100">
+  <thead>
+    <tr *ngIf="selectedReport.reportId == 18 || selectedReport.reportId == 19">
+      <th *ngIf="selectedReport.reportId == 18">Incident City</th>
+      <th *ngIf="selectedReport.reportId == 19">Vehicle Type</th>
+      <th>Year</th>
+      <th>Predicted Amount</th>
+      <th>Predicted Count</th>
+    </tr>
+    <tr *ngIf="selectedReport.reportId == 66 || selectedReport.reportId == 67">
+      <th>Institute Name</th>
+      <th *ngIf="selectedReport.reportId == 66">Predicted Income</th>
+      <th *ngIf="selectedReport.reportId == 67">Predicted Expense</th>
+      <th>Year</th>
+    </tr>
+  </thead>
+  <tbody *ngIf="selectedReport.reportId == 18 || selectedReport.reportId == 19">
+    <tr *ngFor="let data of predictResData">
+      <td *ngIf="selectedReport.reportId == 18">{{ data.city }}</td>
+      <td *ngIf="selectedReport.reportId == 19">{{ data.vehicle }}</td>
+      <td>{{ data.year }}</td>
+      <td>{{ data.predicted_amount | number:'1.1-4' }}</td>
+      <td>{{ data.predicted_count | number:'1.1-4' }}</td>
+    </tr>
+  </tbody>
+  <tbody *ngIf="selectedReport.reportId == 66 || selectedReport.reportId == 67">
+    <tr *ngFor="let data of predictResData">
+      <td>{{ data.instituteName }}</td>
+      <td *ngIf="selectedReport.reportId == 66">{{ data.totalIncome }}</td>
+      <td *ngIf="selectedReport.reportId == 67">{{ data.totalExpense }}</td>
+      <td>{{ data.year }}</td>
+    </tr>
+  </tbody>
+</table>
+<table *ngIf="showPredictRes && selectedReport.reportId != 18 && selectedReport.reportId != 19 && selectedReport.reportId != 66 && selectedReport.reportId != 67"
+       class="table table-striped nowrap w-100">
+  <thead>
+  <tr>
+    <th *ngFor="let field of fields; let i = index" class="text-start">
+      {{ field }}
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let data of predictResData">
+    <td *ngFor="let f of fields; let i = index">
+        {{data[f]}}
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<!--<div>-->
+<!--  <div class="row">-->
+<!--    <div class="col-md-6">-->
+<!--      <h5>Choose a CSV File</h5>-->
+<!--      <div class="input-group">-->
+<!--        <input-->
+<!--          type="file"-->
+<!--          class="form-control"-->
+<!--          (change)="onFileSelected($event)"-->
+<!--          accept=".csv"-->
+<!--        />-->
+<!--      </div>-->
+<!--      <small class="form-text text-muted"-->
+<!--      >Please select a valid CSV file.</small-->
+<!--      >-->
+<!--    </div>-->
+<!--  </div>-->
+<!--  <div class="col-md-4 mt-3">-->
+<!--    <button type="button" class="btn btn-secondary" (click)="pushCsvFile()">-->
+<!--      Submit-->
+<!--    </button>-->
+<!--  </div>-->
+<!--</div>-->
