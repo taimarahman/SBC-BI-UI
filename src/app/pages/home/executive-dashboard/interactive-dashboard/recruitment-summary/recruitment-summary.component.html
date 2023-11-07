@@ -1,0 +1,20 @@
+<div class="content-wrapper">
+    <div *ngIf="showChart" class="row align-items-center mx-0 my-5 bg-light p-5 rounded-3 shadow" >
+        <p class="h3 fw-semibold text-center mb-4">
+            Recruitment Summary
+        </p>
+        <div>
+            <apx-chart *ngIf="showChart"
+              [series]="recruitmentChart.series"
+              [chart]="recruitmentChart.chart"
+              [yaxis]="recruitmentChart.yaxis"
+              [xaxis]="recruitmentChart.xaxis"
+              [dataLabels]="recruitmentChart.dataLabels"
+              [stroke]="recruitmentChart.stroke"
+              [colors]="recruitmentChart.colors"
+              [labels]="recruitmentChart.labels"
+              [plotOptions]="recruitmentChart.plotOptions"
+            ></apx-chart>
+        </div>
+    </div>
+</div>

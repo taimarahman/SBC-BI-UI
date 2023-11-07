@@ -1,30 +1,7 @@
-import {Component, ViewChild} from '@angular/core';
-import {FormBuilder} from "@angular/forms";
+import {ChangeDetectorRef, Component, Input, SimpleChanges} from '@angular/core';
 import {AppService} from "@services/app.service";
-import {ChartData, ChartType} from 'chart.js';
-
-import {
-  ApexAxisChartSeries,
-  ApexChart,
-  ChartComponent,
-  ApexDataLabels,
-  ApexPlotOptions,
-  ApexResponsive,
-  ApexXAxis,
-  ApexLegend,
-  ApexFill
-} from "ng-apexcharts";
-
-export type ChartOptions = {
-  series: any | ApexAxisChartSeries;
-  chart: any | ApexChart;
-  dataLabels: any | ApexDataLabels;
-  plotOptions: any | ApexPlotOptions;
-  responsive: any | ApexResponsive[];
-  xaxis: any | ApexXAxis;
-  legend: any | ApexLegend;
-  fill: any | ApexFill;
-};
+import { ChartOptions, barColors, donutChart, lineChart } from './chartObjectsCD';
+import { StringHelper } from '@helpers/string.helper';
 
 
 @Component({
@@ -33,237 +10,263 @@ export type ChartOptions = {
   styleUrls: ['./claim-dashboard.component.scss']
 })
 export class ClaimDashboardComponent {
-  dataValue: any;
-  foreCastClaimValue: any;
-  fruadAnalysisValue: any;
-  constructor(
-    private formBuilder: FormBuilder,
-    private httpService: AppService
-  ) {}
+  @Input() fromDate: any;
+  @Input() toDate: any;
 
-  showBarChart: boolean = false;
-  showStackedChart: boolean = false;
-  barChartType: ChartType = 'bar';
+  showCA: boolean = false;
+  showChartObj: any = {};
+  dataObj: any = {};
+  chartObjects: any = {};
+  chartKeys: any[] = [];
+  chartData: any = {};
+  claimDataFields: any = [
+    { key: 'index', label: 'SL' },
+    { key: 'statisticsDate', label: 'Statistics Date' },
+    // { key: 'locationArea', label: 'Area' },
+    { key: 'paidAmount', label: 'Paid Amount' },
+    { key: 'claimNumber', label: 'No. of Claims' },
+    { key: 'billEntryVolume', label: 'Bill Entry' },
+  ];
 
-  ngOnInit() {
-    this.showBarChart = false
-    this.showStackedChart = false
-    this.getForeCastClaimReserveReport();
-    this.getProductClaimReport().then((r) => {
-      this.displayStackedChart(r)
-      this.displayBarChart(r)
-    });
-  }
-
-  public barChartData: ChartData = {
-    labels: [],
-    datasets: [{
-      barPercentage: 0.5,
-      barThickness: 25,
-      maxBarThickness: 100,
-      minBarLength: 2,
-      data: [],
-      // backgroundColor: ['#ff7675'],
-      backgroundColor: ['rgba(255, 99, 132, 0.4)',],
-      label: ""
-    },
-    {
-      barPercentage: 0.5,
-      barThickness: 25,
-      maxBarThickness: 100,
-      minBarLength: 2,
-      data: [],
-      backgroundColor: ['rgba(255, 205, 86, 0.4)'],
-      label: ""
-    },
-    {
-      barPercentage: 0.5,
-      barThickness: 25,
-      maxBarThickness: 100,
-      minBarLength: 2,
-      data: [],
-      backgroundColor: ['rgba(54, 162, 235, 0.4)'],
-      label: ""
-    },
-    {
-      barPercentage: 0.5,
-      barThickness: 25,
-      maxBarThickness: 100,
-      minBarLength: 2,
-      data: [],
-      backgroundColor: ['rgba(75, 192, 192, 0.4)'],
-      label: ""
-    }
-    ],
+  seriesObj = {
+    name: '',
+    data: []
   };
 
 
-  public stackedChartOptions: Partial<ChartOptions> = {
-    series: [
-      {
-        name: "",
-        data: [],
-      },
-      {
-        name: "",
-        data: []
-      },
-      {
-        name: "",
-        data: []
-      },
-      {
-        name: "",
-        data: []
-      }
-    ],
+
+  claimBarChart: Partial<ChartOptions> = {
+    series: [],
     chart: {
-      type: "bar",
-      height: 350,
-      stacked: true,
-      toolbar: {
-        show: true
-      },
-      zoom: {
-        enabled: true
-      }
-    },
-    responsive: [
-      {
-        breakpoint: 480,
-        options: {
-          legend: {
-            position: "bottom",
-            offsetX: -10,
-            offsetY: 0
-          }
+      width: '100%',
+      height: '300px',
+      type: 'bar',
+      redrawOnParentResize: true,
+      events: {
+        xAxisLabelClick: (chartContext: any, event: any, config: any) => {
+          this.showChartOnclick(config.config.labels[config.labelIndex]);
         }
-      }
-    ],
+      },
+    },
     plotOptions: {
       bar: {
-        horizontal: false,
-        columnWidth: 60
+        columnWidth: '80%',
+        orientation:'vertical',
       }
     },
-    xaxis: {
-      type: "category",
-      categories: []
-    },
-    legend: {
-      position: "right",
-      offsetY: 40
-    },
-    fill: {
-      colors: ['rgba(255, 99, 132, 0.4)','rgba(255, 205, 86, 0.4)','rgba(54, 162, 235, 0.4)','rgba(75, 192, 192, 0.4)'],
-      opacity: 0.5
-    }
+    labels: [],
+    yaxis: [
+      {
+        axisTicks: {
+          show: true,
+        },
+        axisBorder: {
+          show: true,
+          color: '#175e9c',
+        },
+        labels: {
+          style: {
+            colors: '#175e9c',
+          },
+        },
+        title: {
+          text: 'No. of Claims (in thousands)',
+          style: {
+            color: '#175e9c',
+          },
+        },
+        tooltip: {
+          enabled: true,
+        },
+      },
+      {
+        seriesName: 'Amount',
+        opposite: true,
+        axisTicks: {
+          show: true,
+        },
+        axisBorder: {
+          show: true,
+          color: '#ca3374',
+        },
+        labels: {
+          style: {
+            colors: '#ca3374',
+          },
+        },
+        title: {
+          text: 'Paid Amount (in crore)',
+          style: {
+            color: '#ca3374',
+          },
+        },
+        tooltip: {
+          enabled: true,
+        },
+      },
+    ],
+    xaxis: { labels: { style: {cssClass: 'cursor-pointer',} } },
+    colors: barColors,
   };
+  
+  constructor(private httpService: AppService, private cdr: ChangeDetectorRef) {}
 
-
-  // backgroundColor: [
-  //   'rgba(255, 99, 132, 0.2)',
-  //   'rgba(255, 159, 64, 0.2)',
-  //   'rgba(255, 205, 86, 0.2)',
-  //   'rgba(75, 192, 192, 0.2)',
-  //   'rgba(54, 162, 235, 0.2)',
-  //   'rgba(153, 102, 255, 0.2)',
-  //   'rgba(201, 203, 207, 0.2)'
-  // ]
-
-
-  async getProductClaimReport() {
-    try {
-      const response: any = await this.httpService.productWiseClaimReport();
-      if (response?.status === 200) {
-        this.dataValue = response.data
-      }
-      return response
-    } catch (error) { }
+  ngOnInit() {
+    this.getClaimData();
   }
 
-  displayStackedChart(response: any){
-    this.stackedChartOptions.xaxis.categories = []
-    this.stackedChartOptions.series[0].data = []
-    this.stackedChartOptions.series[1].data = []
-    this.stackedChartOptions.series[2].data = []
-    this.stackedChartOptions.series[3].data = []
-
-    let idx = 0, i = 0
-    let prevMonth = this.getMonth(response.data[idx].statisticsDate)
-    this.stackedChartOptions.xaxis.categories.push(prevMonth)
-
-    while (1) {
-      if (idx >= response.data.length) { break; }
-      let month = this.getMonth(response.data[idx].statisticsDate)
-
-      if(prevMonth != month){
-        this.stackedChartOptions.xaxis.categories.push(month)
-        i=0
-      }
-      this.stackedChartOptions.series[i].data.push(response.data[idx].numberOfClaims)
-      this.stackedChartOptions.series[i].name = response.data[idx].productName
-      i++
-      prevMonth = month
-      idx++
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['fromDate'] || changes['toDate']) {
+      this.getClaimData().then(r => {
+      });
     }
-    this.showStackedChart = true
   }
 
-  displayBarChart(response: any){
-    this.barChartData.labels = []
-    this.barChartData.datasets[0].data = []
-    this.barChartData.datasets[1].data = []
-    this.barChartData.datasets[2].data = []
-    this.barChartData.datasets[3].data = []
-
-    let idx = 0, i = 0
-    let prevMonth = this.getMonth(response.data[idx].statisticsDate)
-    this.barChartData.labels.push(prevMonth)
-
-    while (1) {
-      if (idx >= response.data.length) { break; }
-      let month = this.getMonth(response.data[idx].statisticsDate)
-
-      if(prevMonth != month){
-        this.barChartData.labels.push(month)
-        i=0
-      }
-      this.barChartData.datasets[i].data.push(response.data[idx].numberOfClaims)
-      this.barChartData.datasets[i].label = response.data[idx].productName
-      i++
-      prevMonth = month
-      idx++
-    }
-    this.showBarChart = true
-  }
-
-
-  getMonth(dateData: any) {
-    const date = new Date(dateData);
-    // const month = date.getMonth() + 1;
-    const options = { month: 'long' };
-    // @ts-ignore
-    return date.toLocaleDateString('en-US', options);
-  }
-
-  async getForeCastClaimReserveReport() {
+  async getClaimData() {
     try {
-      const response: any = await this.httpService.foreCastClaimReserveReport();
-      if (response?.status === 200) {
-        this.foreCastClaimValue = response.data;
+      this.showCA = false;
+
+      let resData: any;
+      if (this.fromDate && this.toDate) {
+        const response: any = await this.httpService.getClaimData(this.fromDate, this.toDate);
+        resData = response?.data;
+      } else {
+        const response: any = await this.httpService.getClaimData();
+        resData = response?.data;
       }
-    } catch (error) { }
+      if (resData) {
+        const claimData = resData.claimAnalyses;
+        this.chartData = this.groupByKey(claimData, 'locationArea');
+        this.chartKeys = Object.keys(this.chartData);
+        this.getBarChart(this.chartData, this.chartKeys);
+        this.generateLineChart(this.chartData, this.chartKeys);
+        this.cdr.detectChanges();
+      }
+    } catch (error) {}
   }
-  // async getFraudAnalysisReport() {
-  //   try {
-  //     const response: any = await this.httpService.fraudAnalysisReport();
-  //     if (response?.status === 200) {
-  //       this.fruadAnalysisValue = response.data;
-  //     }
-  //   } catch (error) { }
-  // }
+
+  // GENERATE BARCHART FOR ALL
+  getBarChart(allData: any, keys: any) {
+    this.claimBarChart.series = [];
+    this.claimBarChart.labels = [];
+
+    
+    let objClaim = JSON.parse(JSON.stringify(this.seriesObj));
+    objClaim.name = 'No. of Claims';
+    let objPA = JSON.parse(JSON.stringify(this.seriesObj));
+    objPA.name = 'Paid Amount';
+
+    for (let key of keys) {
+      const cData = allData[key];
+      this.claimBarChart.labels.push(key);
+      
+      let totalPA = 0;
+      let totalClaim = 0;
+      cData.map((item: any) => {
+        totalPA += parseInt(item.paidAmount);
+        totalClaim += parseInt(item.claimNumber);
+      });
+
+      objClaim.data.push(this.toK(totalClaim));
+      objPA.data.push(this.toCrore(totalPA));
+      this.showCA = true;
+
+      this.showChartObj[key] = false;
+    }
+
+    this.claimBarChart.series.push(objClaim);
+    this.claimBarChart.series.push(objPA);
+  }
+ 
+// GENERATE CHARTS 
+  generateLineChart(allData:any, keys:any) {
+    for (let key of keys) {
+      const cData = allData[key];
+      let chart = JSON.parse(JSON.stringify(lineChart));
+      chart.title.text = key;
+
+      let claimObj = JSON.parse(JSON.stringify(this.seriesObj));
+      claimObj.name = 'Claim Number';
+      let paidObj = JSON.parse(JSON.stringify(this.seriesObj));
+      paidObj.name = 'Paid Amount';
 
 
+      cData.map((item: any) => {
+        claimObj.data.push(this.toK(item.claimNumber));
+        paidObj.data.push(this.toCrore(item.paidAmount));
+        chart.labels.push(StringHelper.getFullMonthNameFromDate(item.statisticsDate));
+      })
+      
+      chart.series.push(claimObj);
+      chart.series.push(paidObj);
+      this.chartObjects[key] = chart;
+
+
+    }
+  }  
+
+
+// GROUP RESPONSE DATA BY COMPANY
+  getGroupedByData(objData:any) {
+    const grouped = objData.reduce((data:any, obj:any) => {
+      const key = StringHelper.getFullMonthNameFromDate(obj.statisticsDate);
+      if (!data[key]) {
+        data[key] = [];
+      }
+      data[key].push(obj);
+      return data;
+    }, {});
+  
+    return grouped;
+  }
+
+
+
+  // SHOW CHART ONCLICK
+  showChartOnclick(name: any) {
+    console.log(name)
+    this.showChartObj[name] = true;
+    const el = 'chart' + name;
+    setTimeout(() => {
+      // @ts-ignore
+      document.getElementById(el).scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+    this.cdr.detectChanges();
+  }
+
+  // HIDE CHART ON CLOSE
+  hideEl(key: any) {
+    const el = 'chart' + key;
+    document.getElementById(el)?.classList.add("fade");
+    setTimeout(() => {
+      this.showChartObj[key] = false;
+      document.getElementById(el)?.classList.remove("fade");
+      this.cdr.detectChanges();
+    }, 400);
+  }
+
+  groupByKey(res: any, key: any) {
+    let list: any[] = [];
+    for (const item of res) {
+      const itemKey:any = item[key];
+
+      if (!list[itemKey]) {
+        list[itemKey] = [];
+      }
+      list[itemKey].push(item);
+    }
+
+    return list;
+  }
+
+  
+
+  toCrore(number: any) {
+    return (number / 10000000).toFixed(2);
+  }
+
+  toK(number: any) {
+    return (number / 1000).toFixed(2);
+  }
 
 }

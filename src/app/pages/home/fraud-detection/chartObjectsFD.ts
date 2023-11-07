@@ -43,68 +43,58 @@ const backgroundColor: any[] = [
   '#9EA1D4',
   '#A8D1D1',
   '#57838d',
-  
-    
-  ]
+]
 export let barChart: Partial<ChartOptions> = {
-    series: [],
-    chart: {
-        width: '100%',
-        height: '300px',
-        type: 'bar',
-      redrawOnParentResize: true,
-      events: {
-        dataPointSelection: (event:any, chartContext:any, config:any) => { 
-            console.log(config.w.config.labels[config.dataPointIndex])}
-        }
-    },
-    plotOptions: {
-      bar: {
-            columnWidth: '80%',
-        }
-    },
-    labels: [],
-    dataLabels: {
-        style: {
-          fontWeight: 'semibold',
-          
-        },
-    },
+  series: [],
+  chart: {
+    width: '100%',
+    height: '300px',
+    type: 'bar',
+    redrawOnParentResize: true,
+  },
+  plotOptions: {
+    bar: {
+        columnWidth: '80%',
+      }
+  },
+  labels: [],
+  dataLabels: {
+      style: {
+        fontWeight: 'semibold',
+      },
+  },
+  title: {
+    text: '',
+    align: 'left',
+  },
+  xaxis: {
+    type:''
+  },
+  yaxis: {
     title: {
       text: '',
-      align: 'left',
-  },
-    
-    stroke: {
-      width: [1, 1]
     },
-    xaxis: {
-      categories: [],
+    tooltip: {
+      enabled: true,
     },
-    yaxis: {
-      title: {
-        text: '',
-      },
-      tooltip: {
-        enabled: true,
-      },
-  },
     
-    responsive: [
-      {
-        breakpoint: 480,
-        options: {
-          chart: {
-            width: 200,
-          },
-          
+},
+  
+  responsive: [
+    {
+      breakpoint: 480,
+      options: {
+        chart: {
+          width: 200,
         },
+        
       },
-    ],
-    colors: backgroundColor,
-    fill: {
-        opacity: 0.5,
     },
+  ],
+  colors: backgroundColor,
+  fill: {
+      opacity: 0.5,
+  },
 };
 
 
@@ -155,4 +145,4 @@ export const pieChart: Partial<ChartOptions> = {
       show: true,
     position: 'right',
   }
-  };
+};

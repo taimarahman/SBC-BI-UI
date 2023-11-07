@@ -20,7 +20,7 @@ export class ReportsComponent {
 
   fileFormat = [
     { value: '1', label: 'PDF' },
-    { value: '2', label: 'Excel' }
+    { value: '2', label: 'xls' }
   ];
   selectedFileFormat: any = null
   reportDetails: any;

@@ -49,6 +49,7 @@ export class StringHelper {
     }
   }
 
+  // GET CURRENT YEAR 
   public static getFinancialYearStart() {
     let currentYear: number;
     if (new Date().getMonth() > 5) {
@@ -56,5 +57,15 @@ export class StringHelper {
     } else  currentYear = new Date().getFullYear() - 1;
     
     return currentYear;
+  }
+
+// GET MONTH AND YEAR FROM PROVIDED DATE (i.e. Jan'23)
+  public static getFullMonthNameFromDate(dateString:any) {
+    const date = new Date(dateString);
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const fullMonthName = monthNames[date.getMonth()];
+    const year = date.getFullYear().toString().slice(-2); // Extract the last two digits of the year
+
+    return `${fullMonthName}'${year}`;
   }
 }

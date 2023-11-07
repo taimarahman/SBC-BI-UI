@@ -9,12 +9,12 @@ import { EnvName } from '@enums/environment.enum';
 import packageInfo from '../../package.json';
 
 const scheme = 'http://';
-const host   = '192.168.78.148';
-const port   = ':8090';
-// const path   = '/api/';
+const host   = '192.168.78.99';
+const port   = ':8088';
+const path   = '/JBC-BI';
 
-// const baseUrl = scheme + host + port + path;
-const baseUrl = scheme + host + port;
+const baseUrl = scheme + host + port + path;
+// const baseUrl = scheme + host + port;
 
 export const environment = {
   production      : false,

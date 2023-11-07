@@ -1,184 +1,156 @@
 <div class="content-wrapper mt-3">
+    <div *ngIf="!hideSpinner" class="d-flex justify-content-center">
+        <div  class="spinner-border text-secondary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+    
+    <div class="row row-cols-2 mx-0 g-2 g-xl-3 g-xxl-4 mb-5">
+        <div class="col " *ngIf="showRegionChart">
+            <div class="chart bg-light shadow rounded p-4 p-xxl-5 clearfix">
+                <div class="mb-3">
+                    <p class="h4">Region based Accident Summary</p>
+                </div>
+                <div class="col-10 mx-auto">
+                    <apx-chart *ngIf="showRegionChart" class="cursor-pointer"
+                        [series]="regionDonutChart.series"
+                        [chart]="regionDonutChart.chart"
+                        [colors]="regionDonutChart.colors"
+                        [labels]="regionDonutChart.labels"
+                        [legend]="regionDonutChart.legend"
+                        [plotOptions]="regionDonutChart.plotOptions"
+                        [responsive]="regionDonutChart.responsive"
+                    ></apx-chart>
+                </div>
+                <div class="view-btn">
+                    <button type="button"  (click)="showRegionDetails=true; scroll(region)" class="btn btn-sm float-end">View Details</button>
+                </div>
+            </div>
+        </div>
+        <div class="col" *ngIf="showVehicleChart">
+            <div class="chart bg-light shadow rounded p-4 p-xxl-5 clearfix">
+                <div class="mb-3">
+                    <p class="h4">Vehicle type based Accident Summary</p>
+                </div>
+                <div class="col-10 mx-auto">
+                    <apx-chart *ngIf="showVehicleChart" class="cursor-pointer"
+                        [series]="vehicleDonutChart.series"
+                        [chart]="vehicleDonutChart.chart"
+                        [colors]="vehicleDonutChart.colors"
+                        [labels]="vehicleDonutChart.labels"
+                        [legend]="vehicleDonutChart.legend"
+                        [plotOptions]="regionDonutChart.plotOptions"
+                        [responsive]="vehicleDonutChart.responsive"
+                    ></apx-chart>
+                </div>
+                <div class="view-btn">
+                    <button type="button"  (click)="showVehicleDetails=true; scroll(vehicle)" class="btn btn-sm float-end">View Details</button>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
     <!-- REGION WISE ALL DATA -->
-    <!-- SBC -->
-    <div class="div mb-5 bg-light shadow rounded p-4 p-xl-5 mx-0">
-        <p class="h3 fw-bold text-capitalize">Shadharon Bima Corporation</p>
-        <div class="row row-cols-2 mx-0 p-4">
-            <div>
-                <div class="mb-3">
-                    <p class="h5 text-secondary">No. of Accident (Region wise)</p>
-                </div>
-                <div>
-                    <apx-chart *ngIf="showbarChart"
-                    [series]="sbcRGCountBarChart.series"
-                    [chart]="sbcRGCountBarChart.chart"
-                    [colors]="sbcRGCountBarChart.colors"
-                    [labels]="sbcRGCountBarChart.labels"
-                    [title]="sbcRGCountBarChart.title"
-                    [yaxis]="sbcRGCountBarChart.yaxis"
-                    [plotOptions]="sbcRGCountBarChart.plotOptions"
-                    [responsive]="sbcRGCountBarChart.responsive"
-                    [dataLabels]="sbcRGCountBarChart.dataLabels"
-                
-                    ></apx-chart>
-                </div>
+    <div #region>
+        <div *ngIf="showRegionDetails" class="mb-5 bg-light shadow rounded p-4 p-xxl-5">
+            <div class="position-relative">
+            <p class="h3 fw-bold text-capitalize">Region wise Claim Summary</p>
+            <span class="close-btn" (click)="hideEl(region, 'region')"><i class="bi bi-x-lg"></i></span>
             </div>
-            <div>
-                <div class="mb-3">
-                    <p class="h5 text-secondary">Total Claim Amount (Region wise)</p>
+            
+            <div class="row row-cols-2 mx-0 p-4">
+                <div>
+                    <div class="mb-3">
+                        <p class="h5">No. of Accident</p>
+                    </div>
+                    <div>
+                        <apx-chart *ngIf="showRegionDetails"
+                        [series]="regionChartObj.count.series"
+                        [chart]="regionChartObj.count.chart"
+                        [colors]="regionChartObj.count.colors"
+                        [labels]="regionChartObj.count.labels"
+                        [title]="regionChartObj.count.title"
+                        [yaxis]="regionChartObj.count.yaxis"
+                        [plotOptions]="regionChartObj.count.plotOptions"
+                        [responsive]="regionChartObj.count.responsive"
+                        [dataLabels]="regionChartObj.count.dataLabels"
+                    
+                        ></apx-chart>
+                    </div>
                 </div>
                 <div>
-                    <apx-chart *ngIf="showbarChart"
-                    [series]="sbcRGAmountBarChart.series"
-                    [chart]="sbcRGAmountBarChart.chart"
-                    [colors]="sbcRGAmountBarChart.colors"
-                    [labels]="sbcRGAmountBarChart.labels"
-                    [title]="sbcRGAmountBarChart.title"
-                    [yaxis]="sbcRGAmountBarChart.yaxis"
-                    [plotOptions]="sbcRGAmountBarChart.plotOptions"
-                    [responsive]="sbcRGAmountBarChart.responsive"
-                    [dataLabels]="sbcRGAmountBarChart.dataLabels"
-                
-                    ></apx-chart>
-                </div>
-            </div>
-        </div>
-       
-        
-    </div>
-    <!-- JBC -->
-    <div class="div mb-5 bg-light shadow rounded p-4 p-xl-5 mx-0">
-        <p class="h3 fw-bold text-capitalize">Jibon Bima Corporation</p>
-        <div class="row row-cols-2 mx-0 p-4">
-            <div>
-                <div class="mb-3">
-                    <p class="h5 text-secondary">No. of Accident (Region wise)</p>
-                </div>
-                <div>
-                    <apx-chart *ngIf="showbarChart"
-                        [series]="jbcRGCountBarChart.series"
-                        [chart]="jbcRGCountBarChart.chart"
-                        [colors]="jbcRGCountBarChart.colors"
-                        [labels]="jbcRGCountBarChart.labels"
-                        [title]="jbcRGCountBarChart.title"
-                        [yaxis]="jbcRGCountBarChart.yaxis"
-                        [plotOptions]="jbcRGCountBarChart.plotOptions"
-                        [responsive]="jbcRGCountBarChart.responsive"
-                        [dataLabels]="jbcRGCountBarChart.dataLabels"
-                    ></apx-chart>
-                </div>
-            </div>
-            <div>
-                <div class="mb-3">
-                    <p class="h5 text-secondary">Total Claim Amount (Region wise)</p>
-                </div>
-                <div>
-                    <apx-chart *ngIf="showbarChart"
-                        [series]="jbcRGAmountBarChart.series"
-                        [chart]="jbcRGAmountBarChart.chart"
-                        [colors]="jbcRGAmountBarChart.colors"
-                        [labels]="jbcRGAmountBarChart.labels"
-                        [title]="jbcRGAmountBarChart.title"
-                        [yaxis]="jbcRGAmountBarChart.yaxis"
-                        [plotOptions]="jbcRGAmountBarChart.plotOptions"
-                        [responsive]="jbcRGAmountBarChart.responsive"
-                        [dataLabels]="jbcRGAmountBarChart.dataLabels"
-                    ></apx-chart>
-                </div>
-            </div>
-        </div>
-       
-        
-    </div>
-    <!-- METLIFE -->
-    <div class="div mb-5 bg-light shadow rounded p-4 p-xl-5 mx-0">
-        <p class="h3 fw-bold text-capitalize">Metlife</p>
-        <div class="row row-cols-2 mx-0 p-4">
-            <div>
-                <div class="mb-3">
-                    <p class="h5 text-secondary">No. of Accident (Region wise)</p>
-                </div>
-                <div>
-                    <apx-chart *ngIf="showbarChart"
-                        [series]="metlifeRGCountBarChart.series"
-                        [chart]="metlifeRGCountBarChart.chart"
-                        [colors]="metlifeRGCountBarChart.colors"
-                        [labels]="metlifeRGCountBarChart.labels"
-                        [title]="metlifeRGCountBarChart.title"
-                        [yaxis]="metlifeRGCountBarChart.yaxis"
-                        [plotOptions]="metlifeRGCountBarChart.plotOptions"
-                        [responsive]="metlifeRGCountBarChart.responsive"
-                        [dataLabels]="metlifeRGCountBarChart.dataLabels"
-                    ></apx-chart>
-                </div>
-            </div>
-            <div>
-                <div class="mb-3">
-                    <p class="h5 text-secondary">Total Claim Amount (Region wise)</p>
-                </div>
-                <div>
-                    <apx-chart *ngIf="showbarChart"
-                        [series]="metlifeRGAmountBarChart.series"
-                        [chart]="metlifeRGAmountBarChart.chart"
-                        [colors]="metlifeRGAmountBarChart.colors"
-                        [labels]="metlifeRGAmountBarChart.labels"
-                        [title]="metlifeRGAmountBarChart.title"
-                        [yaxis]="metlifeRGAmountBarChart.yaxis"
-                        [plotOptions]="metlifeRGAmountBarChart.plotOptions"
-                        [responsive]="metlifeRGAmountBarChart.responsive"
-                        [dataLabels]="metlifeRGAmountBarChart.dataLabels"
-                    ></apx-chart>
-                </div>
-            </div>
-        </div>
-       
-        
-    </div>
-    <!-- SONALI -->
-    <div class="div mb-5 bg-light shadow rounded p-4 p-xl-5 mx-0">
-        <p class="h3 fw-bold text-capitalize">Sonali Life Insurance</p>
-        <div class="row row-cols-2 mx-0 p-4">
-            <div>
-                <div class="mb-3">
-                    <p class="h5 text-secondary">No. of Accident (Region wise)</p>
-                </div>
-                <div>
-                    <apx-chart *ngIf="showbarChart"
-                        [series]="sonaliRGCountBarChart.series"
-                        [chart]="sonaliRGCountBarChart.chart"
-                        [colors]="sonaliRGCountBarChart.colors"
-                        [labels]="sonaliRGCountBarChart.labels"
-                        [title]="sonaliRGCountBarChart.title"
-                        [yaxis]="sonaliRGCountBarChart.yaxis"
-                        [plotOptions]="sonaliRGCountBarChart.plotOptions"
-                        [responsive]="sonaliRGCountBarChart.responsive"
-                        [dataLabels]="sonaliRGCountBarChart.dataLabels"
-                    ></apx-chart>
-                </div>
-            </div>
-            <div>
-                <div class="mb-3">
-                    <p class="h5 text-secondary">Total Claim Amount (Region wise)</p>
-                </div>
-                <div>
-                    <apx-chart *ngIf="showbarChart"
-                        [series]="sonaliRGAmountBarChart.series"
-                        [chart]="sonaliRGAmountBarChart.chart"
-                        [colors]="sonaliRGAmountBarChart.colors"
-                        [labels]="sonaliRGAmountBarChart.labels"
-                        [title]="sonaliRGAmountBarChart.title"
-                        [yaxis]="sonaliRGAmountBarChart.yaxis"
-                        [plotOptions]="sonaliRGAmountBarChart.plotOptions"
-                        [responsive]="sonaliRGAmountBarChart.responsive"
-                        [dataLabels]="sonaliRGAmountBarChart.dataLabels"
-                    ></apx-chart>
+                    <div class="mb-3">
+                        <p class="h5">Total Claim Amount</p>
+                    </div>
+                    <div>
+                        <apx-chart *ngIf="showRegionDetails"
+                        [series]="regionChartObj.claim.series"
+                        [chart]="regionChartObj.claim.chart"
+                        [colors]="regionChartObj.claim.colors"
+                        [labels]="regionChartObj.claim.labels"
+                        [title]="regionChartObj.claim.title"
+                        [yaxis]="regionChartObj.claim.yaxis"
+                        [plotOptions]="regionChartObj.claim.plotOptions"
+                        [responsive]="regionChartObj.claim.responsive"
+                        [dataLabels]="regionChartObj.claim.dataLabels"
+                    
+                        ></apx-chart>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- VEHICLE WISE ALL DATA -->
-    
+    <div #vehicle>
+        <div *ngIf="showVehicleDetails" class="mb-5 bg-light shadow rounded p-4 p-xxl-5 mx-0">
+            <div class="position-relative">
+                <p class="h3 fw-bold text-capitalize">Vehicle Type wise Claim Summary</p>
+                <span class="close-btn" (click)="hideEl(vehicle, 'vehicle')"><i class="bi bi-x-lg"></i></span>
+            </div>
+            <div class="row row-cols-2 mx-0 p-4">
+                <div>
+                    <div class="mb-3">
+                        <p class="h5">No. of Accident</p>
+                    </div>
+                    <div>
+                        <apx-chart *ngIf="showVehicleDetails"
+                        [series]="vehicleChartObj.count.series"
+                        [chart]="vehicleChartObj.count.chart"
+                        [colors]="vehicleChartObj.count.colors"
+                        [labels]="vehicleChartObj.count.labels"
+                        [title]="vehicleChartObj.count.title"
+                        [yaxis]="vehicleChartObj.count.yaxis"
+                        [plotOptions]="vehicleChartObj.count.plotOptions"
+                        [responsive]="vehicleChartObj.count.responsive"
+                        [dataLabels]="vehicleChartObj.count.dataLabels"
+                        ></apx-chart>
+                    </div>
+                </div>
+                <div>
+                    <div class="mb-3">
+                        <p class="h5">Total Claim Amount</p>
+                    </div>
+                    <div>
+                        <apx-chart *ngIf="showVehicleDetails"
+                        [series]="vehicleChartObj.claim.series"
+                        [chart]="vehicleChartObj.claim.chart"
+                        [colors]="vehicleChartObj.claim.colors"
+                        [labels]="vehicleChartObj.claim.labels"
+                        [title]="vehicleChartObj.claim.title"
+                        [yaxis]="vehicleChartObj.claim.yaxis"
+                        [plotOptions]="vehicleChartObj.claim.plotOptions"
+                        [responsive]="vehicleChartObj.claim.responsive"
+                        [dataLabels]="vehicleChartObj.claim.dataLabels"
+                    
+                        ></apx-chart>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
 </div>
 
 

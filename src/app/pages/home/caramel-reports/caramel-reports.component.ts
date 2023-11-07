@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AppService } from '@services/app.service';
 import { barChart } from './chartObjectsCR';
+import { ToastService } from '@services/toast-service';
 
 @Component({
   selector: 'app-caramel-reports',
@@ -28,7 +29,7 @@ export class CaramelReportsComponent {
   }
   reportBarChart: any;
 
-  constructor(private httpService: AppService, private route: ActivatedRoute) {
+  constructor(private httpService: AppService, private route: ActivatedRoute, private toastService: ToastService,) {
 
   }
 
@@ -39,7 +40,7 @@ export class CaramelReportsComponent {
 
   async getIdWiseReportList() {
 
-    const response: any = await this.httpService.getIdWiseReportList('27'); // 27 for caramel report
+    const response: any = await this.httpService.getIdWiseReportList('29'); // 29 for caramel report
     const reports = response?.data;
     if (reports.length > 0) {
       for (let data of reports) {
@@ -53,14 +54,13 @@ export class CaramelReportsComponent {
 
   async loadInterface(reportId: any) {
     this.hideSpinner = false;
-
     const currentReport = this.reportList.find(
       (item) => item.value === reportId
     );
     this.selectedReport.reportName = currentReport.label;
     const response: any = await this.httpService.getCaramelReportData(reportId);
     this.hideSpinner = true;
-    
+
     this.selectedReportDetails = response?.data;
     if (this.selectedReportDetails) {
       this.getTableData();
@@ -71,18 +71,18 @@ export class CaramelReportsComponent {
   getTableData() {
     if (this.selectedReportDetails) {
       this.fields = Object.keys(this.selectedReportDetails[0]);
-      this.fields = this.fields.filter((item) => item != 'companyName' );
-      console.log(this.fields);     
+      this.fields = this.fields.filter((item) => item != 'companyName');
+      console.log(this.fields);
     }
   }
 
   getChartData() {
     if (this.selectedReportDetails) {
-      this.reportBarChart = JSON.parse(JSON.stringify(barChart)); 
+      this.reportBarChart = JSON.parse(JSON.stringify(barChart));
       this.reportBarChart.title.text = this.selectedReport.reportName;
       const NAlist = ['companyName', 'riskStatus', 'riskType']
-      const filteredList = this.fields.filter((item) => !NAlist.includes(item) );
-      
+      const filteredList = this.fields.filter((item) => !NAlist.includes(item));
+
       this.selectedReportDetails.map(item => {
         this.reportBarChart.labels.push(item.companyName)
       });
@@ -92,7 +92,7 @@ export class CaramelReportsComponent {
         currentObj.name = this.convertToTitleCase(prop);
 
         this.selectedReportDetails.map(item => {
-          if(this.reportBarChart.labels.length != this.selectedReportDetails.length ) this.reportBarChart.labels.push(item.companyName)
+          if (this.reportBarChart.labels.length != this.selectedReportDetails.length) this.reportBarChart.labels.push(item.companyName)
           currentObj.data.push(item[prop]);
         });
         this.reportBarChart.series.push(currentObj);
@@ -102,10 +102,20 @@ export class CaramelReportsComponent {
 
   }
 
-  openReport(report: any) {
+
+  async openReport(report: any, reportId: any) {
     report = report.charAt(0).toUpperCase() + report.slice(1);
-    const url: string = this.reportURL + report + '/PDF'
-    window.open(url, "_blank");
+    try {
+      const response: any = await this.httpService.printCaramelsReport(report, reportId);
+      if (response?.status === 200) {
+        const url: string = response.data + '/PDF'
+        window.open(url, "_blank")
+      }
+    } catch (e:any) {
+      this.toastService.show(e.response.data, {classname: 'bg-danger', delay: 4000});
+     
+    }
+
   }
 
 

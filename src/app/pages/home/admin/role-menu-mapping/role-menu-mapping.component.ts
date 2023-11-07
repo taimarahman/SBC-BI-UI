@@ -58,7 +58,7 @@ export class RoleMenuMappingComponent {
       if (response?.status === 200) {
         this.roleList = [];
         for (let v of response.data) {
-          this.roleList.push({ value: v.roleId, label: v.roleName });
+          v.activeYn == 'Y' && this.roleList.push({ value: v.roleId, label: v.roleName });
         }
       }
     } catch (e) {}

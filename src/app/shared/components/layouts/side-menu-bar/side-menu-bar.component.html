@@ -29,9 +29,8 @@
           </ul>
         </div>
       </ng-container>
-      <ng-template #linkMenu
-        ><a [routerLink]="menu.basePath"><img [src]="iconBasePath + menu.icon" alt="" />{{ menu.menuName }}</a></ng-template
-      >
+      <ng-template #linkMenu>
+        <a [routerLink]="menu.basePath"><img [src]="menu.icon ? iconBasePath + menu.icon : iconBasePath + 'dashboard-icon.svg'" alt="" />{{ menu.menuName }}</a></ng-template>
     </li>
 
     <a id="collapseBtn" class="bg-theme shadow-sm" (click)="collapseSidebar()" placement="top" [ngbTooltip]="sidebarCollapse.click ? 'expand' : 'collapse'" >

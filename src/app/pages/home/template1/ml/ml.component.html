@@ -42,8 +42,7 @@
       <div class="card-body border scroll-table">
         <table
           *ngIf="activeTab === 'Train'"
-          class="table table-striped nowrap"
-          style="width: 100%"
+          class="table table-striped nowrap w-100"
         >
           <thead>
             <tr>
@@ -110,8 +109,8 @@
     <app-evaluate *ngIf="activeTab === 'Evaluate'" [modelList]="modelList" [reportName]="mlReport.reportName"></app-evaluate>
     <div
       *ngIf="
-        (activeTab === 'Train' || activeTab === 'Predict')  &&
-        mlReport.reportId
+        (activeTab === 'Train' || (activeTab === 'Predict' && ![18, 19, 47, 45, 66, 67].includes(mlReport.reportId)))  &&
+        mlReport.reportId 
       "
     >
       <div class="row">
@@ -123,6 +122,7 @@
               class="form-control"
               (change)="onFileSelected($event)"
               accept=".csv"
+              #fileInput
             />
           </div>
           <small class="form-text text-muted"

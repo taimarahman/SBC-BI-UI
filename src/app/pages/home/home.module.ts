@@ -45,6 +45,7 @@ import {NgxSpinnerModule} from "ngx-spinner";
 import { CaramelReportsComponent } from './caramel-reports/caramel-reports.component';
 import { MotorRoadAccidentComponent } from './motor-road-accident/motor-road-accident.component';
 import { FraudDetectionComponent } from './fraud-detection/fraud-detection.component';
+import { RecruitmentSummaryComponent } from './executive-dashboard/interactive-dashboard/recruitment-summary/recruitment-summary.component';
 
 @NgModule({
     imports: [CommonModule, HomeRoutingModule, SharedModule, Select2Module, NgChartsModule, NgApexchartsModule, NgxSpinnerModule],
@@ -81,6 +82,7 @@ import { FraudDetectionComponent } from './fraud-detection/fraud-detection.compo
         CaramelReportsComponent,
         MotorRoadAccidentComponent,
         FraudDetectionComponent,
+        RecruitmentSummaryComponent,
 
     ],
     exports: [

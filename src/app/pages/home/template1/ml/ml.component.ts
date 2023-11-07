@@ -1,10 +1,10 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, Input, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { AppService } from '@services/app.service';
 import './reportObject';
 import { claimAnalysis } from './reportObject';
-import {NgxSpinnerService} from "ngx-spinner";
-import {ToastService} from "@services/toast-service";
+import { NgxSpinnerService } from "ngx-spinner";
+import { ToastService } from "@services/toast-service";
 
 @Component({
   selector: 'app-ml',
@@ -17,7 +17,8 @@ export class MLComponent {
     private httpService: AppService,
     private spinner: NgxSpinnerService,
     private toastService: ToastService,
-  ) {}
+  ) { }
+  @ViewChild('fileInput') fileInput: ElementRef | undefined;
 
   @Input() mlReport: any = {};
 
@@ -26,7 +27,7 @@ export class MLComponent {
   dataList: any[] = [];
   inputDataList: any[] = [];
   dataObject: { [key: string]: any } = {};
-  csvFile!: File;
+  csvFile: File | undefined;
   tableTitle: string | undefined;
   activeTab: string = 'Train';
   modelList: any[] = [];
@@ -66,11 +67,12 @@ export class MLComponent {
     }
   }
 
-  async loadPaginationData( pageNo: any) {
+  async loadPaginationData(pageNo: any) {
     const response: any = await this.httpService.loadReportData(this.mlReport.reportId, pageNo);
     this.dataList = response?.data.analysisValue;
 
-    
+    if (this.totalNumberOfData != response?.data.totalCountAnalysisValue) this.totalNumberOfData = response?.data.totalCountAnalysisValue;
+
   }
 
   async loadModelDetails(id: any) {
@@ -79,7 +81,7 @@ export class MLComponent {
       if (response?.status === 200) {
         this.modelList = response?.data;
       }
-    }catch (err){}
+    } catch (err) { }
   }
 
   onFileSelected(event: any) {
@@ -104,64 +106,74 @@ export class MLComponent {
 
   async pushCsvFile() {
     try {
-      if(this.activeTab === 'Train'){
-        this.spinner.show();
-        const response: any = await this.httpService.pushCsvFileForTrain(this.csvFile, this.mlReport.reportId);
-        this.spinner.hide();
-        if (response?.status === 200) {
-          this.toastService.show(response.data.message, {classname: 'bg-success', delay: 4000});
-        }else{
-          this.toastService.show(response.data.message, {classname: 'bg-danger', delay: 4000});
+      if (this.csvFile != undefined) {
+        if (this.activeTab === 'Train') {
+          this.spinner.show();
+          const response: any = await this.httpService.pushCsvFileForTrain(this.csvFile, this.mlReport.reportId);
+          this.spinner.hide();
+          if (response?.status === 200) {
+            this.toastService.show(response.data.message, { classname: 'bg-success', delay: 4000 });
+            this.loadPaginationData(this.currentPage);
+            this.loadModelDetails(this.mlReport.reportId);
+            this.clearCSV();
+          } else {
+            this.toastService.show(response.data.message, { classname: 'bg-danger', delay: 4000 });
+          }
+        }
+        else if (this.activeTab === 'Predict') {
+          this.spinner.show();
+          const response: any = await this.httpService.pushCsvFileForPredict(this.csvFile, this.mlReport.reportId);
+          this.spinner.hide();
+          console.log(response)
+          if (response?.status === 200) {
+            this.predictResDataFromCsv = response.data.response
+            this.toastService.show(response.data.message, { classname: 'bg-success', delay: 4000 });
+            this.clearCSV();
+          } else {
+            this.toastService.show(response.data.message, { classname: 'bg-danger', delay: 4000 });
+          }
         }
       }
-      else if(this.activeTab === 'Predict'){
-        this.spinner.show();
-        const response: any = await this.httpService.pushCsvFileForPredict(this.csvFile, this.mlReport.reportId);
-        this.spinner.hide();
-        console.log(response)
-        if (response?.status === 200) {
-          this.predictResDataFromCsv = response.data.response
-          this.toastService.show(response.data.message, {classname: 'bg-success', delay: 4000});
-        }else{
-          this.toastService.show(response.data.message, {classname: 'bg-danger', delay: 4000});
-        }
-      }
-    } catch (e) {
+
+    } catch (e: any) {
+      debugger
       this.spinner.hide();
       // @ts-ignore
-      if(e.response.status != 500){
-        // @ts-ignore
-        this.toastService.show(e.response.data.message, {classname: 'bg-danger', delay: 4000});
-      }else{
-        // @ts-ignore
-        this.toastService.show(e.response.data, {classname: 'bg-danger', delay: 4000});
+      if (e.response.status === 500) {
+        this.toastService.show(e.response.data, { classname: 'bg-danger', delay: 4000 });
+      } else if (e.response.status === 400) {
+        this.toastService.show(e.response.data.message, { classname: 'bg-danger', delay: 4000 });
+      } else {
+        this.toastService.show(e.response.data.message, { classname: 'bg-danger', delay: 4000 });
       }
     }
   }
 
   async submitData() {
-    // this.spinner.show();
-    // setTimeout(() => {
-    //   this.spinner.hide();
-    // }, 5000);
+
     try {
       this.spinner.show();
       const response: any = await this.httpService.submitDataForTrain(this.inputDataList, this.mlReport.reportId);
       this.spinner.hide();
       if (response?.status === 200) {
-        this.toastService.show(response.data.message, {classname: 'bg-success', delay: 4000});
-      }else{
-        this.toastService.show(response.data.message, {classname: 'bg-danger', delay: 4000});
+        this.toastService.show(response.data.message, { classname: 'bg-success', delay: 4000 });
+        this.loadPaginationData(this.currentPage);
+        this.loadModelDetails(this.mlReport.reportId);
+      } else {
+        this.toastService.show(response.data.message, { classname: 'bg-danger', delay: 4000 });
       }
-    } catch (e) {
+    } catch (e: any) {
       this.spinner.hide();
       // @ts-ignore
-      if(e.response.status != 500){
-        // @ts-ignore
-        this.toastService.show(e.response.data.message, {classname: 'bg-danger', delay: 4000});
-      }else{
-        // @ts-ignore
-        this.toastService.show(e.response.data, {classname: 'bg-danger', delay: 4000});
+      if (e.response.status === 500) {
+        this.toastService.show(e.response.data, { classname: 'bg-danger', delay: 4000 });
+      } else if (e.response.status === 400) {
+        this.toastService.show(e.response.data.message, { classname: 'bg-danger', delay: 4000 });
+      } else if (e.response.status === 451) {
+        this.toastService.show(e.response.data, { classname: 'bg-danger', delay: 6000 });
+      }
+      else {
+        this.toastService.show(e.response.data.message, { classname: 'bg-danger', delay: 4000 });
       }
     }
   }
@@ -173,5 +185,11 @@ export class MLComponent {
 
   setActiveTab(tab: string) {
     this.activeTab = tab;
+  }
+
+  clearCSV() {
+    this.csvFile = undefined;
+    // @ts-ignore
+    this.fileInput.nativeElement.value = '';
   }
 }

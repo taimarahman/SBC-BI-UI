@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AppService } from '@services/app.service';
-import {ChartOptions} from "../../executive-dashboard/claim-dashboard/claim-dashboard.component";
 
 @Component({
   selector: 'app-common-interface',
@@ -17,7 +16,7 @@ export class CommonInterfaceComponent {
     'claim-analytics': '12',
     'actuarial-analytics': '13',
     'sales-investigation': '14',
-    'marketing': '15',
+    // 'revenue': '15',
     'insurance-underwriting': '16',
     'insurance-finance': '17',
     'cash-flow-management': '18',
@@ -27,7 +26,11 @@ export class CommonInterfaceComponent {
     'interactive-report': '22',
     'operational-report': '23',
     'ad-hoc-report': '24',
-    'caramel-dashboard': '27'
+    // 'caramel-dashboard': '27',
+    'insurance-operation': '27',
+    // 'centralized-reports': '31',
+    'marketing': '15',
+    'revenue-analysis': '28'
   };
 
   reportList: any[] = [];
@@ -42,18 +45,23 @@ export class CommonInterfaceComponent {
   viewPermission: boolean = false;
 
 
-  constructor(private httpService: AppService,private route: ActivatedRoute) {}
+  constructor(private httpService: AppService, private route: ActivatedRoute) { }
 
   ngOnInit() {
+    // this.currentRoute = this.currentRoute.replace(/-/g, ' ')
     this.currentRoute = this.route.snapshot.routeConfig?.path?.split('/').pop();
     // @ts-ignore
     this.pathId = this.pathValueMap[this.currentRoute];
-    this.currentRoute = this.currentRoute.replace(/-/g, ' ')
+    if (this.currentRoute.includes('-report')) {
+      this.currentRoute = this.currentRoute.replace(/-report/g, ' ');
+    } else {
+      this.currentRoute = this.currentRoute.replace(/-/g, ' ');
+    }
     this.getIdWiseReportList(this.pathId);
   }
 
 
-  async getIdWiseReportList(id:any) {
+  async getIdWiseReportList(id: any) {
     const response: any = await this.httpService.getIdWiseReportList(id);
     const reports = response?.data;
     if (reports.length > 0) {
@@ -75,19 +83,19 @@ export class CommonInterfaceComponent {
     this.selectedReport.reportName = currentReport.label;
     this.selectedReport.reportParam = currentReport.param;
     this.selectedReportType = currentReport.type;
-      console.log(this.selectedReport)
-    if(this.selectedReportType === 'M'){
+    console.log(this.selectedReport)
+    if (this.selectedReportType === 'M') {
       this.trainActivityPermission();
     }
   }
 
-  async trainActivityPermission(){
+  async trainActivityPermission() {
     try {
       const response = await this.httpService.trainActivityPermission();
-      if(response.status === 200){
-        this.viewPermission  = response.data
+      if (response.status === 200) {
+        this.viewPermission = response.data
       }
-    }catch (err){}
+    } catch (err) { }
   }
 
 }

@@ -95,8 +95,6 @@ export class SideMenuBarComponent {
   }
 
   toggleCollapse() {
-    
-
     if (this.sidebarCollapse.hover) {
       this.collapseEvent.emit();
     document.querySelector('.sidebar-wrapper')?.classList.toggle('collapse');

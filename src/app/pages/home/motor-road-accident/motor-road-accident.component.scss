@@ -1,0 +1,20 @@
+.chart{
+    position: relative;
+
+    .view-btn{
+        height: 1.5rem;
+        overflow: hidden;
+        position: absolute;
+        right: 5%;
+        bottom: 5%;
+        transition: height 0.2s ease;
+        .btn{
+            font-size: 0.625rem;
+            background-color: #00005a;
+            color: #fff;
+            height: 1.5rem;
+        }
+    }
+
+    
+}

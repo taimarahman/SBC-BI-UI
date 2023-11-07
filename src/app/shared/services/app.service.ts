@@ -297,7 +297,7 @@ export class AppService {
   public async getReportList() {
     return this.api.get('report/report-list');
   }
-  public async getIdWiseReportList(id:any) {
+  public async getIdWiseReportList(id: any) {
     return this.api.get(`report/report-list/${id}`);
   }
 
@@ -333,7 +333,7 @@ export class AppService {
     return this.api.get(`/claim/claim-list/${startDate}/${endDate}`);
   }
 
-  public async loadReportData(reportId: any, pageNo:any) {
+  public async loadReportData(reportId: any, pageNo: any) {
     return this.api.get(`/analysis-report-list/${reportId}/${pageNo}`);
   }
 
@@ -444,35 +444,40 @@ export class AppService {
     return this.api.post(`/report/save-parameter-report`, data);
   }
 
-  public async trainActivityPermission(){
+  public async trainActivityPermission() {
     return this.api.get(`/report/activity-train-report`);
   }
 
-  public async deleteParameter(param: any){
-    return this.api.post(`/report/delete-report-param`,param);
+  public async deleteParameter(param: any) {
+    return this.api.post(`/report/delete-report-param`, param);
   }
 
-  public async submitDataForTrain(data: any, reportId: any){
-    return this.api.post(`/claim/object-csv-file-train-purpose/${reportId}`,data)
+  public async submitDataForTrain(data: any, reportId: any) {
+    return this.api.post(`/claim/object-csv-file-train-purpose/${reportId}`, data)
   }
 
   // OPERATIONS DATA
-  public async getEXOperationsData(){
+  public async getEXOperationsData() {
     return this.api.get(`/operation/operation-data-list`);
   }
   // FINANCIAL DATA
-  public async getEXFinancialData(){
+  public async getEXFinancialData() {
     return this.api.get(`/financial/financial-data-list`);
   }
 
   // Accident data
-  public async getAccidentData(fromDate:any | undefined = null, toDate:any | undefined = null){
+  public async getAccidentData(fromDate: any | undefined = null, toDate: any | undefined = null) {
     return this.api.get(`/accident/accident-analysis-by-date-wise/${fromDate}/${toDate}`);
   }
 
   // FRAUD DETECTION data
-  public async getFraudDetectiontData(fromDate:any | undefined = null, toDate:any | undefined = null){
+  public async getFraudDetectiontData(fromDate: any | undefined = null, toDate: any | undefined = null) {
     return this.api.get(`/fraud/fraud-analysis-by-date-wise?fromDate=${fromDate}&toDate=${toDate}`);
+  }
+
+  // FRAUD DETECTION data
+  public async getClaimData(fromDate: any | undefined = null, toDate: any | undefined = null) {
+    return this.api.get(`/claim/claim-list-by-date-wise?fromDate=${fromDate}&toDate=${toDate}`);
   }
 
   public async pushCsvFileForPredict(file: File, reportId: any) {
@@ -487,4 +492,28 @@ export class AppService {
     return this.api.post('/claim/csv-file-upload-predict-purpose', formData, config);
   }
 
+  public async printCaramelsReport(columnName: any, reportId: any) {
+    return this.api.get(`caramels/caramels-column-url/${columnName}/${reportId}`);
+  }
+
+
+  // DASHBOARD API
+ 
+  public async getDailySales(fromDate: any | undefined = null, toDate: any | undefined = null) {
+    return this.api.get(`/dashboard/daily-events-by-date-wise?fromDate=${fromDate}&toDate=${toDate}`);
+  } 
+
+  public async getRecruitmentData(fromDate: any | undefined = null, toDate: any | undefined = null) {
+    return this.api.get(`/dashboard/recruitment-manpower-list?fromDate=${fromDate}&toDate=${toDate}`);
+  } 
+
+
+  // FORGOT PASSWORD
+  public async getOTPOnEmail(email: any) {
+    return this.api.get(`/user/forget-password/${email}`);
+  }
+  
+  public async verifyOTP(email: any, OTP:any) {
+    return this.api.get(`/user/check-otp/${email}/${OTP}`); 
+  }
 }

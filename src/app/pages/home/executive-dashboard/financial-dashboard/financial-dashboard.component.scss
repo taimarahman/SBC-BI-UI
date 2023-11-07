@@ -9,6 +9,16 @@
 }
 
 .d-grid {    
-    grid-template-columns: 1fr 1fr 0.7fr
+    grid-template-columns: 1fr 1fr 0.7fr;
 }
 
+@media (max-width:767.98px) {
+    .d-grid {    
+        grid-template-columns: 1fr 0.8fr;
+
+        .full-div{
+            grid-row: 1;
+            grid-column: 1/span 2;
+        }
+    }
+}

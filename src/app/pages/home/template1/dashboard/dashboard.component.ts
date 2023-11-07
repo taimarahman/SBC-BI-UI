@@ -4,7 +4,7 @@ import { AppService } from '@services/app.service';
 import { DatepickerHelper } from '@helpers/datepicker.helper';
 import { NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
-import { highestClaimBarChart,accidentBarChart, claimDonutChart, dynamicBarChart } from './chartObject';
+import { highestClaimBarChart,accidentBarChart, claimDonutChart, dynamicBarChart, lineChart } from './chartObject';
 import { StringHelper } from '@helpers/string.helper';
 
 @Component({
@@ -15,9 +15,16 @@ import { StringHelper } from '@helpers/string.helper';
 })
 export class DashboardComponent {
 
+  fromDate: any;
+  toDate: any;
+
+  monthlySalesChart: any;
+  salesSummary: any = {};
+
+  showLineChart: boolean = false;
   showChart: boolean = false;
 
-  foreCastClaimValue: any[] = [];
+  foreCastClaimValue: any;
   agencyWiseTotalPremiumIncome: any;
   agencyWisePerformance: any;
   totalAccident: any;
@@ -28,8 +35,6 @@ export class DashboardComponent {
   highestClaimReport: any[] = [];
   highestClaimBarChart: any;
   claimPieChart: any;
-  accidentByVehicleBarChart: any;
-  accidentByRegionBarChart: any;
 
   HCClaimAmountData: any[] = [];
   HCPremiumAmountData: any[] = [];
@@ -39,7 +44,6 @@ export class DashboardComponent {
   ARegionCountData: any[] = [];
   AVehicleCountData: any[] = [];
 
-  foreCastClaimReportDetails: any[] = []
   claimBarChartLabels: any[] = [];
 
 
@@ -65,18 +69,17 @@ export class DashboardComponent {
   ];
   currentYear: any;
 
-  datasetObj = {
-    name: null,
-    type: 'column',
-    data: []
+  seriesObj = {
+    name: '',
+    data: [],
   }
 
   constructor(
-    private formBuilder: FormBuilder,
     private httpService: AppService,
-    private router: Router
   ) {
     this.currentYear = StringHelper.getFinancialYearStart();
+    this.fromDate = this.currentYear + '/01/01' ;
+    this.toDate = this.currentYear + '/12/31';
 
     this.FCClaimAmountBarChart = this.createBarChart(this.FCClaimAmountBarChart, 'Total Claim Amount', ['#079992']);
     this.FCReserveBarChart = this.createBarChart(this.FCReserveBarChart, 'Total Claim Reserve', ['#574b90']);
@@ -93,17 +96,7 @@ export class DashboardComponent {
 
     this.claimPieChart = JSON.parse(JSON.stringify(claimDonutChart));
 
-    this.accidentByVehicleBarChart = JSON.parse(JSON.stringify(accidentBarChart));
-    this.accidentByVehicleBarChart.series.map((item:any) => {
-      if(item.name == 'Total Claim Amount') item.data = this.AVehicleAmountData;
-      if(item.name == 'No. of Accidents') item.data = this.AVehicleCountData;
-    })
-
-    this.accidentByRegionBarChart = JSON.parse(JSON.stringify(accidentBarChart));
-    this.accidentByRegionBarChart.series.map((item:any) => {
-      if(item.name == 'Total Claim Amount') item.data = this.ARegionAmountData;
-      if(item.name == 'No. of Accidents') item.data = this.ARegionCountData;
-    })
+    
 
   }
 
@@ -130,7 +123,7 @@ export class DashboardComponent {
       this.claimBarChart.CA = true;
     }) ;
     this.getAgencyWiseTotalPremiumIncome();
-    this.getAccidentReport();
+   
 
     this.loadClaimAnalysisData().then((r) => {
       this.showPieChart = true;
@@ -138,6 +131,65 @@ export class DashboardComponent {
     this.getHighestClaimReport().then((r) => {
       this.showBarChart = true;
     });
+
+    this.getDailySales();
+  }
+
+  async getDailySales() {
+    try {
+      const res = await this.httpService.getDailySales();
+      if (res.data) {
+        const salesData = res.data.dailyEventSummeryData;
+        this.getMOnthlyLineChart(salesData);
+        const currentDate = this.getCurrentDate();
+        const prevDate = this.getCurrentDate(true);
+        this.salesSummary.today = salesData.find((item: any) => item.date == currentDate);
+        this.salesSummary.prev = salesData.find((item: any) => item.date == prevDate);
+        this.salesSummary.thisMonth = this.getMonthlySummary(salesData)
+      }
+    } catch (error) {}
+  }
+
+  getMonthlySummary(data:any) {
+    const currentDate = new Date(); 
+    const currentYear = currentDate.getFullYear(); 
+    const currentMonth = currentDate.getMonth() + 1; 
+
+    // Filter the data for the current year and month
+    const filteredData = data.filter((item:any) => {
+      const itemDate = new Date(item.date);
+      return itemDate.getFullYear() === currentYear && itemDate.getMonth() + 1 === currentMonth;
+    });
+
+    // Calculate the sum of dailySoldInsurance for the current month
+    let monthlySum = {
+      sumOfInsurance: 0,
+      sumOfPremiumCollection: 0
+    };
+    monthlySum.sumOfInsurance = filteredData.reduce((sum:any, item:any) => sum + parseInt(item.dailySoldInsurance, 10), 0);
+    monthlySum.sumOfPremiumCollection = filteredData.reduce((sum: any, item: any) => sum + parseInt(item.dailyPremiumCollection, 10), 0);
+    
+    return monthlySum;
+  }
+
+  // DAILY EVENTS LINE CHART
+  getMOnthlyLineChart(res: any) {
+    this.showLineChart = false;
+    this.monthlySalesChart = JSON.parse(JSON.stringify(lineChart));
+    let insObj = JSON.parse(JSON.stringify(this.seriesObj));
+    insObj.name = "Insurance";
+    let preObj = JSON.parse(JSON.stringify(this.seriesObj));
+    preObj.name = "Premium Collection";
+
+    res.map((item: any) => {
+      insObj.data.push(item.dailySoldInsurance);
+      preObj.data.push(item.dailyPremiumCollection);
+      this.monthlySalesChart.labels.push(item.date);
+    })
+
+    this.monthlySalesChart.series.push(insObj);
+    this.monthlySalesChart.series.push(preObj);
+    this.showLineChart = true;
   }
 
   async loadClaimAnalysisData() {
@@ -177,12 +229,10 @@ export class DashboardComponent {
     try {
       const response: any = await this.httpService.foreCastClaimReserveReport();
       if (response?.status === 200) {
-        this.foreCastClaimValue = response?.data?.totalForeCastClaimReport;
-        this.foreCastClaimReportDetails = response?.data?.foreCastClaimReportDetails;
-        this.setChartData(this.foreCastClaimReportDetails);
-        console.log()
         console.log(response?.data)
-        console.log(this.foreCastClaimReportDetails[0])
+        this.foreCastClaimValue = response?.data;
+        
+        
 
       }
     } catch (error) {}
@@ -218,28 +268,7 @@ export class DashboardComponent {
     } catch (error) {}
   }
 
-  async getAccidentReport() {
-    try {
-      const response: any = await this.httpService.accidentSummaryReport();
-      this.accidentAnalysisData.region = response?.data.regionWiseAccidentAnalysisData;
-      this.accidentAnalysisData.vehicle = response?.data.vehicleTypeWiseAccidentAnalysisData;
-
-      this.accidentAnalysisData.region.map((item:any) => {
-        this.ARegionAmountData.push(item.predicted_amount);
-        this.ARegionCountData.push(item.predicted_count);
-        this.accidentByRegionBarChart.xaxis.categories.push(item.city)
-      });
-
-      this.accidentAnalysisData.vehicle.map((item:any) => {
-        this.AVehicleAmountData.push(item.predicted_amount);
-        this.AVehicleCountData.push(item.predicted_count);
-        this.accidentByVehicleBarChart.xaxis.categories.push(item.vehicle)
-      });
-
-    } catch (error) {
-
-    }
-  }
+  
 
 
   setChartData(list: any) {
@@ -262,5 +291,34 @@ export class DashboardComponent {
 
   scroll(el: HTMLElement) {
     el.scrollIntoView({behavior: 'smooth'});
+  }
+
+  getCurrentDate(prev:any | undefined = null ) {
+    const currentDate = new Date();
+    prev && currentDate.setDate(currentDate.getDate() - 1);
+
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); 
+    const day = currentDate.getDate().toString().padStart(2, '0');
+
+    return`${year}-${month}-${day}`;
+  }
+
+  formatDateString(inputDate:any) {
+    const date = new Date(inputDate);
+    const day = date.getDate();
+    const month = date.toLocaleString('default', { month: 'short' });
+    return `${day} ${month}`;
+  }
+
+  formatToCrThousand(amount: any) {
+    if (amount >= 10000000) {
+      return (amount / 10000000).toFixed(2) + 'CR';
+    } else if(amount >= 1000){
+      return (amount / 1000).toFixed(2) + 'K';
+    } else {
+      return amount;
+    }
+    
   }
 }

@@ -49,25 +49,18 @@ const backgroundColor: any[] = [
 export let barChart: Partial<ChartOptions> = {
     series: [],
     chart: {
-        width: '100%',
-        height: '300px',
+        height: '400px',
         type: 'bar',
-      redrawOnParentResize: true,
+        redrawOnParentResize: true,
     },
     plotOptions: {
       bar: {
-            columnWidth: '80%',
-        dataLabels: {
-              position:'top',
-          orientation: 'vertical',
-          total: {
-            enabled: false,
-          },
-            }
+            columnWidth: '90%',
         }
     },
     labels: [],
-    dataLabels: {
+  dataLabels: {
+      enabled: false,
         style: {
           fontWeight: 'semibold',
           colors: ['#333', '#000'],

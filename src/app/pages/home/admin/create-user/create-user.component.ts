@@ -120,21 +120,21 @@ export class CreateUserComponent {
           );
           if (saveResponse.data.statusCode === 1) {
             this.onReset();
-            this.toastService.show(saveResponse.data.message, {classname: 'bg-success', delay: 3000});
+            this.toastService.show(saveResponse.data.message, {classname: 'bg-success', delay: 5000});
           } else {
-            this.toastService.show(saveResponse.data.message, {classname: 'bg-danger', delay: 3000});
+            this.toastService.show(saveResponse.data.message, {classname: 'bg-danger', delay: 5000});
           }
         } else {
-          const updateResponse: any = await this.httpService.updateUser(
-            this.formData.user
-          );
+          const updateResponse: any = await this.httpService.updateUser(this.formData.user);
 
           if (updateResponse.data.statusCode === 1) {
             this.isEditing = false;
-            window.location.reload();
-            this.toastService.show(updateResponse.data.message, {classname: 'bg-success', delay: 3000});
+            this.onReset();
+            this.ngOnInit();
+            // window.location.reload();
+            this.toastService.show(updateResponse.data.message, {classname: 'bg-success', delay: 5000});
           } else {
-            this.toastService.show(updateResponse.data.message, {classname: 'bg-danger', delay: 3000});
+            this.toastService.show(updateResponse.data.message, {classname: 'bg-danger', delay: 5000});
           }
         }
       }

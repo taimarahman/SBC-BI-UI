@@ -1,19 +1,19 @@
 // Angular modules
-import { Component }    from '@angular/core';
-import { FormBuilder, FormGroup }    from '@angular/forms';
-import { FormControl }  from '@angular/forms';
-import { Validators }   from '@angular/forms';
-import { Router }       from '@angular/router';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormControl } from '@angular/forms';
+import { Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 // Internal modules
-import { environment }  from '@env/environment';
+import { environment } from '@env/environment';
 import { StorageHelper } from '@helpers/storage.helper';
 
 // Services
-import { AppService }   from '@services/app.service';
+import { AppService } from '@services/app.service';
 import { StoreService } from '@services/store.service';
 import { ToastManager } from '@blocks/toast/toast.manager';
-import {ToastService} from "@services/toast-service";
+import { ToastService } from "@services/toast-service";
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -26,7 +26,9 @@ export class LoginComponent {
   };
   password = '';
   show = false;
-  loginCheckLoader: Boolean = false;
+  disableBtn: boolean = false;
+
+  showFP: boolean = false;
 
   public appName: string = environment.appName;
   public formGroup!: FormGroup<{
@@ -94,17 +96,23 @@ export class LoginComponent {
   // -------------------------------------------------------------------------------
 
   private async authenticate(): Promise<void> {
+    this.disableBtn = true;
     // this.storeService.setIsLoading(true);
-
+    while (StorageHelper.getToken() || StorageHelper.getUserDtls()) {
+      StorageHelper.removeToken();
+      StorageHelper.removeMenu();
+      StorageHelper.removeUser();
+      StorageHelper.removeUserDtls();
+      StorageHelper.removeFullScreen();
+    }
     this.user.userId = this.formGroup.controls.userId.getRawValue();
     this.user.password = this.formGroup.controls.password.getRawValue();
     const userId = this.formGroup.controls.userId.getRawValue();
     const password = this.formGroup.controls.password.getRawValue();
-    this.loginCheckLoader = true;
     const success = await this.appService.authenticate(this.user);
-    this.loginCheckLoader = false;
+    this.disableBtn = false;
 
-    if(success){
+    if (success) {
       // GET MENU AND STORE
       const menuResponse = await this.appService.getMenu();
       if (menuResponse) {
@@ -114,6 +122,8 @@ export class LoginComponent {
       const userDtlsResponse = await this.appService.getUserDtls();
       if (userDtlsResponse) {
         StorageHelper.setUserDtls(userDtlsResponse.data)
+        var changePass = userDtlsResponse.data.needPassReset;
+        console.log(userDtlsResponse.data)
       }
 
       let fullScreenData: any = {
@@ -123,11 +133,15 @@ export class LoginComponent {
       StorageHelper.setFullScreen(fullScreenData);
 
       // NOTE Redirect to home
-      this.router.navigate(['/dashboard-general']);
-      this.toastService.show('Successfully Logged In', {classname: 'bg-success', delay: 4000});
+      if (changePass == 'Y') {
+        this.router.navigate(['/change-password']);
+      } else {
+        this.router.navigate(['/dashboard-general']);
+      }
+      this.toastService.show('Successfully Logged In', { classname: 'bg-success', delay: 4000 });
     }
-    else{
-      this.toastService.show('Username or Password is Incorrect', {classname: 'bg-danger', delay: 4000});
+    else {
+      this.toastService.show('Username or Password is Incorrect', { classname: 'bg-danger', delay: 4000 });
     }
   }
 
@@ -141,6 +155,9 @@ export class LoginComponent {
     }
   }
 
+  toggleFP() {
+    this.showFP = !this.showFP;
+  }
   // -------------------------------------------------------------------------------
   // NOTE Helpers ------------------------------------------------------------------
   // -------------------------------------------------------------------------------

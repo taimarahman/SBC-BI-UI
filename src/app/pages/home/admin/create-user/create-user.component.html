@@ -307,7 +307,7 @@
               >
                 Save
               </button>
-              <button type="submit" *ngIf="isEditing" class="btn bg-theme me-2">
+              <button type="button" (click)="onSubmit()" *ngIf="isEditing" class="btn bg-theme me-2">
                 Update
               </button>
               <button

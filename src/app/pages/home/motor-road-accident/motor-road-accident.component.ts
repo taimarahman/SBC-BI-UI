@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, SimpleChanges } from '@angular/core';
 import { AppService } from '@services/app.service';
-import { barChart } from './chartObjectsMRA';
+import { ChartOptions, backgroundColor, barChart, donutChart } from './chartObjectsMRA';
 
 @Component({
   selector: 'app-motor-road-accident',
@@ -9,137 +9,168 @@ import { barChart } from './chartObjectsMRA';
 })
 export class MotorRoadAccidentComponent {
 
-  sbcRGCountBarChart: any;
-  jbcRGCountBarChart: any;
-  metlifeRGCountBarChart: any;
-  sonaliRGCountBarChart: any;
+  @Input() fromDate: any;
+  @Input() toDate: any;
 
-  sbcRGAmountBarChart: any;
-  jbcRGAmountBarChart: any;
-  metlifeRGAmountBarChart: any;
-  sonaliRGAmountBarChart: any;
 
-  sbcVHBarChart: any;
-  jbcVHBarChart: any;
-  metlifeVHBarChart: any;
-  sonaliVHBarChart: any;
+  regionDonutChart: any;
+  vehicleDonutChart: any;
+
+  regionChartObj: any = {};
+  vehicleChartObj: any = {};
 
   hideSpinner: boolean = false;
 
-  showbarChart: boolean = false;
+  showRegionDetails: boolean = false;
+  showVehicleDetails: boolean = false;
+
+  showRegionChart: boolean = false;
+  showVehicleChart: boolean = false;
   
 
   seriesObj = {
     name: '',
     data: []
   }
+ 
+  
 
-  constructor(private httpService: AppService) {
-    this.sbcRGCountBarChart = JSON.parse(JSON.stringify(barChart));
-    this.jbcRGCountBarChart = JSON.parse(JSON.stringify(barChart));
-    this.metlifeRGCountBarChart = JSON.parse(JSON.stringify(barChart));
-    this.sonaliRGCountBarChart = JSON.parse(JSON.stringify(barChart));
-    
-    this.sbcRGAmountBarChart = JSON.parse(JSON.stringify(barChart));
-    this.jbcRGAmountBarChart = JSON.parse(JSON.stringify(barChart));
-    this.metlifeRGAmountBarChart = JSON.parse(JSON.stringify(barChart));
-    this.sonaliRGAmountBarChart = JSON.parse(JSON.stringify(barChart));
-
-    this.sbcVHBarChart = JSON.parse(JSON.stringify(barChart));
-    this.jbcVHBarChart = JSON.parse(JSON.stringify(barChart));
-    this.metlifeVHBarChart = JSON.parse(JSON.stringify(barChart));
-    this.sonaliVHBarChart = JSON.parse(JSON.stringify(barChart));
-  }
+  constructor(private httpService: AppService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
-    this.getAccidentData();
+    this.getAccidentData().then(r => this.hideSpinner = true);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['fromDate'] || changes['toDate']) {
+      this.getAccidentData().then(r => this.hideSpinner = true);
+    }
   }
 
   async getAccidentData() {
     try {
-      const response: any = await this.httpService.getAccidentData();
-      if (response?.data) {
-        const regionData: any[] = response?.data?.regionWiseAccidentAnalysisData;
-        console.log(regionData)
-        const institutionData = this.getGroupedByData(regionData);
-        const sbcData = institutionData[1];
-        const jbcData = institutionData[2];
-        const metlifeData = institutionData[3];
-        const sonaliData = institutionData[4];
-        
-        // barchart.yaxis.title.text = 'No. of Customers'
-        const countYaxisLabel = 'No. of Accident'
-        const amountYaxisLabel = 'Total Claim Amount'
-        console.log(metlifeData)
-        // REGION COUNT
-        this.sbcRGCountBarChart = this.createBarChatData(this.sbcRGCountBarChart, sbcData, 'predicted_count', countYaxisLabel);
-        this.jbcRGCountBarChart = this.createBarChatData(this.jbcRGCountBarChart, jbcData, 'predicted_count', countYaxisLabel)
-        this.metlifeRGCountBarChart = this.createBarChatData(this.metlifeRGCountBarChart,  metlifeData, 'predicted_count', countYaxisLabel);
-        this.sonaliRGCountBarChart = this.createBarChatData(this.sonaliRGCountBarChart,  sonaliData, 'predicted_count', countYaxisLabel)
-        // REGION AMOUNT
-        this.sbcRGAmountBarChart = this.createBarChatData(this.sbcRGAmountBarChart, sbcData, 'predicted_amount', amountYaxisLabel);
-        this.jbcRGAmountBarChart = this.createBarChatData(this.jbcRGAmountBarChart, jbcData, 'predicted_amount', amountYaxisLabel)
-        this.metlifeRGAmountBarChart = this.createBarChatData(this.metlifeRGAmountBarChart,  metlifeData, 'predicted_amount', amountYaxisLabel);
-        this.sonaliRGAmountBarChart = this.createBarChatData(this.sonaliRGAmountBarChart,  sonaliData, 'predicted_amount', amountYaxisLabel)
+      this.showRegionChart = false;
+      this.showVehicleChart = false;
 
-        console.log('jbc',this.metlifeRGCountBarChart)
+      let resData: any;
+      if (this.fromDate && this.toDate) {
+        const response: any = await this.httpService.getAccidentData(this.fromDate, this.toDate);
+        resData = response?.data;
+      } else {
+        const response: any = await this.httpService.getAccidentData();
+        resData = response?.data;
+      }
+      if (resData) {
+        const regionData = resData?.regionWiseAccidentAnalysisData;
+        const vehicleData = resData?.vehicleTypeWiseAccidentAnalysisData;
 
-        // this.sbcVHBarChart = this.createBarChatData(this.sbcVHBarChart, sbcData,'predicted_amount', amountYaxisLabel);
-        // this.jbcVHBarChart = this.createBarChatData(this.jbcVHBarChart, jbcData,'predicted_amount', amountYaxisLabel)
-        // this.metlifeVHBarChart = this.createBarChatData(this.metlifeVHBarChart,'predicted_amount', metlifeData, amountYaxisLabel);
-        // this.sonaliVHBarChart = this.createBarChatData(this.sonaliVHBarChart,'predicted_amount', sonaliData, amountYaxisLabel)
-        
-        this.showbarChart = true;
+        if (regionData.length) {
+          this.regionDonutChart = JSON.parse(JSON.stringify(donutChart));
+          const regionGroupData = this.groupByKey(regionData, 'city');
+          this.regionDonutChart = this.getDonutChart(regionGroupData, this.regionDonutChart);  
+          this.regionChartObj = this.createBarChatData(regionGroupData, this.regionChartObj);
+          
+          this.showRegionChart = true;
+        }
+
+        if (vehicleData.length) {
+          this.vehicleDonutChart = JSON.parse(JSON.stringify(donutChart));
+          const vehicleGroupData = this.groupByKey(vehicleData, 'vehicle');
+          this.vehicleDonutChart = this.getDonutChart(vehicleGroupData, this.vehicleDonutChart);  
+          this.vehicleChartObj = this.createBarChatData(vehicleGroupData, this.vehicleChartObj);
+          
+          this.showVehicleChart = true;
+        }
       }
       
-    } catch (error) {
-      
-    }
-    
-    
+    } catch (error) {}
   }
 
-  createBarChatData(chartObj: any, chartdata: any, property: string, yaxisTitle: any) {
-    let label: any[] = []
-    
-    for (let item of chartdata) {
-      !label.includes(item.year) && label.push(item.year);
-      if (chartObj.series.length > 0) {
-        let oldObj = chartObj.series.find((obj: any) => obj.name == item.city);
-        if (oldObj) {
-          oldObj.data.push(parseInt(item[property]));
-      } else {
-        let columnObj = JSON.parse(JSON.stringify(this.seriesObj));
-        columnObj.name = item.city;
-        columnObj.data.push(parseInt(item[property]));
-        chartObj.series.push(columnObj)
-      }
 
-     } else { // length = 0
-        let columnObj = JSON.parse(JSON.stringify(this.seriesObj));
-        columnObj.name = item.city;
-        columnObj.data.push(parseInt(item[property]));
-        chartObj.series.push(columnObj)
-     }
+
+
+  // GENERATE PIECHART FOR ALL
+  getDonutChart(res: any, chart: any) {
+    const keys = Object.keys(res);
+
+    for (let key of keys) {
+      const cData = res[key];
+      chart.labels.push(key);
+      let totalACC = 0;
+      cData.map((item: any) => {
+        totalACC += item.predicted_count;
+      });
+
+      chart.series.push(totalACC);
     }
-    console.log(label)
-    chartObj.labels = label;
-    chartObj.yaxis.title.text = yaxisTitle;
+
+    return chart;
+  }
+
+  createBarChatData(res: any, chartObj: any) {
+    let countChart = JSON.parse(JSON.stringify(barChart));
+    let claimChart = JSON.parse(JSON.stringify(barChart));
+    let labels:any[] = [];
+    const keys = Object.keys(res);
+
+    for (let key of keys) { 
+      const cData = res[key];
+      const countObj = JSON.parse(JSON.stringify(this.seriesObj));
+      const claimObj = JSON.parse(JSON.stringify(this.seriesObj));
+      countObj.name = claimObj.name = key;
+      
+      cData.map((item: any) => {
+        !labels.includes(item.year) && labels.push(item.year);
+        countObj.data.push(item.predicted_count);
+        claimObj.data.push(item.predicted_amount);
+      })
+
+      countChart.series.push(countObj);
+      claimChart.series.push(claimObj);
+    }
+
+    countChart.labels = claimChart.labels = labels;
+
+    chartObj.count = countChart;
+    chartObj.claim = claimChart;
 
     return chartObj;
   }
 
-  getGroupedByData(objData:any) {
-    const grouped = objData.reduce((data:any, obj:any) => {
-      const key = obj.instituteCode;
-      if (!data[key]) {
-        data[key] = [];
-      }
-      data[key].push(obj);
-      return data;
-    }, {});
-  
-    return grouped;
+
+  // SCROLL TO ELEMENT
+  scroll(el: HTMLElement) {
+
+    setTimeout(() => {
+      el.scrollIntoView({ behavior: 'smooth' });   
+    }, 100)
+    this.cdr.detectChanges();
+
   }
 
+  // HIDE CHART ON CLOSE
+  hideEl(el: any, flag:any) {
+    el.classList.add('fade');
+    setTimeout(() => {
+      if (flag == 'region') this.showRegionDetails = false;
+      else this.showVehicleDetails = false;
+      el.classList.remove('fade');
+    }, 400)
+    this.cdr.detectChanges();
+
+  }
+
+
+  groupByKey(res: any, key: any) {
+
+    let list: any = {};
+    for (const item of res) {
+      const itemKey:any = item[key];
+      if (!list[itemKey]) {
+        list[itemKey] = [];
+      }
+      list[itemKey].push(item);
+    }
+    return list;
+  }
 }

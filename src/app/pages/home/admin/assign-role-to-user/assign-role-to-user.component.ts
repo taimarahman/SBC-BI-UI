@@ -135,7 +135,7 @@ export class AssignRoleToUserComponent {
       if (response?.status === 200) {
         this.roleList = [];
         for (let v of response.data) {
-          this.roleList.push({
+          v.activeYn == 'Y' && this.roleList.push({
             value: v.roleId,
             label: v.roleName,
             checked: false,

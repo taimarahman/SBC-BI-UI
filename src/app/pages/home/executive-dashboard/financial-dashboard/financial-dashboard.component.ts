@@ -87,25 +87,19 @@ export class FinancialDashboardComponent {
   numberToCrores(number: any): any {
     if (number > 9999999) {
       const croreValue = (number / 10000000).toFixed(2);
-      return `৳ ${croreValue} cr`;
+      return `${croreValue} cr`;
     }
-    return `৳ ${Math.floor(parseInt(number))}`;
+    return `${Math.floor(parseInt(number))}`;
   }
 
 
-  toTextLg(text:any): string {
-    if (text) {
-      const processedText = text.replace(/(\d+)/g, "<span class='display-3'>$1</span>");
-      return processedText;
-    }
-    return '';
-  }
+  // toTextLg(text:any): string {
+  //   if (text) {
+  //     const processedText = text.replace(/(\d+)/g, "<span class='h1'>$1</span>");
+  //     return processedText;
+  //   }
+  //   return '';
+  // }
 
-  toTextMd(text:any): string {
-    if (text) {
-      const processedText = text.replace(/(\d+)/g, "<span class='h1 fw-light'>$1</span>");
-      return processedText;
-    }
-    return '';
-  }
+
 }

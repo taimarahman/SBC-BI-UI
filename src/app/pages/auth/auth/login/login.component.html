@@ -9,8 +9,8 @@
           alt=""
           class="img-fluid"
       /></a>
-      <h1 class="display-5 fw-bold text-capitalize">
-        Shadharan Bima  <br class="d-block d-md-none d-lg-block" />
+      <h1 class="display-4 fw-bold text-capitalize">
+        Jiban Bima  <br class="d-block d-md-none d-lg-block" />
         Corporation
       </h1>
     </div>
@@ -21,7 +21,7 @@
         <div class="mb-3 mb-lg-4 mb-xl-5">
           <p class="h1 fw-bold text-capitalize">BI Portal</p>
         </div>
-        <form [formGroup]="formGroup" (ngSubmit)="onClickSubmit()">
+        <form *ngIf="!showFP" [formGroup]="formGroup" (ngSubmit)="onClickSubmit()">
           <div class="form-data">
             <div class="forms-inputs mb-3 mb-xl-4">
               <p class="mb-2">Username</p>
@@ -74,20 +74,18 @@
                 </div>
               </div>
             </div>
-            <p class="mb-2">
-              <a href="#" class="text-muted cursor-pointer text-decoration-none"
-                >Forgot Password?</a
-              >
-            </p>
+            <p class="mb-2 text-muted cursor-pointer"(click)="showFP=true">Forgot Password?</p>
             <button
               type="submit"
               class="btn bg-theme w-100 login-btn"
-              [disabled]="formGroup.invalid || loginCheckLoader"
+              [disabled]="formGroup.invalid || disableBtn"
             >
+              <span *ngIf="disableBtn" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
               Login
             </button>
           </div>
         </form>
+        <app-forgot-password *ngIf="showFP" (toggleFP)="toggleFP()"></app-forgot-password>
       </div>
 <!--      <div class="col-md-12 mt-2">-->
 <!--        <div class="alert alert-danger" *ngIf="login && loginFailure">-->

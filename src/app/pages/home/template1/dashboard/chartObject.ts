@@ -7,15 +7,13 @@ import {
     ApexStroke,
     ApexXAxis,
     ApexYAxis,
-  } from 'ng-apexcharts';
-  
-  import {
     ApexNonAxisChartSeries,
     ApexResponsive,
     ApexChart,
     ApexTheme,
     ApexTitleSubtitle,
   } from 'ng-apexcharts';
+
 
 export type ChartOptions = {
     series: any | ApexNonAxisChartSeries;
@@ -43,9 +41,7 @@ const backgroundColor: any[] = [
   '#9EA1D4',
   '#A8D1D1',
   '#57838d',
-  
-    
-  ]
+]
 const barBgColor: any[] = [ '#e77f67', '#574b90','#cf6a87', '#3dc1d3']
 
 export const claimPieChart: Partial<ChartOptions> = {
@@ -104,7 +100,7 @@ export const claimDonutChart: Partial<ChartOptions> = {
             width: 200,
           },
           legend: {
-            position: 'bottom',
+            show: false,
           },
         },
       },
@@ -166,6 +162,7 @@ export let highestClaimBarChart: Partial<ChartOptions> = {
     ],
     chart: {
       width: '100%',
+      height: '256px',
       type: 'bar',
       redrawOnParentResize: true,
     },
@@ -277,7 +274,6 @@ export let accidentBarChart: Partial<ChartOptions> = {
       bar: {
             columnWidth: '80%',
             dataLabels: {
-                // position: 'top',
                 orientation: 'vertical',
             }
         }
@@ -505,4 +501,95 @@ export let dynamicBarChart: Partial<ChartOptions> = {
   fill: {
       opacity: 0.5,
   },
+};
+
+export const lineChart: Partial<ChartOptions> = {
+  series: [],
+  chart: {
+    width: '100%',
+    height: '250px',
+    type: 'line',
+    redrawOnParentResize: true,
+
+    toolbar: {
+      show: true,
+      tools: {
+        download: true,
+        selection: false,
+        zoom: false,
+        zoomin: false,
+        zoomout: false,
+        pan: false,
+        reset: false
+      }
+    }
+  },
+  dataLabels: {
+    enabled: true,
+    background: {
+      borderWidth: 0,
+    }
+  },
+  stroke: {
+    curve: 'smooth'
+  },
+  title: {
+    text:'',
+  },
+  labels: [],
+  xaxis: {
+    type: 'datetime',
+  },
+  yaxis: [
+    {
+      axisTicks: {
+        show: true,
+      },
+      axisBorder: {
+        show: true,
+        color: '#175e9c',
+      },
+      labels: {
+        style: {
+          colors: '#175e9c',
+        },
+      },
+      title: {
+        text: 'Sold Insurance',
+        style: {
+          color: '#175e9c',
+        },
+      },
+      tooltip: {
+        enabled: true,
+      },
+    },
+    {
+      seriesName: 'Amount',
+      opposite: true,
+      axisTicks: {
+        show: true,
+      },
+      axisBorder: {
+        show: true,
+        color: '#ca3374',
+      },
+      labels: {
+        style: {
+          colors: '#ca3374',
+        },
+      },
+      title: {
+        text: 'Premium Collection',
+        style: {
+          color: '#ca3374',
+        },
+      },
+      tooltip: {
+        enabled: true,
+      },
+    },
+  ],
+  
+  colors: barBgColor,
 };

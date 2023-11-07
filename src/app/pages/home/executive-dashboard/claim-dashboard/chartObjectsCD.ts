@@ -1,22 +1,19 @@
 import {
-    ApexDataLabels,
-    ApexFill,
-    ApexLegend,
-    ApexPlotOptions,
-    ApexStroke,
-    ApexXAxis,
-    ApexYAxis,
-  } from 'ng-apexcharts';
+  ApexDataLabels,
+  ApexFill,
+  ApexLegend,
+  ApexPlotOptions,
+  ApexStroke,
+  ApexXAxis,
+  ApexYAxis,
+  ApexNonAxisChartSeries,
+  ApexResponsive,
+  ApexChart,
+  ApexTheme,
+  ApexTitleSubtitle,
+} from 'ng-apexcharts';
   
-  import {
-    ApexNonAxisChartSeries,
-    ApexResponsive,
-    ApexChart,
-    ApexTheme,
-    ApexTitleSubtitle,
-  } from 'ng-apexcharts';
-
-export type ChartOptions = {
+  export type ChartOptions = {
     series: any | ApexNonAxisChartSeries;
     chart: any | ApexChart;
     responsive: any | ApexResponsive[];
@@ -31,10 +28,9 @@ export type ChartOptions = {
     stroke: any | ApexStroke;
     plotOptions: any | ApexPlotOptions;
     dataLabels: any | ApexDataLabels;
-  
 };
 
-export const backgroundColor: any[] = [
+const backgroundColor: any[] = [
   '#0c4876',
   '#608fb7',
   '#C0DBEA',
@@ -43,77 +39,12 @@ export const backgroundColor: any[] = [
   '#9EA1D4',
   '#A8D1D1',
   '#57838d',
-  
-    
+];
+export const barColors = [
+  '#0c4876',
+  '#E8A0BF',
+  '#70a6a6',
   ]
-export let barChart: Partial<ChartOptions> = {
-    series: [],
-    chart: {
-        width: '100%',
-        height: '300px',
-        type: 'bar',
-      redrawOnParentResize: true,
-      events: {
-        dataPointSelection: (event:any, chartContext:any, config:any) => { 
-            console.log(config.w.config.labels[config.dataPointIndex])}
-        }
-    },
-    plotOptions: {
-      bar: {
-            columnWidth: '80%',
-        dataLabels: {
-             
-          orientation: 'vertical',
-          total: {
-            enabled: false,
-          },
-            }
-        }
-    },
-    labels: [],
-    dataLabels: {
-        style: {
-          fontWeight: 'semibold',
-          
-        },
-    },
-    title: {
-      text: '',
-      align: 'left',
-  },
-    
-    stroke: {
-      width: [1, 1]
-    },
-    xaxis: {
-      categories: [],
-    },
-    yaxis: {
-      title: {
-        text: '',
-      },
-      tooltip: {
-        enabled: true,
-      },
-  },
-    
-    responsive: [
-      {
-        breakpoint: 480,
-        options: {
-          chart: {
-            width: 200,
-          },
-          
-        },
-      },
-    ],
-    colors: backgroundColor,
-    fill: {
-        opacity: 0.5,
-    },
-};
-
 export const donutChart: Partial<ChartOptions> = {
   series: [],
   chart: {
@@ -179,4 +110,92 @@ legend: {
     vertical: 0
 },
 }
+};
+
+export const lineChart: Partial<ChartOptions> = {
+  series: [],
+  chart: {
+    width: '100%',
+    height: '300px',
+    type: 'line',
+    redrawOnParentResize: true,
+
+    toolbar: {
+      show: true,
+      tools: {
+        download: true,
+        selection: false,
+        zoom: false,
+        zoomin: false,
+        zoomout: false,
+        pan: false,
+        reset: false
+      }
+    }
+  },
+  dataLabels: {
+    enabled: true,
+    background: {
+      borderWidth: 0,
+    }
+  },
+  stroke: {
+    curve: 'smooth'
+  },
+  title: {
+    text:'',
+  },
+  labels: [],
+  yaxis: [
+    {
+      axisTicks: {
+        show: true,
+      },
+      axisBorder: {
+        show: true,
+        color: '#175e9c',
+      },
+      labels: {
+        style: {
+          colors: '#175e9c',
+        },
+      },
+      title: {
+        text: 'No. of Claims (in thousands)',
+        style: {
+          color: '#175e9c',
+        },
+      },
+      tooltip: {
+        enabled: true,
+      },
+    },
+    {
+      seriesName: 'Amount',
+      opposite: true,
+      axisTicks: {
+        show: true,
+      },
+      axisBorder: {
+        show: true,
+        color: '#ca3374',
+      },
+      labels: {
+        style: {
+          colors: '#ca3374',
+        },
+      },
+      title: {
+        text: 'Paid Amount (in crore)',
+        style: {
+          color: '#ca3374',
+        },
+      },
+      tooltip: {
+        enabled: true,
+      },
+    },
+  ],
+
+  colors: barColors,
 };

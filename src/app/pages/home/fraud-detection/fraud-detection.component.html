@@ -1,14 +1,14 @@
 
 <div class="content-wrapper mt-3">
     
-    <div class="row row-cols-2 mx-0 g-2 g-xl-4">
-        <div class="col">
-            <div class="bg-light shadow rounded p-4 p-xl-5">
+    <div class="row row-cols-1 row-cols-md-2 mx-0 g-2 g-xl-3 g-xxl-4">
+        <div class="col" *ngIf="showFraudRatio">
+            <div class="bg-light shadow rounded p-4 p-xxl-5">
                 <div class="mb-3">
                     <p class="h4">Fraud Basis Liability Assessment Summary</p>
                 </div>
-                <div class="col-10 mx-auto">
-                    <apx-chart *ngIf="showRatioChart" class="cursor-pointer"
+                <div class="col-8 col-md-11 col-lg-10 mx-auto">
+                    <apx-chart *ngIf="showFraudRatio" class="cursor-pointer"
                         [series]="ratioPieChart.series"
                         [chart]="ratioPieChart.chart"
                         [colors]="ratioPieChart.colors"
@@ -19,14 +19,13 @@
                     ></apx-chart>
                 </div>
             </div>
-            
         </div>
-        <div class="col">
-            <div class="bg-light shadow rounded p-4 p-xl-5">
+        <div class="col" *ngIf="showRatioChart">
+            <div class="bg-light shadow rounded p-4 p-xxl-5">
                 <div class="mb-3">
                     <p class="h4">Claim Refusal Basis Premium Collection Summary</p>
                 </div>
-                <div class="col-10 mx-auto">
+                <div class="col-8 col-md-11 col-lg-10 mx-auto">
                     <apx-chart *ngIf="showRatioChart" class="cursor-pointer"
                         [series]="premiumPieChart.series"
                         [chart]="premiumPieChart.chart"
@@ -42,9 +41,9 @@
         
     </div>
 
-    <div class="d-flex flex-wrap mx-0 p-4 ">
+    <div class="d-flex flex-wrap mx-0 py-4 ">
         <div [ngClass]="{'col-6': showYesChart}" #yesChart>
-            <div class="bg-light shadow rounded p-4 p-xl-5 mb-3 me-3" *ngIf="showYesChart">
+            <div class="bg-light shadow rounded p-4 p-xxl-5 mb-3 me-3" *ngIf="showYesChart">
                 <div class="mb-3 position-relative">
                     <p class="h5">Liability Assessment <br> <span class="text-danger">(Fraud)</span></p>
                     <span class="close-btn" (click)="hideEl(yesChart, 'fraud')"><i class="bi bi-x-lg"></i></span>
@@ -57,6 +56,7 @@
                         [labels]="fraudBarChart.labels"
                         [title]="fraudBarChart.title"
                         [yaxis]="fraudBarChart.yaxis"
+                        [xaxis]="fraudBarChart.xaxis"
                         [plotOptions]="fraudBarChart.plotOptions"
                         [responsive]="fraudBarChart.responsive"
                         [dataLabels]="fraudBarChart.dataLabels"
@@ -65,7 +65,7 @@
             </div>
         </div>
         <div [ngClass]="{'col-6': showNoChart}" #noChart>
-            <div class="bg-light shadow rounded p-4 p-xl-5 mb-3" *ngIf="showNoChart">
+            <div class="bg-light shadow rounded p-4 p-xxl-5 mb-3" *ngIf="showNoChart">
                 <div class="mb-3 position-relative">
                     <p class="h5">Liability Assessment <br><span class="text-success">(Not Fraud)</span></p>
                     <span class="close-btn" (click)="hideEl(noChart, 'not fraud')"><i class="bi bi-x-lg"></i></span>
@@ -87,7 +87,7 @@
             
         </div>
         <div [ngClass]="{'col-6': showRefuseYesChart}" #yesRefuse>
-            <div class="bg-light shadow rounded p-4 p-xl-5 mb-3 me-3" *ngIf="showRefuseYesChart">
+            <div class="bg-light shadow rounded p-4 p-xxl-5 mb-3 me-3" *ngIf="showRefuseYesChart">
                 <div class="mb-3 position-relative">
                     <p class="h5">Premium Collection Data <br> <span class="text-danger">(Claim Refused)</span></p>
                     <span class="close-btn" (click)="hideEl(yesRefuse, 'refuse')"><i class="bi bi-x-lg"></i></span>
@@ -99,6 +99,7 @@
                         [colors]="refuseBarChart.colors"
                         [labels]="refuseBarChart.labels"
                         [title]="refuseBarChart.title"
+                        [xaxis]="refuseBarChart.xaxis"
                         [yaxis]="refuseBarChart.yaxis"
                         [plotOptions]="refuseBarChart.plotOptions"
                         [responsive]="refuseBarChart.responsive"
@@ -108,7 +109,7 @@
             </div>
         </div>
         <div [ngClass]="{'col-6': showRefuseNoChart}" #noRefuse>
-            <div class="bg-light shadow rounded p-4 p-xl-5 mb-3" *ngIf="showRefuseNoChart">
+            <div class="bg-light shadow rounded p-4 p-xxl-5 mb-3" *ngIf="showRefuseNoChart">
                 <div class="mb-3 position-relative">
                     <p class="h5">Premium Collection Data <br><span class="text-success">(Claim Not Refused)</span> </p>
                     <span class="close-btn" (click)="hideEl(noRefuse, 'not refused')"><i class="bi bi-x-lg"></i></span>
@@ -120,6 +121,7 @@
                         [colors]="notRefuseBarChart.colors"
                         [labels]="notRefuseBarChart.labels"
                         [title]="notRefuseBarChart.title"
+                        [xaxis]="notRefuseBarChart.xaxis"
                         [yaxis]="notRefuseBarChart.yaxis"
                         [plotOptions]="notRefuseBarChart.plotOptions"
                         [responsive]="notRefuseBarChart.responsive"

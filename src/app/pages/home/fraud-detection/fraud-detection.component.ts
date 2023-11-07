@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, ElementRef, Input, SimpleChanges, ViewChild } from '@angular/core';
 import { AppService } from '@services/app.service';
-import { ChartOptions, barChart, pieChart } from './chartObjectsFD';
+import { ChartOptions, barChart } from './chartObjectsFD';
 
 @Component({
   selector: 'app-fraud-detection',
@@ -20,6 +20,7 @@ export class FraudDetectionComponent {
   // ratioPieChart: any;
   fraudBarChart: any;
   notFraudBarChart: any;
+  showFraudRatio: boolean = false;
   showRatioChart: boolean = false;
   showYesChart: boolean = false;
   showNoChart: boolean = false;
@@ -55,7 +56,18 @@ export class FraudDetectionComponent {
     labels: ['Fraud', 'Not Fraud'],
     fill: {
       opacity: 0.5,
-  }
+    },
+    responsive: [
+      {
+        breakpoint: 992,
+        options: {
+          legend: {
+            position:'bottom'
+          }
+          
+        },
+      },
+    ],
   };
   premiumPieChart: Partial<ChartOptions> = {
     series: [],
@@ -74,7 +86,17 @@ export class FraudDetectionComponent {
     labels: ['Refused', 'Not Refused'],
     fill: {
       opacity: 0.5,
-  }
+    },
+    responsive: [
+      {
+        breakpoint: 992,
+        options: {
+          legend: {
+            position:'bottom'
+          }
+        },
+      },
+    ],
   };
 
   constructor(private httpService: AppService, private cdr: ChangeDetectorRef) {
@@ -92,13 +114,14 @@ export class FraudDetectionComponent {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['fromDate'] || changes['toDate']) {
       this.getFraudDetectiontData().then(r => {
-        // this.cdr.detectChanges();
       });
     }
   }
 
   async getFraudDetectiontData() {
     try {
+      this.showRatioChart = false;
+      this.showFraudRatio = false;
       this.ratioPieChart.series = [];
       this.premiumPieChart.series = [];
       let resData: any;
@@ -109,88 +132,97 @@ export class FraudDetectionComponent {
       } else {
         const response: any = await this.httpService.getFraudDetectiontData();
         resData = response?.data;
-      }
+      } 
       if (resData) {
         const fraudData = resData.liabilityAssessments;
         const refuseData = resData.premiumCollections;
                
-        this.ratioPieChart.series.push(parseInt(resData.totalFraudYesInLiabilityAssessmentData));
-        this.ratioPieChart.series.push(parseInt(resData.totalFraudNoInLiabilityAssessmentData));
-        // claim refuse
-        this.premiumPieChart.series.push(parseInt(resData.totalClaimRefusalYesInPremiumCollectionData));
-        this.premiumPieChart.series.push(parseInt(resData.totalClaimRefusalNoInPremiumCollectionData));
-        this.getFraudBarChart(fraudData);
-        this.getRefuseBarChart(refuseData);
-        this.showRatioChart = true;
+        if (parseInt(resData.totalFraudYesInLiabilityAssessmentData) && parseInt(resData.totalFraudNoInLiabilityAssessmentData)) {
+          this.ratioPieChart.series.push(parseInt(resData.totalFraudYesInLiabilityAssessmentData));
+          this.ratioPieChart.series.push(parseInt(resData.totalFraudNoInLiabilityAssessmentData));
+          
+          fraudData.length && this.getFraudBarChart(fraudData);
+          
+          this.showFraudRatio = true;
+        }
+
+        if (parseInt(resData.totalClaimRefusalYesInPremiumCollectionData) && parseInt(resData.totalClaimRefusalYesInPremiumCollectionData)) {
+          this.premiumPieChart.series.push(parseInt(resData.totalClaimRefusalYesInPremiumCollectionData));
+          this.premiumPieChart.series.push(parseInt(resData.totalClaimRefusalNoInPremiumCollectionData));
+
+          refuseData.length && this.getRefuseBarChart(refuseData);
+
+          this.showRatioChart = true;
+        }
+
+        this.cdr.detectChanges();
+
       }
     } catch (error) {}
   }
 
   getFraudBarChart(allData: any) {
-    const groupedData = this.getGroupedByData(allData);
-    let label: any[] = [];
-    this.fraudBarChart.series = [];
-    this.notFraudBarChart.series = [];
+    const groupedData = this.groupByKey(allData, 'fraud');
+    this.refuseBarChart.series = [];
+    this.notRefuseBarChart.series = [];
     
     let yesColObj = JSON.parse(JSON.stringify(this.seriesObj));
     yesColObj.name = 'Fraud';
     let noColObj = JSON.parse(JSON.stringify(this.seriesObj));
     noColObj.name = 'Not Fraud';
 
-    Object.keys(groupedData).forEach(obj => {
+    Object.keys(groupedData).forEach(key => {
+      const currList = groupedData[key];
+      const currGroup = this.groupByKey(currList, 'organization_type');
+      const orgs = Object.keys(currGroup)
+      let label: any[] = [];
 
-      const currentObj = groupedData[obj];
-      let yesCount = 0;
-      let noCount = 0;
-  
-      currentObj.map((item: any) => {
-        !label.includes(item.instituteName) && label.push(item.instituteName);
-          
-        item.fraud == 'Yes' ? yesCount++ : noCount++;
-        })
-        yesColObj.data.push(yesCount);
-        noColObj.data.push(noCount);
+      for (let org of orgs) {
+        label.push(org);
+        if (key == 'Yes') yesColObj.data.push(currGroup[org].length);
+        else noColObj.data.push(currGroup[org].length);
+      }
+
+      if (key == 'Yes') this.fraudBarChart.labels = label;
+      else this.notFraudBarChart.labels = label;
     })
 
-    this.fraudBarChart.labels = this.notFraudBarChart.labels = label;
     this.fraudBarChart.series.push(yesColObj);
     this.notFraudBarChart.series.push(noColObj);
   }
 
   getRefuseBarChart(allData: any) {
-    const groupedData = this.getGroupedByData(allData);
-    let label: any[] = [];
+    const groupedData = this.groupByKey(allData, 'claimRefusal');
     this.refuseBarChart.series = [];
     this.notRefuseBarChart.series = [];
-    
+    this.refuseBarChart.xaxis.type = this.notRefuseBarChart.xaxis.type = 'datetime'
     let yesColObj = JSON.parse(JSON.stringify(this.seriesObj));
     yesColObj.name = 'Refused';
     let noColObj = JSON.parse(JSON.stringify(this.seriesObj));
     noColObj.name = 'Not Refused';
 
-    Object.keys(groupedData).forEach(obj => {
+    Object.keys(groupedData).forEach(key => {
+      const currList = groupedData[key];
+      const currGroup = this.groupByKey(currList, 'date');
+      const allDates = Object.keys(currGroup)
+      let label: any[] = [];
 
-      const currentObj = groupedData[obj];
-      let yesCount = 0;
-      let noCount = 0;
-  
-      currentObj.map((item: any) => {
-        !label.includes(item.instituteName) && label.push(item.instituteName);
-          
-        item.claimRefusal == 'Yes' ? yesCount++ : noCount++;
-        })
-        yesColObj.data.push(yesCount);
-        noColObj.data.push(noCount);
+      for (let date of allDates) {
+        label.push(date);
+        if (key == 'Yes') yesColObj.data.push(currGroup[date].length);
+        else noColObj.data.push(currGroup[date].length);
+      }
+
+      if (key == 'Yes') this.refuseBarChart.labels = label;
+      else this.notRefuseBarChart.labels = label;
     })
 
-    this.refuseBarChart.labels = this.notRefuseBarChart.labels = label;
     this.refuseBarChart.series.push(yesColObj);
     this.notRefuseBarChart.series.push(noColObj);
   }
   
 
   showChartOnClick(flag: any) {
-    console.log(flag)
     if (flag == 'Fraud') {
       this.showYesChart = true;
       setTimeout(() => {
@@ -218,18 +250,18 @@ export class FraudDetectionComponent {
 
   }
 
+  groupByKey(res: any, key: any) {
+    let list: any = {};
+    for (const item of res) {
+      const itemKey:any = item[key];
 
-  getGroupedByData(objData:any) {
-    const grouped = objData.reduce((data:any, obj:any) => {
-      const key = obj.instituteCode;
-      if (!data[key]) {
-        data[key] = [];
+      if (!list[itemKey]) {
+        list[itemKey] = [];
       }
-      data[key].push(obj);
-      return data;
-    }, {});
-  
-    return grouped;
+      list[itemKey].push(item);
+    }
+
+    return list;
   }
 
 

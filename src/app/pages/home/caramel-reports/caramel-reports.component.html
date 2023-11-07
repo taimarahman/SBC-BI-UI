@@ -32,13 +32,13 @@
                     <thead >
                         <tr> 
                             <th>Company Name</th>
-                            <th *ngFor="let f of fields" (click)="openReport(f)" class="cursor-pointer"> {{convertToTitleCase(f)}}</th>
+                            <th *ngFor="let f of fields" (click)="openReport(f, selectedReport.reportId)" class="cursor-pointer"> {{convertToTitleCase(f)}}</th>
                         </tr>
                     </thead>
                     <tbody>
                     <tr *ngFor="let data of selectedReportDetails">
                       <td class="text-center">{{data.companyName}}</td>
-                      <td *ngFor="let f of fields" class="text-center cursor-pointer" (click)="openReport(f)">{{data[f]}}</td>
+                      <td *ngFor="let f of fields" class="text-center cursor-pointer" (click)="openReport(f, selectedReport.reportId)">{{data[f]}}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -57,8 +57,7 @@
                 [plotOptions]="reportBarChart.plotOptions"
                 [responsive]="reportBarChart.responsive"
                 [dataLabels]="reportBarChart.dataLabels"
-
-                ></apx-chart>
+            ></apx-chart>
         </div>
       </div>
     </div>

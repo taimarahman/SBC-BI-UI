@@ -1,4 +1,3 @@
-
 <table class="table table-striped nowrap w-100">
   <thead>
     <!-- <tr>
@@ -15,17 +14,20 @@
       <th>Year</th>
     </tr>
     <tr *ngIf="selectedReport.reportId == 66 || selectedReport.reportId == 67">
-      <th>Institute Name</th>
       <th>Year</th>
     </tr>
-    <tr *ngIf="![18,19,66,67].includes(selectedReport.reportId)" >
+    <tr *ngIf="selectedReport.reportId == 47 || selectedReport.reportId == 45">
+      <th>Start Year</th>
+      <th>End Year</th>
+    </tr>
+    <tr *ngIf="![18,19,47,45,66,67].includes(selectedReport.reportId)">
       <th *ngFor="let field of fields; let i = index" class="text-start">
         {{ field }}
       </th>
     </tr>
   </thead>
   <tbody>
-    <ng-container *ngIf="![18,19,66,67].includes(selectedReport.reportId)">
+    <ng-container *ngIf="![18,19,47,45,66,67].includes(selectedReport.reportId)">
       <tr *ngFor="let data of inputDataList">
         <td *ngFor="let f of fields; let i = index">
           <input type="text" [name]="f" [(ngModel)]="data[f]" />
@@ -40,6 +42,7 @@
       <td>
         <input type="text" name="year" [(ngModel)]="year" />
       </td>
+      <td>
     </tr>
     <tr *ngIf="selectedReport.reportId == 19">
       <td>
@@ -48,13 +51,19 @@
       <td>
         <input type="text" name="year" [(ngModel)]="year" />
       </td>
+      <td>
     </tr>
     <tr *ngIf="selectedReport.reportId == 66 || selectedReport.reportId == 67">
       <td>
-        <input type="text" name="instituteName" [(ngModel)]="instituteName" />
+        <input type="text" name="year" [(ngModel)]="year" />
+      </td>
+    </tr>
+    <tr *ngIf="selectedReport.reportId == 47 || selectedReport.reportId == 45">
+      <td>
+        <input type="text" name="startYear" [(ngModel)]="startYear" />
       </td>
       <td>
-        <input type="text" name="year" [(ngModel)]="year" />
+        <input type="text" name="endYear" [(ngModel)]="endYear" />
       </td>
     </tr>
 
@@ -66,20 +75,18 @@
     >
       Add
     </button> -->
-    <button
-      *ngIf="selectedReport.reportId"
-      type="button"
-      class="btn btn bg-theme shadow me-3 mt-4"
-      (click)="submitData()"
-    >
+    <button *ngIf="selectedReport.reportId" type="button" class="btn btn bg-theme shadow me-3 mt-4"
+      (click)="submitData()">
       Submit
     </button>
   </tbody>
 </table>
-<table *ngIf="showPredictRes && ( selectedReport.reportId == 18 || selectedReport.reportId == 19 || selectedReport.reportId == 66 || selectedReport.reportId == 67)"
-       class="table table-striped nowrap w-100">
+<table *ngIf="showPredictRes && (allowedReportIds.includes(selectedReport.reportId))"
+  class="table table-striped nowrap w-100">
   <thead>
     <tr *ngIf="selectedReport.reportId == 18 || selectedReport.reportId == 19">
+      <td>Institute Code</td>
+      <td>Institute Name</td>
       <th *ngIf="selectedReport.reportId == 18">Incident City</th>
       <th *ngIf="selectedReport.reportId == 19">Vehicle Type</th>
       <th>Year</th>
@@ -92,9 +99,17 @@
       <th *ngIf="selectedReport.reportId == 67">Predicted Expense</th>
       <th>Year</th>
     </tr>
+    <tr *ngIf="selectedReport.reportId == 47">
+      <th>Institute Code</th>
+      <th>Institute Name</th>
+      <th>Date</th>
+      <th>Sales</th>
+    </tr>
   </thead>
   <tbody *ngIf="selectedReport.reportId == 18 || selectedReport.reportId == 19">
     <tr *ngFor="let data of predictResData">
+      <td>{{ data.instituteCode }}</td>
+      <td>{{ data.instituteName }}</td>
       <td *ngIf="selectedReport.reportId == 18">{{ data.city }}</td>
       <td *ngIf="selectedReport.reportId == 19">{{ data.vehicle }}</td>
       <td>{{ data.year }}</td>
@@ -110,22 +125,67 @@
       <td>{{ data.year }}</td>
     </tr>
   </tbody>
+  <tbody *ngIf="selectedReport.reportId == 47">
+    <tr *ngFor="let data of predictResData[0]">
+      <td>{{ data.instituteCode }}</td>
+      <td>{{ data.instituteName }}</td>
+      <td>{{ data.date }}</td>
+      <td>{{ data.sales | number:'1.1-4'}}</td>
+    </tr>
+  </tbody>
 </table>
-<table *ngIf="showPredictRes && selectedReport.reportId != 18 && selectedReport.reportId != 19 && selectedReport.reportId != 66 && selectedReport.reportId != 67"
-       class="table table-striped nowrap w-100">
+
+<table *ngIf="showPredictRes && selectedReport.reportId == 45" class="table table-striped nowrap w-100 align-middle">
   <thead>
-  <tr>
-    <th *ngFor="let field of fields; let i = index" class="text-start">
-      {{ field }}
-    </th>
-  </tr>
+
+    <tr>
+      <th >Institute Code</th>
+      <th >Institute Name</th>
+      <th >Date</th>
+      <th >Trend</th>
+      <th colspan="2" class="m-auto text-center">
+        Outliers
+        <div class="d-flex justify-content-between">
+          <p>TXN Number</p>
+          <p>Anomaly Type</p>
+        </div>
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let data of predictResData">
+      <td >{{data.trendAnalysis.instituteCode }}</td>
+      <td >{{data.trendAnalysis.instituteName }}</td>
+      <td >{{data.trendAnalysis.period }}</td>
+      <td >{{data.trendAnalysis.trend}}</td>
+      <td>
+        <ng-container *ngFor="let anomalyType of data.outliers">
+          <tr *ngFor="let txId of data.trendOutliers.anomalyType">
+            <td>{{ txId }}</td>
+            <!-- <td>{{ anomalyType.key }}</td> -->
+          </tr>
+        </ng-container>
+    </td>
+    </tr>
+  </tbody>
+</table>
+
+<table *ngIf="showPredictRes && !allowedReportIds.includes(selectedReport.reportId)"
+  class="table table-striped nowrap w-100">
+  <thead>
+    <tr>
+      <th *ngFor="let field of outFields; let i = index" class="text-start">
+        {{ field }}
+      </th>
+    </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let data of predictResData">
-    <td *ngFor="let f of fields; let i = index">
+    <tr *ngFor="let data of predictResData">
+      <td *ngFor="let f of outFields; let i = index">
         {{data[f]}}
-    </td>
-  </tr>
+      </td>
+    </tr>
   </tbody>
 </table>
 
