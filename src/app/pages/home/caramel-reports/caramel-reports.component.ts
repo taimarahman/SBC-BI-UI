@@ -29,9 +29,7 @@ export class CaramelReportsComponent {
   }
   reportBarChart: any;
 
-  constructor(private httpService: AppService, private route: ActivatedRoute, private toastService: ToastService,) {
-
-  }
+  constructor(private httpService: AppService, private route: ActivatedRoute, private toastService: ToastService,) {}
 
   ngOnInit() {
     this.getIdWiseReportList();

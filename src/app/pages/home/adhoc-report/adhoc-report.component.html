@@ -1,3 +1,21 @@
 <app-page-layout>
-    <p>adhoc-report works!</p>
+  
+    <div class="content-wrapper mt-3">
+      <div class="row mb-5 bg-light shadow rounded p-4 mx-0">
+          <div class="col">
+              <label for="userId" id="userId" class="col-form-label text-capitalize">Adhoc Report</label>
+              <select2
+                name="parentModuleId"
+                id=""
+                class="mt-4"
+                class="form-control p-0 border-0"
+                placeholder="Select Report"
+                [(ngModel)]="tableId"
+                [data]="tableList"
+                (update)="loadInterface(tableId)"
+              >
+              </select2>
+            </div>
+      </div>
+    </div>
 </app-page-layout>

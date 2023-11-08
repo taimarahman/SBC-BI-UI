@@ -521,4 +521,10 @@ export class AppService {
     return this.api.get(`/user/check-otp/${email}/${OTP}`); 
   }
 
+
+  // ADHOC REPORT API
+  
+  public async getAdhocTableList() {
+    return this.api.get(`/ad-hoc/table-list`); 
+  }
 }
