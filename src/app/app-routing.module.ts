@@ -12,25 +12,20 @@ import { AccessControlComponent } from "./pages/home/admin/access-control/access
 import { MenusComponent } from "./pages/home/admin/menus/menus.component";
 import { SubMenusComponent } from "./pages/home/admin/sub-menus/sub-menus.component";
 import { RoleEntryComponent } from "./pages/home/admin/role-entry/role-entry.component";
-import { DataTableComponent } from '@blocks/data-table/data-table.component';
-import { ReportsComponent } from "./pages/home/template1/reports/reports.component";
 import { ReportsRegistryComponent } from "./pages/home/admin/reports-registry/reports-registry.component";
 import { UserManagementComponent } from './pages/home/admin/user-management/user-management.component';
-import { MLComponent } from "./pages/home/template1/ml/ml.component";
 import { PermissionGuard } from '@helpers/permission.guard';
 import { ProfileComponent } from "./pages/home/template1/profile/profile.component";
 import { AccessLogComponent } from './pages/home/template1/access-log/access-log.component';
 import {ChangePasswordComponent} from "./pages/home/template1/change-password/change-password.component";
 import { HomeComponent } from './pages/home/home.component';
-import {ClaimDashboardComponent} from "./pages/home/executive-dashboard/claim-dashboard/claim-dashboard.component";
-import {OperationsDashboardComponent} from "./pages/home/executive-dashboard/operations-dashboard/operations-dashboard.component";
-import {FinancialDashboardComponent} from "./pages/home/executive-dashboard/financial-dashboard/financial-dashboard.component";
 import {
   InteractiveDashboardComponent
 } from "./pages/home/executive-dashboard/interactive-dashboard/interactive-dashboard.component";
 import {UserActivityTableComponent} from "./pages/home/template1/user-activity-table/user-activity-table.component";
 import { CommonInterfaceComponent } from './pages/home/template1/common-interface/common-interface.component';
 import { CaramelReportsComponent } from './pages/home/caramel-reports/caramel-reports.component';
+import { AdhocReportComponent } from './pages/home/adhoc-report/adhoc-report.component';
 
 const routes: Routes = [
   {
@@ -71,7 +66,7 @@ const routes: Routes = [
   { path: 'report/ranking-report', component: CommonInterfaceComponent, pathMatch: 'full', canActivate: [AuthGuard, PermissionGuard]},
   { path: 'report/interactive-report', component: CommonInterfaceComponent, pathMatch: 'full', canActivate: [AuthGuard, PermissionGuard]},
   { path: 'report/operational-report', component: CommonInterfaceComponent, pathMatch: 'full', canActivate: [AuthGuard, PermissionGuard]},
-  { path: 'report/adhoc-report', component: CommonInterfaceComponent, pathMatch: 'full', canActivate: [AuthGuard, PermissionGuard]},
+  { path: 'report/adhoc-report', component: AdhocReportComponent, pathMatch: 'full', canActivate: [AuthGuard, PermissionGuard]},
   { path: 'centralized-rating/centralized-reports', component: CommonInterfaceComponent, pathMatch: 'full', canActivate: [AuthGuard, PermissionGuard]},
   { path: 'centralized-rating/caramel-dashboard', component: CaramelReportsComponent, pathMatch: 'full', canActivate: [AuthGuard, PermissionGuard]},
   { path: 'my-account/profile', component: ProfileComponent, pathMatch: 'full', canActivate: [AuthGuard] },

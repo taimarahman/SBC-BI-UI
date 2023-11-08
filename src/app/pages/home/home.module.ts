@@ -46,6 +46,7 @@ import { CaramelReportsComponent } from './caramel-reports/caramel-reports.compo
 import { MotorRoadAccidentComponent } from './motor-road-accident/motor-road-accident.component';
 import { FraudDetectionComponent } from './fraud-detection/fraud-detection.component';
 import { RecruitmentSummaryComponent } from './executive-dashboard/interactive-dashboard/recruitment-summary/recruitment-summary.component';
+import { AdhocReportComponent } from './adhoc-report/adhoc-report.component';
 
 @NgModule({
     imports: [CommonModule, HomeRoutingModule, SharedModule, Select2Module, NgChartsModule, NgApexchartsModule, NgxSpinnerModule],
@@ -83,6 +84,7 @@ import { RecruitmentSummaryComponent } from './executive-dashboard/interactive-d
         MotorRoadAccidentComponent,
         FraudDetectionComponent,
         RecruitmentSummaryComponent,
+        AdhocReportComponent,
 
     ],
     exports: [

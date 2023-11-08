@@ -25,7 +25,7 @@ export class CommonInterfaceComponent {
     'ranking-report': '21',
     'interactive-report': '22',
     'operational-report': '23',
-    'ad-hoc-report': '24',
+    // 'ad-hoc-report': '24',
     // 'caramel-dashboard': '27',
     'insurance-operation': '27',
     // 'centralized-reports': '31',

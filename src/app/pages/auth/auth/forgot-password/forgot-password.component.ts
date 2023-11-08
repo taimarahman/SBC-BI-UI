@@ -30,7 +30,25 @@ export class ForgotPasswordComponent {
   async sendOTP() {
     try {
       this.disableBtn = true;
-      const res = await this.httpService.getOTPOnEmail(this.email);
+      const res = await this.httpService.getOTPMail(this.email);
+      this.disableBtn = false;
+      if (res.status == 200) {
+        this.toastService.show(res.data, {classname: 'bg-success', delay: 3000});
+        this.showOTP = true;
+        this.timer();
+      } else {
+        this.toastService.show(res.data, {classname: 'bg-danger', delay: 3000});
+      }
+    } catch (error) {
+      this.disableBtn = false;
+      this.toastService.show('Something went wrong', {classname: 'bg-danger', delay: 3000});
+    }
+  }
+  
+  async resendOTP() {
+    try {
+      this.disableBtn = true;
+      const res = await this.httpService.resendOTPMail(this.email);
       this.disableBtn = false;
       if (res.status == 200) {
         this.toastService.show(res.data, {classname: 'bg-success', delay: 3000});

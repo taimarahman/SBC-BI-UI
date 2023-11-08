@@ -509,11 +509,16 @@ export class AppService {
 
 
   // FORGOT PASSWORD
-  public async getOTPOnEmail(email: any) {
+  public async getOTPMail(email: any) {
     return this.api.get(`/user/forget-password/${email}`);
   }
-  
+
+  public async resendOTPMail(email: any) {
+    return this.api.get(`user/resend-otp/${email}`); 
+  }
+
   public async verifyOTP(email: any, OTP:any) {
     return this.api.get(`/user/check-otp/${email}/${OTP}`); 
   }
+
 }
