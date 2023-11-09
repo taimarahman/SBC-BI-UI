@@ -21,7 +21,7 @@
           <div class="mb-3 position-relative">
             <p class="h5 text-capitalize">{{dataLabel['profit_principal_operations']}}</p>
             <p class="text-secondary">{{currentYear}} - {{currentYear + 1}}</p>
-            <i class="bi bi-question-circle text-secondary cursor-pointer" placement="left" [ngbTooltip]="keyDescriptionObject['profit_principal_operations']"></i>
+            <i class="bi bi-question-circle text-secondary cursor-pointer p-1" id="ppo" placement="left" [ngbTooltip]="keyDescriptionObject['profit_principal_operations']"></i>
           </div>
           <p class="h3 fw-medium text-uppercase"><span class="h5">BDT </span>{{sbcFinancialData?.profit_principal_operations}}</p>
       </div>

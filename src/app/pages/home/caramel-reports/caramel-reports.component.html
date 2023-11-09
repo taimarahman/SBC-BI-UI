@@ -33,7 +33,7 @@
                     <thead >
                         <tr> 
                             <th>Company Name</th>
-                            <th *ngFor="let f of fields" (click)="openReport(f, selectedReport.reportId)" class="cursor-pointer"> {{convertToTitleCase(f)}}</th>
+                            <th *ngFor="let f of fields" (click)="openReport(f, selectedReport.reportId)" class="cursor-pointer"> {{convertCapToTitleCase(f)}}</th>
                         </tr>
                     </thead>
                     <tbody>

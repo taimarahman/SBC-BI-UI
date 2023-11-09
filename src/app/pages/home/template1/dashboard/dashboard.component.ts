@@ -63,7 +63,7 @@ export class DashboardComponent {
   ];
   agencyDataFields: any = [
     { key: 'index', label: 'SL' },
-    { key: 'agencyName', label: 'Agency Name' },
+    { key: 'agencyName', label: 'Agent Name' },
     { key: 'productName', label: 'Product Name' },
     { key: 'premiumIncome', label: 'Premium Income'}
   ];

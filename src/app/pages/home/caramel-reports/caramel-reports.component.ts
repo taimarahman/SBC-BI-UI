@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AppService } from '@services/app.service';
 import { barChart } from './chartObjectsCR';
 import { ToastService } from '@services/toast-service';
+import { StringHelper } from '@helpers/string.helper';
 
 @Component({
   selector: 'app-caramel-reports',
@@ -87,7 +88,7 @@ export class CaramelReportsComponent {
 
       filteredList.map(prop => {
         let currentObj = JSON.parse(JSON.stringify(this.seriesObj));
-        currentObj.name = this.convertToTitleCase(prop);
+        currentObj.name = this.convertCapToTitleCase(prop);
 
         this.selectedReportDetails.map(item => {
           if (this.reportBarChart.labels.length != this.selectedReportDetails.length) this.reportBarChart.labels.push(item.companyName)
@@ -95,7 +96,6 @@ export class CaramelReportsComponent {
         });
         this.reportBarChart.series.push(currentObj);
       })
-
     }
 
   }
@@ -116,10 +116,7 @@ export class CaramelReportsComponent {
 
   }
 
-
-  convertToTitleCase(inputString: string): string {
-    const words = inputString.split(/(?=[A-Z])/); // Split by capital letters
-    const titleCaseWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-    return titleCaseWords;
+  convertCapToTitleCase(inputString: string) {
+    StringHelper.convertCapToTitleCase(inputString)
   }
 }

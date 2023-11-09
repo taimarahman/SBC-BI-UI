@@ -10,8 +10,8 @@ import packageInfo from '../../package.json';
 
 const scheme = 'http://';
 const host   = '192.168.78.99';
-const port   = ':8088';
-const path   = '/JBC-BI';
+const port   = ':8091';
+const path   = '/SBC-BI';
 
 const baseUrl = scheme + host + port + path;
 // const baseUrl = scheme + host + port;

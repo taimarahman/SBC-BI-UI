@@ -26,6 +26,7 @@ import {UserActivityTableComponent} from "./pages/home/template1/user-activity-t
 import { CommonInterfaceComponent } from './pages/home/template1/common-interface/common-interface.component';
 import { CaramelReportsComponent } from './pages/home/caramel-reports/caramel-reports.component';
 import { AdhocReportComponent } from './pages/home/adhoc-report/adhoc-report.component';
+import { ViewReportComponent } from './pages/home/adhoc-report/view-report/view-report.component';
 
 const routes: Routes = [
   {
@@ -67,6 +68,7 @@ const routes: Routes = [
   { path: 'report/interactive-report', component: CommonInterfaceComponent, pathMatch: 'full', canActivate: [AuthGuard, PermissionGuard]},
   { path: 'report/operational-report', component: CommonInterfaceComponent, pathMatch: 'full', canActivate: [AuthGuard, PermissionGuard]},
   { path: 'report/adhoc-report', component: AdhocReportComponent, pathMatch: 'full', canActivate: [AuthGuard, PermissionGuard]},
+  { path: 'report/adhoc-report/:reportName', component: ViewReportComponent, pathMatch: 'full', canActivate: [AuthGuard]},
   { path: 'centralized-rating/centralized-reports', component: CommonInterfaceComponent, pathMatch: 'full', canActivate: [AuthGuard, PermissionGuard]},
   { path: 'centralized-rating/caramel-dashboard', component: CaramelReportsComponent, pathMatch: 'full', canActivate: [AuthGuard, PermissionGuard]},
   { path: 'my-account/profile', component: ProfileComponent, pathMatch: 'full', canActivate: [AuthGuard] },

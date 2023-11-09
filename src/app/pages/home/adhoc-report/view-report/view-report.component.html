@@ -1,0 +1,32 @@
+<div class="content-wrapper">
+    <div class="d-flex align-items-center justify-content-center">
+        <div>
+            <img src="../../../../../assets/img/project/logo.svg" alt="">
+        </div>
+        <div class="text-center">
+            <p class="h5 fw-bold">{{reportHeader.companyName}}</p>
+            <p class="h5 fw-bold">{{reportHeader.companyAddress}}</p>
+            <p class="h6">{{reportHeader.companyMail}}</p>
+            <p class="h6">{{reportHeader.companyWebsite}}</p>
+        </div>
+    </div>
+</div>
+<div *ngIf="reportName">
+    <p class="h3">Report on {{reportName}}</p>
+</div>
+
+<div *ngIf="reportResData?.length">
+    <table class="table w-100">
+        <thead >
+            <tr>
+                <th *ngFor="let field of reportFields">{{field}}</th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let data of reportResData">
+          <td *ngFor="let f of reportFields" class="text-center cursor-pointer" >{{data[f]}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+

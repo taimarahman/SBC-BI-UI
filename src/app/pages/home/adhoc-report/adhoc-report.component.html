@@ -10,12 +10,110 @@
                 class="mt-4"
                 class="form-control p-0 border-0"
                 placeholder="Select Report"
-                [(ngModel)]="tableId"
+                [(ngModel)]="reqObj.tableName"
                 [data]="tableList"
-                (update)="loadInterface(tableId)"
+                (update)="loadInterface(reqObj.tableName)"
               >
               </select2>
             </div>
+      </div>
+
+      <div *ngIf="columnList.length" class="mb-5 bg-light shadow rounded p-4 mx-0">
+        <p class="h4 border-bottom pb-3">Configure Report</p>
+        <div class="row">
+          <div class="col-4">
+            <p>Column List</p>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                name="selectAll"
+                (click)="updateColList($event, '', true)"/>
+              <label class="form-check-label">Select All</label>
+            </div>
+            <div *ngFor="let col of columnList" >
+              <div class="form-check">
+                <input #checkBox
+                  class="form-check-input"
+                  type="checkbox"
+                  name="col"
+                  (click)="updateColList($event, col)"
+                />
+                <label class="form-check-label text-break">
+                  {{ col }}</label
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col-8">
+            <!-- BUTTON -->
+            <div class="mb-3">
+              <button class="btn bg-theme shadow text-capitalize" (click)="toggleCondition()" *ngIf="conditionList.length == 0; else removeBtn"><i class="bi bi-plus-lg"></i> add condition</button>
+              <ng-template #removeBtn>
+                <button class="btn bg-danger shadow text-white text-capitalize" (click)="toggleCondition()"><i class="bi bi-dash-lg"></i> delete condition</button>
+              </ng-template>
+            </div>
+            
+            <!-- CONDITION  -->
+            <div *ngIf="conditionList.length > 0">
+              <div *ngFor="let condition of conditionList; let i = index;" class="row bg-white rounded p-3 mb-3">
+                <p>Condition: {{i+1}}</p>
+                <div class="col-8">
+                  <label for="userId" id="userId" class="col-form-label text-capitalize">Column Name</label>
+                  <select2
+                    name="column"
+                    id=""
+                    class="mt-4"
+                    class="form-control p-0 border-0"
+                    placeholder="Select Column Name"
+                    [(ngModel)]="condition.column"
+                    [data]="colListS"
+                  >
+                  </select2>
+                </div>
+                <div class="col-4">
+                  <label for="userId" id="userId" class="col-form-label text-capitalize">Operator</label>
+                  <select2
+                    name="operator"
+                    id=""
+                    class="mt-4"
+                    class="form-control p-0 border-0"
+                    placeholder="Select Operator"
+                    [(ngModel)]="condition.operator"
+                    [data]="operatorList"
+                  >
+                  </select2>
+                </div>
+                <div class="col-12">
+                  <label for="userId" id="userId" class="col-form-label text-capitalize">Value</label>
+                  <input type="text" class="form-control" [(ngModel)]="condition.value" name="value" placeholder="Enter Value">
+                </div>
+              </div>
+              <button type="button" class="btn btn bg-theme shadow me-3 mt-4" (click)="addConditionCount()">Add</button>
+            </div>
+            
+
+            <div *ngIf="conditionList.length > 1">
+              <label for="userId" id="userId" class="col-form-label text-capitalize">Adhoc Report</label>
+              <select2
+                  name="conditionOperator"
+                  class="mt-4"
+                  class="form-control p-0 border-0"
+                  placeholder="Select Conditional Operator"
+                  [(ngModel)]="reqObj.conditionOperator"
+                  [data]="conditionOperatorList"
+                >
+                </select2>
+            </div>
+            
+          </div>
+          
+          <button type="button" class="btn btn w-25 ms-auto bg-theme shadow mt-4" (click)="generateReport()">Generate Report</button>
+        </div>
+
+
+
+        <!-- <app-view-report *ngIf="reportResData.length" [reportResData]="reportResData"  class="d-none"></app-view-report> -->
       </div>
     </div>
 </app-page-layout>

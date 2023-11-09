@@ -527,4 +527,11 @@ export class AppService {
   public async getAdhocTableList() {
     return this.api.get(`/ad-hoc/table-list`); 
   }
+  public async getAdhocColumnList(tableName:any) {
+    return this.api.get(`/ad-hoc/column-list/${tableName}`); 
+  }
+  public async generateAdhocReport(reqData:any) {
+    return this.api.post(`/ad-hoc/query-value`, reqData); 
+  }
+  
 }

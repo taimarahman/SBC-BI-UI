@@ -47,6 +47,7 @@ import { MotorRoadAccidentComponent } from './motor-road-accident/motor-road-acc
 import { FraudDetectionComponent } from './fraud-detection/fraud-detection.component';
 import { RecruitmentSummaryComponent } from './executive-dashboard/interactive-dashboard/recruitment-summary/recruitment-summary.component';
 import { AdhocReportComponent } from './adhoc-report/adhoc-report.component';
+import { ViewReportComponent } from './adhoc-report/view-report/view-report.component';
 
 @NgModule({
     imports: [CommonModule, HomeRoutingModule, SharedModule, Select2Module, NgChartsModule, NgApexchartsModule, NgxSpinnerModule],
@@ -85,6 +86,7 @@ import { AdhocReportComponent } from './adhoc-report/adhoc-report.component';
         FraudDetectionComponent,
         RecruitmentSummaryComponent,
         AdhocReportComponent,
+        ViewReportComponent,
 
     ],
     exports: [
