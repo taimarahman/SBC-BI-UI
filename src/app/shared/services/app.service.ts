@@ -506,6 +506,12 @@ export class AppService {
   public async getRecruitmentData(fromDate: any | undefined = null, toDate: any | undefined = null) {
     return this.api.get(`/dashboard/recruitment-manpower-list?fromDate=${fromDate}&toDate=${toDate}`);
   } 
+  
+  public async getTypeWIseProductList() {
+    return this.api.get(`/dashboard/product-type-wise-product-list-data`);
+  } 
+
+
 
 
   // FORGOT PASSWORD

@@ -1,8 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StringHelper } from '@helpers/string.helper';
 import { AppService } from '@services/app.service';
 import { ToastService } from '@services/toast-service';
+import html2canvas from 'html2canvas';
+import jspdf from 'jspdf';
 
 @Component({
   selector: 'app-view-report',
@@ -10,6 +12,8 @@ import { ToastService } from '@services/toast-service';
   styleUrls: ['./view-report.component.scss']
 })
 export class ViewReportComponent {
+  @ViewChild('reportPage') reportPage: ElementRef | undefined;
+
   reportHeader: any = {
     companyName: "সাধারণ বীমা কর্পোরেশন",
     companyAddress: "প্রধান কার্যালয়, ৩৩, দিলকুশা বাণিজ্যিক এলাকা, ঢাকা-১০০০, বাংলাদেশ।",
@@ -20,10 +24,9 @@ export class ViewReportComponent {
   reportResData: any[] = [];
   reportFields: any[] = [];
   reportName: any;
-
-  constructor(private httpService: AppService, private toastService: ToastService, private route: ActivatedRoute) {
-    
-  }
+  pageWidth: number = 208;
+  pageHeigth: number = 157;
+  constructor(private httpService: AppService, private toastService: ToastService, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
@@ -36,8 +39,14 @@ export class ViewReportComponent {
   retrieveData() {
     window.addEventListener('message', (event) => {
       this.reportResData = event.data.data;
-      if (this.reportResData.length) {
+      if (this.reportResData?.length) {
         this.reportFields = Object.keys(this.reportResData[0]);
+        if (this.reportFields.length > 12) {
+          this.pageWidth = 312;
+        } else if (this.reportFields.length > 20) {
+          this.pageWidth = 407;
+          this.pageHeigth = 210;
+        }
       }
     });
   }
@@ -55,7 +64,29 @@ export class ViewReportComponent {
   }
   
   
-  
+  public convetToPDF()
+{
+    // @ts-ignore
+
+    console.log("el",this.reportPage?.nativeElement)
+    // @ts-ignore
+    html2canvas(this.reportPage?.nativeElement).then(canvas => {
+    // Few necessary setting options
+    var imgWidth = this.pageWidth;
+    var pageHeight = 295;
+      var imgHeight = canvas.height * imgWidth / canvas.width;
+      console.log(canvas.width,"canvas.height", canvas.height, 'imgHeight', imgHeight)
+    var heightLeft = imgHeight;
+
+    const contentDataURL = canvas.toDataURL('image/png')
+      // let pdf = new jspdf('p', 'mm', 'a4'); // A4 size page of PDF
+     
+    let pdf = new jspdf('l', 'mm', [this.pageWidth, this.pageHeigth]); // A4 size page of PDF
+    var position = 0;
+    pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight)
+    pdf.save(this.reportName + '.pdf'); // Generated PDF
+    });
+}
   
   
 }

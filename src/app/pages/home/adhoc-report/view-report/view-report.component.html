@@ -1,4 +1,6 @@
-<div class="content-wrapper p-4">
+<button (click)="convetToPDF()">download</button>
+
+<div class="report-wrapper p-4" #reportPage>
     <!-- PAGE TITLE -->
     <div class="d-flex align-items-center justify-content-center mb-5">
         <div>
@@ -21,7 +23,7 @@
         <table class="table w-100">
             <thead >
                 <tr>
-                    <th *ngFor="let field of reportFields">{{field}}</th>
+                    <th *ngFor="let field of reportFields" class="text-break">{{field}}</th>
                 </tr>
             </thead>
             <tbody>

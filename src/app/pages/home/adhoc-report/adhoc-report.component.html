@@ -19,19 +19,23 @@
       </div>
 
       <div *ngIf="columnList.length" class="mb-5 bg-light shadow rounded p-4 mx-0">
-        <p class="h4 border-bottom pb-3">Configure Report</p>
-        <div class="row">
-          <div class="col-4">
-            <p>Column List</p>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                name="selectAll"
-                (click)="updateColList($event, '', true)"/>
-              <label class="form-check-label">Select All</label>
+        <p class="h4 border-bottom pb-3 mb-4">Configure Report</p>
+        <div class="row mx-0">
+          <div class="col-4 bg-white rounded p-0 card">
+            <p class="h5 mb-3 card-header bg-theme">Column List</p>
+            <div class="px-2">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  name="selectAll"
+                  [checked]="columnList.length == reqObj.columnNames.length"
+                  (click)="updateColList($event, '', true)"/>
+                <label class="form-check-label">Select All</label>
+              </div>
             </div>
-            <div *ngFor="let col of columnList" >
+            
+            <div *ngFor="let col of columnList" class="px-3">
               <div class="form-check">
                 <input #checkBox
                   class="form-check-input"

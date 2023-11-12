@@ -91,6 +91,7 @@ export class AdhocReportComponent {
       // this.resetData();
       this.colListS = []
       this.conditionList = []
+      this.reqObj.columnNames = []
       this.hideSpinner = false;
       const response: any = await this.httpService.getAdhocColumnList(tableName);
       this.hideSpinner = true;
@@ -164,8 +165,8 @@ export class AdhocReportComponent {
 
   addConditionCount()
   {
-      const cloneObject = JSON.parse(JSON.stringify(this.conditionObj));
-      this.conditionList.push(cloneObject);
+    const cloneObject = JSON.parse(JSON.stringify(this.conditionObj));
+    this.conditionList.push(cloneObject);
   }
 
 

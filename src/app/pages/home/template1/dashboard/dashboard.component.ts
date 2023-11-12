@@ -137,6 +137,7 @@ export class DashboardComponent {
 
   async getDailySales() {
     try {
+      const asca = await this.httpService.getTypeWIseProductList();
       const res = await this.httpService.getDailySales();
       if (res.data) {
         const salesData = res.data.dailyEventSummeryData;
