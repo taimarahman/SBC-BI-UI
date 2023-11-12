@@ -10,7 +10,7 @@
       <div class="bg-light rounded shadow px-4 px-xl-5 py-4">
           <div class="mb-3 position-relative">
             <p class="h5 text-capitalize">{{dataLabel['main_business_income']}}</p>
-            <p class="text-secondary">{{currentYear}} - {{currentYear + 1}}</p>
+            <p class="text-secondary">{{currentYear}}</p>
             <i class="bi bi-question-circle text-secondary cursor-pointer" placement="left" [ngbTooltip]="keyDescriptionObject['main_business_income']"></i>
           </div>
           <p class="h2 fw-medium text-uppercase"><span class="h5">BDT </span>{{sbcFinancialData?.main_business_income}}</p>
@@ -20,7 +20,7 @@
       <div class="bg-light rounded shadow px-4 px-xl-5 py-4 full-div">
           <div class="mb-3 position-relative">
             <p class="h5 text-capitalize">{{dataLabel['profit_principal_operations']}}</p>
-            <p class="text-secondary">{{currentYear}} - {{currentYear + 1}}</p>
+            <p class="text-secondary">{{currentYear}}</p>
             <i class="bi bi-question-circle text-secondary cursor-pointer p-1" id="ppo" placement="left" [ngbTooltip]="keyDescriptionObject['profit_principal_operations']"></i>
           </div>
           <p class="h3 fw-medium text-uppercase"><span class="h5">BDT </span>{{sbcFinancialData?.profit_principal_operations}}</p>
@@ -30,7 +30,7 @@
       <div class="text-center position-relative">
           <p class="display-6 fw-bold text-uppercase mb-0">{{sbcFinancialData?.acc_rece_turnover | number:'1.0-0'}}</p>
           <p class="h5 text-capitalize text-center">{{dataLabel['acc_rece_turnover']}}</p>
-          <p class="text-secondary mb-0">{{currentYear}} - {{currentYear + 1}}</p>   
+          <p class="text-secondary mb-0">{{currentYear}}</p>   
           <i class="bi bi-question-circle text-secondary cursor-pointer" placement="left" [ngbTooltip]="keyDescriptionObject['acc_rece_turnover']"></i>  
         </div>
     </div>
@@ -39,7 +39,7 @@
   <div class="row mx-0 mb-5 g-2">
     <div class="col-xl-8 col-xxl-6">
       <div class="py-4 px-5 bg-light shadow rounded-3 summary-card-2">
-        <p class="h4 text-capitalize mb-4 mb-lg-5 d-flex align-items-end justify-content-between pb-3 border-bottom">Profit Margin <span class="h5 mb-0 text-secondary">{{currentYear}} - {{currentYear + 1}}</span></p>
+        <p class="h4 text-capitalize mb-4 mb-lg-5 d-flex align-items-end justify-content-between pb-3 border-bottom">Profit Margin <span class="h5 mb-0 text-secondary">{{currentYear}}</span></p>
         <div class="d-flex justify-content-between align-items-center flex-column flex-md-row">
           <div class="align-self-start">
             <p class="h2 fw-medium text-uppercase"><span class="h5">BDT </span>{{sbcFinancialData?.profit_margin}}</p>

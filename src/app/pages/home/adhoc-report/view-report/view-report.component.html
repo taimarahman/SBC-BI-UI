@@ -1,5 +1,6 @@
-<div class="content-wrapper">
-    <div class="d-flex align-items-center justify-content-center">
+<div class="content-wrapper p-4">
+    <!-- PAGE TITLE -->
+    <div class="d-flex align-items-center justify-content-center mb-5">
         <div>
             <img src="../../../../../assets/img/project/logo.svg" alt="">
         </div>
@@ -10,23 +11,26 @@
             <p class="h6">{{reportHeader.companyWebsite}}</p>
         </div>
     </div>
-</div>
-<div *ngIf="reportName">
-    <p class="h3">Report on {{reportName}}</p>
+
+    <!-- REPORT TITLE -->
+    <div *ngIf="reportName" class="mb-5">
+        <p class="h3 text-center fw-bold">Report on {{reportName}}</p>
+    </div>
+    <!-- REPORT TABLE -->
+    <div *ngIf="reportResData?.length">
+        <table class="table w-100">
+            <thead >
+                <tr>
+                    <th *ngFor="let field of reportFields">{{field}}</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let data of reportResData">
+              <td *ngFor="let f of reportFields" class="text-center cursor-pointer" >{{data[f]}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<div *ngIf="reportResData?.length">
-    <table class="table w-100">
-        <thead >
-            <tr>
-                <th *ngFor="let field of reportFields">{{field}}</th>
-            </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let data of reportResData">
-          <td *ngFor="let f of reportFields" class="text-center cursor-pointer" >{{data[f]}}</td>
-        </tr>
-        </tbody>
-    </table>
-</div>
 

@@ -144,10 +144,17 @@ $brand-color: #313193;
       padding: 4vh 7vw;
     }
 
-    p > a > img {
-      max-width: 5rem;
+    h1{
+      font-size: 1.5rem;
     }
   }
+  .login-content-wrapper {
+    h1 {
+      font-size: 2rem;
+    }
+    a  {
+    max-width: 5rem;
+  }}
 }
 
 @media (min-width: 1679.98px) {

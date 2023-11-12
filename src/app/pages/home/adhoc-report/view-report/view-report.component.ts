@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { StringHelper } from '@helpers/string.helper';
 import { AppService } from '@services/app.service';
 import { ToastService } from '@services/toast-service';
 
@@ -27,7 +28,7 @@ export class ViewReportComponent {
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       const paramValue = params.get('reportName');
-
+      this.reportName = this.toReadableText(paramValue)
     });
     this.retrieveData();
   }
@@ -41,7 +42,17 @@ export class ViewReportComponent {
     });
   }
   
-  
+  toReadableText(inputString: any) {
+    if (inputString.includes('_'))  return this.removeUnderscore(inputString);
+    else return this.convertCapToTitleCase(inputString);
+    
+  }
+  convertCapToTitleCase(inputString: string) {
+    return StringHelper.convertCapToTitleCase(inputString);
+  }
+  removeUnderscore(inputString:any) {
+    return StringHelper.convertSnakeToTitleCase(inputString);
+  }
   
   
   

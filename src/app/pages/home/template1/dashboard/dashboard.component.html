@@ -76,19 +76,19 @@
       <div class="col-lg-6">
         <div class="ml-claim bg-light rounded-3 shadow px-5 py-4">
           <div class="my-3 border-bottom">
-            <p class="h6">Total Claim Amount  <b>{{currentYear}} - {{currentYear + 1}}</b></p>
+            <p class="h6">Total Claim Amount  <b>{{currentYear}}</b></p>
             <p class="h3 fw-bold ">{{ foreCastClaimValue?.Total_Claim_Amount | currency : "BDT" : "BDT " : "1.0-0" }}&nbsp;</p>
           </div>
           <div class="my-3 border-bottom">
-            <p class="h6">Claim Reserve  <b>{{currentYear}} - {{currentYear + 1}}</b></p>
+            <p class="h6">Claim Reserve  <b>{{currentYear}}</b></p>
             <p class="h3 fw-bold ">{{ foreCastClaimValue?.Claim_Reserve | currency : "BDT" : "BDT " : "1.0-0" }}&nbsp;</p>
           </div>
           <div class="my-3 border-bottom">
-            <p class="h6">Forecasted Losses  <b>{{currentYear}} - {{currentYear + 1}}</b></p>
+            <p class="h6">Forecasted Losses  <b>{{currentYear}}</b></p>
             <p class="h3 fw-bold ">{{ foreCastClaimValue?.Forecasted_Losses | currency : "BDT" : "BDT " : "1.0-0" }}&nbsp;</p>
           </div>
           <div class="mt-3">
-            <p class="h6">Average Premium  <b>{{currentYear}} - {{currentYear + 1}}</b></p>
+            <p class="h6">Average Premium  <b>{{currentYear}}</b></p>
             <p class="h3 fw-bold "> {{ foreCastClaimValue?.Average_Premium | number: '1.0-0'}}&nbsp;</p>
           </div>
         </div>
@@ -101,14 +101,14 @@
               <div class="py-4 px-4 bg-light shadow rounded-3 cursor-pointer single-card" (click)="scroll(accidentR)">
                 <p class="h6 mb-4">Total No. of Accidents</p>
                 <p class="h3 fw-bold mb-3">{{ this.totalAccident | number : "1.0-0" }}</p>
-                <small> Region Wise <b>{{currentYear}} - {{currentYear + 1}}</b></small>
+                <small> Region Wise <b>{{currentYear}}</b></small>
               </div>
             </div>
             <div class="col">
               <div class="py-4 px-4 bg-light shadow rounded-3 cursor-pointer single-card" (click)="scroll(premium)">
                 <p class="h6 mb-4 text-end">Total Premium Income</p>
                 <p class="h3 fw-bold mb-3 text-end">{{ this.agencyWiseTotalPremiumIncome | currency : "BDT" : "BDT " : "0.0" }}&nbsp;</p>
-                <small> Agency Wise <b>{{currentYear}} - {{currentYear + 1}}</b></small>
+                <small> Agency Wise <b>{{currentYear}}</b></small>
               </div>
             </div>
             
@@ -125,7 +125,7 @@
                   <p class="h3 fw-bold mb-3 text-end">{{this.totalClaim}}</p>
                 </div>
               </div>
-              <small class="h6 pt-2 mb-0 border-top">Geography Wise <b>{{currentYear}} - {{currentYear + 1}}</b></small>
+              <small class="h6 pt-2 mb-0 border-top">Geography Wise <b>{{currentYear}}</b></small>
             </div>
             
           </div>
