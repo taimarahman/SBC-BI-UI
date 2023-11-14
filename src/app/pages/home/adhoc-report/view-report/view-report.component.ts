@@ -63,7 +63,7 @@ export class ViewReportComponent {
           this.pageHeigth = 210;
         }
       }
-    });
+    }, {once: true});
   }
   
   toReadableText(inputString: any) {
