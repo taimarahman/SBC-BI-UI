@@ -18,6 +18,26 @@
             </div>
       </div>
 
+      <div *ngIf="tableData">
+        <div class="mb-5">
+          <div class="scroll-table">
+              <table class="table nowrap w-100">
+                  <thead >
+                      <tr> 
+                          <!-- <th>Company Name</th> -->
+                          <th *ngFor="let f of columnList" class="text-break text-center"> {{toReadableText(f)}}</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let data of tableData">
+                    <!-- <td class="text-center">{{data.companyName}}</td> -->
+                    <td *ngFor="let f of columnList" class="text-center" >{{data[f]}}</td>
+                  </tr>
+                  </tbody>
+              </table>
+          </div>
+      </div>
+      </div>
       <div *ngIf="columnList.length" class="mb-5 bg-light shadow rounded p-4 mx-0">
         <p class="h4 border-bottom pb-3 mb-4">Configure Report</p>
         <div class="row mx-0">
@@ -44,7 +64,7 @@
                   (click)="updateColList($event, col)"
                 />
                 <label class="form-check-label text-break">
-                  {{ col }}</label
+                  {{ this.toReadableText(col) }}</label
                 >
               </div>
             </div>
@@ -67,8 +87,7 @@
                   <select2
                     name="column"
                     id=""
-                    class="mt-4"
-                    class="form-control p-0 border-0"
+                    class="form-control p-0 border-0 text-break"
                     placeholder="Select Column Name"
                     [(ngModel)]="condition.column"
                     [data]="colListS"
@@ -80,7 +99,6 @@
                   <select2
                     name="operator"
                     id=""
-                    class="mt-4"
                     class="form-control p-0 border-0"
                     placeholder="Select Operator"
                     [(ngModel)]="condition.operator"
@@ -88,10 +106,13 @@
                   >
                   </select2>
                 </div>
-                <div class="col-12">
+                <div *ngIf="condition.operator != 'BETWEEN'; else DateRange" class="col-12">
                   <label for="userId" id="userId" class="col-form-label text-capitalize">Value</label>
                   <input type="text" class="form-control" [(ngModel)]="condition.value" name="value" placeholder="Enter Value">
                 </div>
+                <ng-template #DateRange>
+                  
+                </ng-template>
               </div>
               <button type="button" class="btn btn bg-theme shadow me-3 mt-4" (click)="addConditionCount()">Add</button>
             </div>
@@ -111,13 +132,8 @@
             </div>
             
           </div>
-          
           <button type="button" class="btn btn w-25 ms-auto bg-theme shadow mt-4" (click)="generateReport()">Generate Report</button>
         </div>
-
-
-
-        <!-- <app-view-report *ngIf="reportResData.length" [reportResData]="reportResData"  class="d-none"></app-view-report> -->
       </div>
     </div>
 </app-page-layout>

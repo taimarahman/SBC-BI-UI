@@ -24,8 +24,8 @@ export class ViewReportComponent {
   reportResData: any[] = [];
   reportFields: any[] = [];
   reportName: any;
-  pageWidth: number = 208;
-  pageHeigth: number = 157;
+  pageWidth: number = 210;
+  pageHeigth: number = 197;
   constructor(private httpService: AppService, private toastService: ToastService, private route: ActivatedRoute) {}
 
   ngOnInit() {
@@ -74,14 +74,13 @@ export class ViewReportComponent {
     // Few necessary setting options
     var imgWidth = this.pageWidth;
     var pageHeight = 295;
-      var imgHeight = canvas.height * imgWidth / canvas.width;
-      console.log(canvas.width,"canvas.height", canvas.height, 'imgHeight', imgHeight)
+    var imgHeight = canvas.height * imgWidth / canvas.width;
+    console.log(canvas.width,"canvas.height", canvas.height, 'imgHeight', imgHeight)
     var heightLeft = imgHeight;
 
     const contentDataURL = canvas.toDataURL('image/png')
-      // let pdf = new jspdf('p', 'mm', 'a4'); // A4 size page of PDF
-     
-    let pdf = new jspdf('l', 'mm', [this.pageWidth, this.pageHeigth]); // A4 size page of PDF
+    if(this.reportFields.length < 11) var pdf = new jspdf('p', 'mm', 'a4'); // A4 size page of PDF
+    else var pdf = new jspdf('l', 'mm', [this.pageWidth, this.pageHeigth]); 
     var position = 0;
     pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight)
     pdf.save(this.reportName + '.pdf'); // Generated PDF

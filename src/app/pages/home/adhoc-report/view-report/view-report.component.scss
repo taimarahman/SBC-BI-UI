@@ -1,8 +1,18 @@
 .report-wrapper{
     width: max-content;
-    max-width: 3000px;
+    max-width: 4000px;
 
     th{
         max-width: 9.25rem;
     }
+}
+
+.table > :not(caption) > * > *{
+    border: 1px solid #000;
+}
+
+.download-btn{
+    position: fixed;
+    top: 2%;
+    right: 2%;
 }

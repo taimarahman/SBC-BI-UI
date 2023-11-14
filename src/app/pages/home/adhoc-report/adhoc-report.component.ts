@@ -15,7 +15,8 @@ export class AdhocReportComponent {
   
   hideSpinner: boolean = false;
   
-  
+  tableData: any[] = [];
+
   tableList: any[] = [];
   columnList: any[] = [];
   colListS: any[] = [];
@@ -88,20 +89,26 @@ export class AdhocReportComponent {
 
   async loadInterface(tableName: any) {
     try {
-      // this.resetData();
       this.colListS = []
       this.conditionList = []
       this.reqObj.columnNames = []
+      this.columnList = []
       this.hideSpinner = false;
-      const response: any = await this.httpService.getAdhocColumnList(tableName);
+      const response: any = await this.httpService.getAdhocDataList(tableName);
       this.hideSpinner = true;
-      this.columnList = response?.data;
+
+      if (response?.data.length) {
+        this.tableData = response?.data;
+        this.columnList = Object.keys(response?.data[0]);
+      } else {
+        this.toastService.show('No Data Found', {classname: 'bg-danger', delay: 3000});
+      }
       
       if (this.columnList.length) {
         for (let column of this.columnList) {
           this.colListS.push({
             value: column,
-            label: column
+            label: this.toReadableText(column)
           });
         }
       }
@@ -113,17 +120,22 @@ export class AdhocReportComponent {
 
   async generateReport() {
     try {
-      this.reqObj.conditions = this.conditionList;
+      if (this.reqObj.columnNames.length > 0) {
+        this.reqObj.conditions = this.conditionList;
       const response: any = await this.httpService.generateAdhocReport(this.reqObj);
       console.log(response.data);
       this.reportResData = response.data;
+      console.log(this.reportResData.length)
       if (this.reportResData.length) {
-        // const queryString = `data=${JSON.stringify(this.reportResData)}`;
         const newWindow = window.open(`/report/adhoc-report/${this.reqObj.tableName}`, '_blank');
         newWindow?.addEventListener('load', () => {
           newWindow.postMessage({ data: this.reportResData }, '*');
         });
       }
+      } else {
+        this.toastService.show('Select Column Name', {classname: 'bg-danger', delay: 3000});
+      }
+      
     } catch (error) {
       this.toastService.show('Something went wrong', {classname: 'bg-danger', delay: 3000});
     }
