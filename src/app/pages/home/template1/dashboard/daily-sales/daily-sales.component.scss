@@ -1,0 +1,47 @@
+
+.sales-row {
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(170px, 0.3fr) auto 1fr;
+    column-gap: 1.5rem;
+  }
+  
+  .point{
+    position: relative;
+    padding-left: 1rem;
+    color: #4f4d4d;
+  
+    &::before{
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 50%;
+      background-color: #4f4d4d;
+    }
+  }
+
+  
+@media (max-width: 1199.98px) {
+    .sales-row{
+      gap: 0.5rem;
+    }
+  }
+  @media (max-width: 1399.98px) {
+    .sales-row{
+      gap: 1rem;
+    }
+  }
+  
+  @media (max-width: 991.98px) {
+    .sales-row{
+      grid-template-columns: 1fr 1fr;
+  
+      .graph{
+        grid-column: 1 / span 2;
+      }
+    }
+  }

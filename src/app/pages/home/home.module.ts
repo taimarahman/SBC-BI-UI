@@ -48,6 +48,7 @@ import { FraudDetectionComponent } from './fraud-detection/fraud-detection.compo
 import { RecruitmentSummaryComponent } from './executive-dashboard/interactive-dashboard/recruitment-summary/recruitment-summary.component';
 import { AdhocReportComponent } from './adhoc-report/adhoc-report.component';
 import { ViewReportComponent } from './adhoc-report/view-report/view-report.component';
+import { DailySalesComponent } from './template1/dashboard/daily-sales/daily-sales.component';
 
 @NgModule({
     imports: [CommonModule, HomeRoutingModule, SharedModule, Select2Module, NgChartsModule, NgApexchartsModule, NgxSpinnerModule],
@@ -87,6 +88,7 @@ import { ViewReportComponent } from './adhoc-report/view-report/view-report.comp
         RecruitmentSummaryComponent,
         AdhocReportComponent,
         ViewReportComponent,
+        DailySalesComponent,
 
     ],
     exports: [

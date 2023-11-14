@@ -3,73 +3,7 @@
   <div class="content-wrapper">
 
     <!-- DAILY SALES -->
-    <div *ngIf="showLineChart" class="sales-row mb-5">
-      <div class="">
-        <div class="bg-success bg-opacity-25 shadow rounded p-4 h-100">
-          <div class="h-100 d-flex flex-column justify-content-between">
-            <p class="h5 pb-2 mb-3 border-bottom border-dark" style="--bs-border-opacity: .3;">Sales</p>
-            <div>
-              <div class="mb-4">
-                <p class="h3 fw-bold mb-1">{{formatToCrThousand(salesSummary.thisMonth.sumOfInsurance)}}</p>
-                <p class="my-0 point">This month</p>
-              </div>
-              <div class="mb-4">
-                <p class="h3 fw-bold mb-1">{{formatToCrThousand(salesSummary.today.dailySoldInsurance)}}</p>
-                <p class="my-0 point">Today</p>
-              </div>
-              <div class="mb-2">
-                <p class="h3 fw-bold mb-1">{{formatToCrThousand(salesSummary.prev.dailySoldInsurance)}}</p>
-                <p class="my-0 point">Yesterday</p>
-              </div>  
-            </div>
-          </div>
-          
-        </div>
-      </div>
-      <div class="">
-        <div class="bg-primary bg-opacity-25 shadow rounded p-4 h-100">
-          <div class="h-100 d-flex flex-column justify-content-between">
-            <p class="h5 pb-2 mb-3 border-bottom border-dark" style="--bs-border-opacity: .3;">Premium Collection</p>
-            <div>
-              <div class="mb-4">
-                <p class="h3 fw-bold mb-1"><span class="h5">BDT</span> {{formatToCrThousand(salesSummary.thisMonth.sumOfPremiumCollection)}}</p>
-                <p class="my-0 point">This month</p>
-              </div>
-              <div class="mb-4">
-                <p class="h3 fw-bold mb-1"><span class="h5">BDT</span> {{formatToCrThousand(salesSummary.today.dailyPremiumCollection)}}</p>
-                <p class="my-0 point">Today</p>
-              </div>
-              <div class="mb-2">
-                <p class="h3 fw-bold mb-1"><span class="h5">BDT</span> {{formatToCrThousand(salesSummary.prev.dailyPremiumCollection)}}</p>
-                <p class="my-0 point">Yesterday</p>
-              </div>  
-            </div>
-          </div>
-          
-        </div>
-      </div>
-      <div class="graph">
-        <div class="bg-light shadow rounded p-4 h-100 d-flex justify-content-center align-items-center">
-          <div class="flex-grow-1">
-            <p class="h5 pb-2 mb-3 border-bottom border-dark" style="--bs-border-opacity: .3;">Sales Summary of Past 30 days</p>
-            <div>
-              <apx-chart *ngIf="showLineChart"
-              [series]="monthlySalesChart.series"
-              [chart]="monthlySalesChart.chart"
-              [colors]="monthlySalesChart.colors"
-              [labels]="monthlySalesChart.labels"
-              [stroke]="monthlySalesChart.stroke"
-              [xaxis]="monthlySalesChart.xaxis"
-              [yaxis]="monthlySalesChart.yaxis"
-              [responsive]="monthlySalesChart.responsive"
-              [legend]="monthlySalesChart.legend"
-            ></apx-chart>
-            </div>
-           
-        </div>
-        </div>
-      </div>
-    </div>
+    <app-daily-sales></app-daily-sales>
 
     <!--  -->
     <div *ngIf="foreCastClaimValue" class="row g-2 g-xl-3 g-xxl-4 mb-5">
