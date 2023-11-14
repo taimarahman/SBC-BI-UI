@@ -234,6 +234,13 @@ body {
   width: max(auto, 100%);
 }
 
+.close-btn{
+  position: absolute;
+  top: 2%;
+  right: 0%;
+  cursor: pointer;
+}
+
 .fade {
   animation: fadeIn .5s;
 }

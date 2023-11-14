@@ -508,7 +508,7 @@ export class AppService {
   } 
   
   public async getTypeWIseProductList() {
-    return this.api.get(`/dashboard/product-type-wise-product-list-data`);
+    return this.api.get(`/dashboard/daily-events-filter-data`);
   } 
 
 

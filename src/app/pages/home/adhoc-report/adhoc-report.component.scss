@@ -15,14 +15,16 @@ thead {
 
     th {
         width: min-content;
-        min-width: 10rem;
+        min-width: 6rem;
+        max-width: 10rem;
         text-wrap: wrap;
         vertical-align: middle;
         text-align: center;
         background-color: transparent;
         color: #fff;
-        padding: 1.25rem 0.25rem;
-        font-size: 1.125rem;
+        padding: 1rem 0.25rem;
+        font-size: 1rem;
+        font-weight: normal;
     }
 }
 
@@ -36,6 +38,10 @@ tbody{
    
     td{ 
         padding: 1rem 0;
+    }
+
+    td:first-child {
+        padding-left: .25rem;
     }
 
     tr:nth-child(odd) td{

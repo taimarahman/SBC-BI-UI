@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StringHelper } from '@helpers/string.helper';
 import { AppService } from '@services/app.service';
@@ -21,24 +21,39 @@ export class ViewReportComponent {
     companyWebsite: "http://www.sbc.gov.bd"
   }
 
+  isEventListenerRegistered = false;
   reportResData: any[] = [];
   reportFields: any[] = [];
   reportName: any;
   pageWidth: number = 210;
   pageHeigth: number = 197;
-  constructor(private httpService: AppService, private toastService: ToastService, private route: ActivatedRoute) {}
+  constructor(private httpService: AppService, private toastService: ToastService, private route: ActivatedRoute, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       const paramValue = params.get('reportName');
       this.reportName = this.toReadableText(paramValue)
     });
-    this.retrieveData();
+
+    const listenerPromise = new Promise<void>((resolve) => {
+      window.addEventListener('message', (event) => {
+        if (!this.isEventListenerRegistered) {
+          this.isEventListenerRegistered = true;
+          resolve();
+        }
+      });
+    });
+
+    listenerPromise.then(() => {
+      this.retrieveData();
+    });
   }
 
   retrieveData() {
     window.addEventListener('message', (event) => {
+      console.log("vfdfv")
       this.reportResData = event.data.data;
+      console.log(this.reportResData)
       if (this.reportResData?.length) {
         this.reportFields = Object.keys(this.reportResData[0]);
         if (this.reportFields.length > 12) {
