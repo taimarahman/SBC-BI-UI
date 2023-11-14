@@ -117,6 +117,6 @@ export class CaramelReportsComponent {
   }
 
   convertCapToTitleCase(inputString: string) {
-    StringHelper.convertCapToTitleCase(inputString)
+    return StringHelper.convertCapToTitleCase(inputString)
   }
 }
