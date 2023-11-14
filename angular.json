@@ -20,15 +20,28 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "jspdf",
+              "raf",
+              "core-js",
+              "html2canvas",
+              "rgbcolor",
+              "apexcharts"
+            ],
             "outputPath": "dist/easy-angular",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": ["src/assets/img/favicon/favicon.ico", "src/assets"],
-            "styles": ["src/assets/scss/styles.scss",
-              "node_modules/ngx-spinner/animations/ball-scale-multiple.css"],
+            "assets": [
+              "src/assets/img/favicon/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/assets/scss/styles.scss",
+              "node_modules/ngx-spinner/animations/ball-scale-multiple.css"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -90,8 +103,13 @@
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "inlineStyleLanguage": "scss",
-            "assets": ["src/assets/img/favicon/favicon.ico", "src/assets"],
-            "styles": ["src/assets/scss/styles.scss"],
+            "assets": [
+              "src/assets/img/favicon/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/assets/scss/styles.scss"
+            ],
             "scripts": []
           }
         }
