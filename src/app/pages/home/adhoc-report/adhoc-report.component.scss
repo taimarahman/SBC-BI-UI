@@ -52,3 +52,9 @@ tbody{
         background-color: #c0dbeaa8;
     }
 }
+
+.scroll-table{
+    height: auto;
+    max-height: 28rem;
+    overflow-y: scroll;
+}
