@@ -195,7 +195,7 @@ export class FraudDetectionComponent {
     const groupedData = this.groupByKey(allData, 'claimRefusal');
     this.refuseBarChart.series = [];
     this.notRefuseBarChart.series = [];
-    this.refuseBarChart.xaxis.type = this.notRefuseBarChart.xaxis.type = 'datetime'
+    // this.refuseBarChart.xaxis.type = this.notRefuseBarChart.xaxis.type = 'datetime'
     let yesColObj = JSON.parse(JSON.stringify(this.seriesObj));
     yesColObj.name = 'Refused';
     let noColObj = JSON.parse(JSON.stringify(this.seriesObj));

@@ -92,4 +92,12 @@ export class StringHelper {
 
     return list;
   }
+
+
+  public static formatDateYYYYMMDD(date: any) {
+    const jsDate = new Date(date.year, date.month - 1, date.day);
+    let formattedDate = `${jsDate.getFullYear()}/${(jsDate.getMonth() + 1).toString().padStart(2, '0')}/${jsDate.getDate().toString().padStart(2, '0')}`;
+
+    return formattedDate;
+  }
 }
