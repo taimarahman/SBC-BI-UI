@@ -43,6 +43,7 @@ const backgroundColor: any[] = [
   '#57838d',
 ]
 const barBgColor: any[] = [ '#e77f67', '#574b90','#cf6a87', '#3dc1d3']
+const lineBgColor: any[] = [ '#e77f67', '#574b90','#27ae60', '#3dc1d3', '#2c3e50', '#B33771']
 
 export const claimPieChart: Partial<ChartOptions> = {
     series: [],
@@ -598,7 +599,7 @@ export const salesLineChart: Partial<ChartOptions> = {
   series: [],
   chart: {
     width: '100%',
-    height: '280px',
+    height: '250px',
     type: 'line',
     redrawOnParentResize: true,
 
@@ -617,9 +618,6 @@ export const salesLineChart: Partial<ChartOptions> = {
   },
   dataLabels: {
     enabled: true,
-    background: {
-      borderWidth: 0,
-    }
   },
   stroke: {
     curve: 'smooth'
@@ -646,6 +644,9 @@ export const salesLineChart: Partial<ChartOptions> = {
       enabled: true,
     },
   },
-  
-  // colors: barBgColor,
+  legend: {
+    position: 'bottom',
+    offsetY: 5,
+  },
+  colors: lineBgColor,
 };

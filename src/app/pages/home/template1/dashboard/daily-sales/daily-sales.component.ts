@@ -32,7 +32,6 @@ export class DailySalesComponent {
       if (res.data) {
         const salesData = res.data;
         const salesTypeWise = this.groupByKey(res.data, 'PRODUCT_TYPE');
-        console.log('type',salesTypeWise)
         this.getMOnthlyLineChart(salesTypeWise, Object.keys(salesTypeWise));
         const currentDate = this.getCurrentDate();
         const prevDate = this.getCurrentDate(true);
@@ -82,9 +81,11 @@ export class DailySalesComponent {
   getMOnthlyLineChart(res: any, typeList:any) {
     this.showSalesChart = false;
     this.monthlySalesChart = JSON.parse(JSON.stringify(salesLineChart));
+    this.monthlySalesChart.title.text = 'Sales (Product & Service)';
     this.monthlyCollectionChart = JSON.parse(JSON.stringify(salesLineChart));
+    this.monthlyCollectionChart.title.text = 'Premium Collection';
+
     let labels: any[] = [];
-    // console.log("Dcx")
 
     for (let type of typeList) {
       let salesObj = JSON.parse(JSON.stringify(this.seriesObj));
