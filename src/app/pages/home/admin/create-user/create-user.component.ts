@@ -131,7 +131,7 @@ export class CreateUserComponent {
             this.isEditing = false;
             this.onReset();
             this.ngOnInit();
-            // window.location.reload();
+            window.location.reload();
             this.toastService.show(updateResponse.data.message, {classname: 'bg-success', delay: 5000});
           } else {
             this.toastService.show(updateResponse.data.message, {classname: 'bg-danger', delay: 5000});

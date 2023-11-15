@@ -499,15 +499,15 @@ export class AppService {
 
   // DASHBOARD API
  
-  public async getDailySales(fromDate: any | undefined = null, toDate: any | undefined = null) {
-    return this.api.get(`/dashboard/daily-events-by-date-wise?fromDate=${fromDate}&toDate=${toDate}`);
-  } 
+  // public async getDailySales(fromDate: any | undefined = null, toDate: any | undefined = null) {
+  //   return this.api.get(`/dashboard/daily-events-by-date-wise?fromDate=${fromDate}&toDate=${toDate}`);
+  // } 
 
   public async getRecruitmentData(fromDate: any | undefined = null, toDate: any | undefined = null) {
     return this.api.get(`/dashboard/recruitment-manpower-list?fromDate=${fromDate}&toDate=${toDate}`);
   } 
   
-  public async getTypeWIseProductList() {
+  public async getDailySales() {
     return this.api.get(`/dashboard/daily-events-filter-data`);
   } 
 

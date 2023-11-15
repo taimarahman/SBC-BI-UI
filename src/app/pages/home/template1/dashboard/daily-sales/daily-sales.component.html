@@ -1,8 +1,12 @@
-<div *ngIf="showLineChart" class="sales-row mb-5">
+<div *ngIf="showSalesChart || showCollectionChart" class="sales-row mb-5">
     <div class="">
       <div class="bg-success bg-opacity-25 shadow rounded p-4 h-100">
         <div class="h-100 d-flex flex-column justify-content-between">
-          <p class="h5 pb-2 mb-3 border-bottom border-dark" style="--bs-border-opacity: .3;">Sales</p>
+          <div class="mb-3 border-bottom border-dark" style="--bs-border-opacity: .3;">
+            <p class="h5">Sales</p>
+            <p class="h6">Product & Service</p>
+          </div>
+          <!-- <p class="h5 pb-2 mb-3 border-bottom border-dark" style="--bs-border-opacity: .3;">Sales</p> -->
           <div>
             <div class="mb-4">
               <p class="h3 fw-bold mb-1">{{formatToCrThousand(salesSummary.thisMonth.sumOfInsurance)}}</p>
@@ -24,7 +28,10 @@
     <div class="">
       <div class="bg-primary bg-opacity-25 shadow rounded p-4 h-100">
         <div class="h-100 d-flex flex-column justify-content-between">
-          <p class="h5 pb-2 mb-3 border-bottom border-dark" style="--bs-border-opacity: .3;">Premium Collection</p>
+          <div class="mb-3 border-bottom border-dark" style="--bs-border-opacity: .3;">
+            <p class="h5">Premium Collection</p>
+            <p class="h6">Product & Service</p>
+          </div>
           <div>
             <div class="mb-4">
               <p class="h3 fw-bold mb-1"><span class="h5">BDT</span> {{formatToCrThousand(salesSummary.thisMonth.sumOfPremiumCollection)}}</p>
@@ -44,11 +51,11 @@
       </div>
     </div>
     <div class="graph">
-      <div class="bg-light shadow rounded p-4 h-100 d-flex justify-content-center align-items-center">
-        <div class="flex-grow-1">
+      <div class="bg-light shadow rounded p-4 h-100 d-flex flex-column justify-content-center align-items-center">
+        <div class="w-100 mb-4">
           <p class="h5 pb-2 mb-3 border-bottom border-dark" style="--bs-border-opacity: .3;">Sales Summary of Past 30 days</p>
           <div>
-            <apx-chart *ngIf="showLineChart"
+            <apx-chart *ngIf="showSalesChart"
             [series]="monthlySalesChart.series"
             [chart]="monthlySalesChart.chart"
             [colors]="monthlySalesChart.colors"
@@ -59,9 +66,31 @@
             [responsive]="monthlySalesChart.responsive"
             [legend]="monthlySalesChart.legend"
           ></apx-chart>
+            <apx-chart *ngIf="showCollectionChart"
+            [series]="monthlyCollectionChart.series"
+            [chart]="monthlyCollectionChart.chart"
+            [colors]="monthlyCollectionChart.colors"
+            [labels]="monthlyCollectionChart.labels"
+            [stroke]="monthlyCollectionChart.stroke"
+            [xaxis]="monthlyCollectionChart.xaxis"
+            [yaxis]="monthlyCollectionChart.yaxis"
+            [responsive]="monthlyCollectionChart.responsive"
+            [legend]="monthlyCollectionChart.legend"
+          ></apx-chart>
           </div>
          
+        </div>
+        <div class="row row-cols-2 g-4 w-75">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" id="ins" [checked]="showSalesChart" (change)="showSalesChart=true;  showCollectionChart=false">
+            <label class="form-check-label" for="ins">Sold Insurance</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" id="premium" [checked]="showCollectionChart" (change)="showCollectionChart=true; showSalesChart = false">
+            <label class="form-check-label" for="premium">Premium Collection</label>
+          </div>
+        </div>
       </div>
-      </div>
+    
     </div>
   </div>

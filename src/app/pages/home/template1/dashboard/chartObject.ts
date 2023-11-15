@@ -593,3 +593,59 @@ export const lineChart: Partial<ChartOptions> = {
   
   colors: barBgColor,
 };
+
+export const salesLineChart: Partial<ChartOptions> = {
+  series: [],
+  chart: {
+    width: '100%',
+    height: '280px',
+    type: 'line',
+    redrawOnParentResize: true,
+
+    toolbar: {
+      show: true,
+      tools: {
+        download: true,
+        selection: false,
+        zoom: false,
+        zoomin: false,
+        zoomout: false,
+        pan: false,
+        reset: false
+      }
+    }
+  },
+  dataLabels: {
+    enabled: true,
+    background: {
+      borderWidth: 0,
+    }
+  },
+  stroke: {
+    curve: 'smooth'
+  },
+  title: {
+    text:'',
+  },
+  labels: [],
+  xaxis: {
+    type: 'datetime',
+  },
+  yaxis: {
+    axisTicks: {
+      show: true,
+    },
+    axisBorder: {
+      show: true,
+    },
+    title: {
+      text: '',
+      
+    },
+    tooltip: {
+      enabled: true,
+    },
+  },
+  
+  // colors: barBgColor,
+};

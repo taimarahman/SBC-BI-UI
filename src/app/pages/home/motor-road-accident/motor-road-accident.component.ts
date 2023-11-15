@@ -163,7 +163,6 @@ export class MotorRoadAccidentComponent {
 
 
   groupByKey(res: any, key: any) {
-
     return StringHelper.groupByKey(res, key);
   }
 }

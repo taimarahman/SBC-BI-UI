@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AppService } from '@services/app.service';
-import { lineChart } from '../chartObject';
+import { salesLineChart } from '../chartObject';
+import { StringHelper } from '@helpers/string.helper';
 
 @Component({
   selector: 'app-daily-sales',
@@ -9,9 +10,11 @@ import { lineChart } from '../chartObject';
 })
 export class DailySalesComponent {
   monthlySalesChart: any;
+  monthlyCollectionChart: any;
   salesSummary: any = {};
 
-  showLineChart: boolean = false;
+  showSalesChart: boolean = false;
+  showCollectionChart: boolean = false;
   seriesObj = {
     name: '',
     data: [],
@@ -24,20 +27,35 @@ export class DailySalesComponent {
 
   async getDailySales() {
     try {
-      const asca = await this.httpService.getTypeWIseProductList();
+      // const asca = await this.httpService.getTypeWIseProductList();
       const res = await this.httpService.getDailySales();
       if (res.data) {
-        const salesData = res.data.dailyEventSummeryData;
-        this.getMOnthlyLineChart(salesData);
+        const salesData = res.data;
+        const salesTypeWise = this.groupByKey(res.data, 'PRODUCT_TYPE');
+        console.log('type',salesTypeWise)
+        this.getMOnthlyLineChart(salesTypeWise, Object.keys(salesTypeWise));
         const currentDate = this.getCurrentDate();
         const prevDate = this.getCurrentDate(true);
-        this.salesSummary.today = salesData.find((item: any) => item.date == currentDate);
-        this.salesSummary.prev = salesData.find((item: any) => item.date == prevDate);
-        this.salesSummary.thisMonth = this.getMonthlySummary(salesData)
+        
+        this.salesSummary.today = this.getDailySummary(salesData, currentDate);
+        this.salesSummary.prev = this.getDailySummary(salesData, prevDate);
+        this.salesSummary.thisMonth = this.getMonthlySummary(salesData);
       }
     } catch (error) {}
   }
 
+  getDailySummary(data: any, date: any) {
+    const filteredData = data.filter((item: any) => item.Date == date);
+
+    let dailySum = {
+      dailySoldInsurance: 0,
+      dailyPremiumCollection: 0
+    }
+    dailySum.dailySoldInsurance =  filteredData.reduce((sum:any, item:any) => sum + parseInt(item.Daily_Sold_Insurance, 10), 0);
+    dailySum.dailyPremiumCollection = filteredData.reduce((sum: any, item: any) => sum + parseInt(item.Daily_Premium_Collection, 10), 0);
+    
+    return dailySum;
+  }
   getMonthlySummary(data:any) {
     const currentDate = new Date(); 
     const currentYear = currentDate.getFullYear(); 
@@ -45,7 +63,7 @@ export class DailySalesComponent {
 
     // Filter the data for the current year and month
     const filteredData = data.filter((item:any) => {
-      const itemDate = new Date(item.date);
+      const itemDate = new Date(item.Date);
       return itemDate.getFullYear() === currentYear && itemDate.getMonth() + 1 === currentMonth;
     });
 
@@ -54,30 +72,49 @@ export class DailySalesComponent {
       sumOfInsurance: 0,
       sumOfPremiumCollection: 0
     };
-    monthlySum.sumOfInsurance = filteredData.reduce((sum:any, item:any) => sum + parseInt(item.dailySoldInsurance, 10), 0);
-    monthlySum.sumOfPremiumCollection = filteredData.reduce((sum: any, item: any) => sum + parseInt(item.dailyPremiumCollection, 10), 0);
+    monthlySum.sumOfInsurance = filteredData.reduce((sum:any, item:any) => sum + parseInt(item.Daily_Sold_Insurance, 10), 0);
+    monthlySum.sumOfPremiumCollection = filteredData.reduce((sum: any, item: any) => sum + parseInt(item.Daily_Premium_Collection, 10), 0);
     
     return monthlySum;
   }
 
   // DAILY EVENTS LINE CHART
-  getMOnthlyLineChart(res: any) {
-    this.showLineChart = false;
-    this.monthlySalesChart = JSON.parse(JSON.stringify(lineChart));
-    let insObj = JSON.parse(JSON.stringify(this.seriesObj));
-    insObj.name = "Insurance";
-    let preObj = JSON.parse(JSON.stringify(this.seriesObj));
-    preObj.name = "Premium Collection";
+  getMOnthlyLineChart(res: any, typeList:any) {
+    this.showSalesChart = false;
+    this.monthlySalesChart = JSON.parse(JSON.stringify(salesLineChart));
+    this.monthlyCollectionChart = JSON.parse(JSON.stringify(salesLineChart));
+    let labels: any[] = [];
+    // console.log("Dcx")
 
-    res.map((item: any) => {
-      insObj.data.push(item.dailySoldInsurance);
-      preObj.data.push(item.dailyPremiumCollection);
-      this.monthlySalesChart.labels.push(item.date);
-    })
+    for (let type of typeList) {
+      let salesObj = JSON.parse(JSON.stringify(this.seriesObj));
+      let clcObj = JSON.parse(JSON.stringify(this.seriesObj));
+      salesObj.name = clcObj.name = type;
+      
+      const typeData = res[type];
+      const dateWiseData = this.groupByKey(typeData, 'Date');
+      const dateList: string[] = Object.keys(dateWiseData);
+      console.log(type,dateList)
+      for (let date of dateList) {
+        !labels.includes(date) && labels.push(date);
+        let totalS = 0;
+        let totalC = 0;
+        // @ts-ignore
+        dateWiseData[date].map((data: any) => {
+          totalS += data.Daily_Sold_Insurance
+          totalC += data.Daily_Premium_Collection
+        });
+        salesObj.data.push(totalS);
+        clcObj.data.push(totalC);
+      }
 
-    this.monthlySalesChart.series.push(insObj);
-    this.monthlySalesChart.series.push(preObj);
-    this.showLineChart = true;
+      this.monthlySalesChart.series.push(salesObj)
+      this.monthlyCollectionChart.series.push(clcObj)
+      this.monthlySalesChart.labels = this.monthlyCollectionChart.labels = labels
+      this.showSalesChart = true;
+    }
+    
+    // this.showSalesChart = true;
   }
 
   getCurrentDate(prev:any | undefined = null ) {
@@ -100,5 +137,9 @@ export class DailySalesComponent {
       return amount;
     }
     
+  }
+
+  groupByKey(res: any, key: any) {
+    return StringHelper.groupByKey(res, key);
   }
 }
