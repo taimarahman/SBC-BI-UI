@@ -78,4 +78,18 @@ export class StringHelper {
   public static convertSnakeToTitleCase(inputString: string): string {
     return inputString.replace(/_/g, ' ');
   }
+
+  public static groupByKey(res: any, key: any) {
+    let list: any[] = [];
+    for (const item of res) {
+      const itemKey:any = item[key];
+
+      if (!list[itemKey]) {
+        list[itemKey] = [];
+      }
+      list[itemKey].push(item);
+    }
+
+    return list;
+  }
 }

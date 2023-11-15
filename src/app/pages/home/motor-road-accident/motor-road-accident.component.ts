@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, Input, SimpleChanges } from '@angular/core';
 import { AppService } from '@services/app.service';
 import { ChartOptions, backgroundColor, barChart, donutChart } from './chartObjectsMRA';
+import { StringHelper } from '@helpers/string.helper';
 
 @Component({
   selector: 'app-motor-road-accident',
@@ -163,14 +164,6 @@ export class MotorRoadAccidentComponent {
 
   groupByKey(res: any, key: any) {
 
-    let list: any = {};
-    for (const item of res) {
-      const itemKey:any = item[key];
-      if (!list[itemKey]) {
-        list[itemKey] = [];
-      }
-      list[itemKey].push(item);
-    }
-    return list;
+    return StringHelper.groupByKey(res, key);
   }
 }

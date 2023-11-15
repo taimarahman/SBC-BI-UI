@@ -246,17 +246,7 @@ export class ClaimDashboardComponent {
   }
 
   groupByKey(res: any, key: any) {
-    let list: any[] = [];
-    for (const item of res) {
-      const itemKey:any = item[key];
-
-      if (!list[itemKey]) {
-        list[itemKey] = [];
-      }
-      list[itemKey].push(item);
-    }
-
-    return list;
+    return StringHelper.groupByKey(res, key);
   }
 
   

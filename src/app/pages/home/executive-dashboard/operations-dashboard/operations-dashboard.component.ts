@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AppService } from '@services/app.service';
 import { barChart, pieChart } from './chartObjectsOP';
+import { StringHelper } from '@helpers/string.helper';
 
 @Component({
   selector: 'app-operations-dashboard',
@@ -127,16 +128,6 @@ export class OperationsDashboardComponent {
   }
 
   groupByKey(res: any, key: any) {
-    let list: any = {};
-    for (const item of res) {
-      const itemKey:any = item[key];
-
-      if (!list[itemKey]) {
-        list[itemKey] = [];
-      }
-      list[itemKey].push(item);
-    }
-
-    return list;
+    return StringHelper.groupByKey(res, key);
   }
 }
