@@ -43,6 +43,7 @@ export class PredictComponent {
       this.loadReportDataExample();
     }
     if (this.predictResDataFromCsv.length != 0 && changes['predictResDataFromCsv']) {
+      debugger
       this.predictResData = this.predictResDataFromCsv
       this.outFields = Object.keys(this.predictResData[0]);
 
@@ -115,7 +116,9 @@ export class PredictComponent {
         const response: any = await this.httpService.submitDataForPredict(this.inputDataList, this.selectedReport.reportId);
         this.spinner.hide();
         if (response?.status === 200) {
+          debugger
           this.predictResData = response?.data.response;
+          this.outFields = Object.keys(this.predictResData[0]);
           this.toastService.show(response.data.message, { classname: 'bg-success', delay: 4000 });
           this.showPredictRes = true;
         } else {

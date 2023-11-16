@@ -85,8 +85,6 @@
   class="table table-striped nowrap w-100">
   <thead>
     <tr *ngIf="selectedReport.reportId == 18 || selectedReport.reportId == 19">
-      <td>Institute Code</td>
-      <td>Institute Name</td>
       <th *ngIf="selectedReport.reportId == 18">Incident City</th>
       <th *ngIf="selectedReport.reportId == 19">Vehicle Type</th>
       <th>Year</th>
@@ -108,8 +106,6 @@
   </thead>
   <tbody *ngIf="selectedReport.reportId == 18 || selectedReport.reportId == 19">
     <tr *ngFor="let data of predictResData">
-      <td>{{ data.instituteCode }}</td>
-      <td>{{ data.instituteName }}</td>
       <td *ngIf="selectedReport.reportId == 18">{{ data.city }}</td>
       <td *ngIf="selectedReport.reportId == 19">{{ data.vehicle }}</td>
       <td>{{ data.year }}</td>
@@ -139,10 +135,10 @@
   <thead>
 
     <tr>
-      <th >Institute Code</th>
-      <th >Institute Name</th>
-      <th >Date</th>
-      <th >Trend</th>
+      <th>Institute Code</th>
+      <th>Institute Name</th>
+      <th>Date</th>
+      <th>Trend</th>
       <th colspan="2" class="m-auto text-center">
         Outliers
         <div class="d-flex justify-content-between">
@@ -155,17 +151,17 @@
 
   <tbody>
     <tr *ngFor="let data of predictResData">
-      <td >{{data.trendAnalysis.instituteCode }}</td>
-      <td >{{data.trendAnalysis.instituteName }}</td>
-      <td >{{data.trendAnalysis.period }}</td>
-      <td >{{data.trendAnalysis.trend}}</td>
+      <td>{{data.trendAnalysis.instituteCode }}</td>
+      <td>{{data.trendAnalysis.instituteName }}</td>
+      <td>{{data.trendAnalysis.period }}</td>
+      <td>{{data.trendAnalysis.trend}}</td>
       <td>
         <ng-container *ngFor="let anomalyType of data.outliers">
-          <tr *ngFor="let txId of data.trendOutliers.anomalyType">
-            <td>{{ txId }}</td>
-            <!-- <td>{{ anomalyType.key }}</td> -->
-          </tr>
-        </ng-container>
+    <tr *ngFor="let txId of data.trendOutliers.anomalyType">
+      <td>{{ txId }}</td>
+      <!-- <td>{{ anomalyType.key }}</td> -->
+    </tr>
+    </ng-container>
     </td>
     </tr>
   </tbody>
