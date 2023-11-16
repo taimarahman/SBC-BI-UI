@@ -22,7 +22,7 @@ export class CaramelReportsComponent {
     reportName: null
   };
 
-  reportURL: string = 'http://192.168.78.13:8084/api/v1/reports/IDRA/Caramel/';
+  reportURL: string = 'http://192.168.78.13:8084/api/v1/reports/SBC/Caramel/';
 
   seriesObj = {
     name: '',
