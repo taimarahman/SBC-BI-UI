@@ -34,26 +34,10 @@ export class ViewReportComponent {
       const paramValue = params.get('reportName');
       this.reportName = this.toReadableText(paramValue)
     });
-
-    const listenerPromise = new Promise<void>((resolve) => {
-      window.addEventListener('message', (event) => {
-        if (!this.isEventListenerRegistered) {
-          this.isEventListenerRegistered = true;
-          resolve();
-        }
-      });
-    });
-
-    listenerPromise.then(() => {
-      this.retrieveData();
-    });
-  }
-
-  retrieveData() {
-    window.addEventListener('message', (event) => {
-      console.log("vfdfv")
-      this.reportResData = event.data.data;
-      console.log(this.reportResData)
+    const storedData = localStorage.getItem('sharedData');
+    if (storedData) {
+      this.reportResData = JSON.parse(storedData);
+      // Do something with receivedData
       if (this.reportResData?.length) {
         this.reportFields = Object.keys(this.reportResData[0]);
         if (this.reportFields.length > 12) {
@@ -63,6 +47,34 @@ export class ViewReportComponent {
           this.pageHeigth = 210;
         }
       }
+    }
+
+    // Clear the data from localStorage if needed
+    localStorage.removeItem('sharedData');
+
+    // const listenerPromise = new Promise<void>((resolve) => {
+    //   window.addEventListener('message', (event) => {
+    //     if (!this.isEventListenerRegistered) {
+    //       console.log(event.data.data)
+    //       this.isEventListenerRegistered = true;
+          
+    //       resolve();
+    //     }
+    //   });
+    // });
+
+    // listenerPromise.then(() => {
+    //   this.retrieveData();
+    // });
+  }
+
+  retrieveData() {
+    window.addEventListener('message', (event) => {
+      console.log("vfdfv")
+      console.log(event.data.data)
+
+      this.reportResData = event.data.data;
+      
     }, {once: true});
   }
   
