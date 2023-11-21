@@ -212,7 +212,6 @@
                   <div class="input-group">
                     <input
                       name="startDate"
-                      [id]="'sd'+i"
                       ngbDatepicker
                       #dStart="ngbDatepicker"
                       [ngModelOptions]="{ standalone: true }"
@@ -222,7 +221,7 @@
                       class="form-control"
                       placeholder="YYYY-MM-DD"
                       autocomplete="off"
-                      (ngModelChange)="assignDateToVar(dateRangeList[i].start, condition)"
+                      (ngModelChange)="assignDateToVar(dateRangeList[i].start, condition, 'start')"
                     />
                     <button
                       class="btn btn-outline-secondary bi bi-calendar3"
@@ -245,7 +244,7 @@
                       class="form-control"
                       placeholder="DD/MM/YYYY"
                       autocomplete="off"
-                      (ngModelChange)="assignDateToVar(dateRangeList[i].end, condition)"
+                      (ngModelChange)="assignDateToVar(dateRangeList[i].end, condition, 'end')"
                     />
                     <button
                       class="btn btn-outline-secondary bi bi-calendar3"

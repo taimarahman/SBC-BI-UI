@@ -174,11 +174,13 @@ export class AdhocReportComponent {
         }
       });
     }
+    this.filterTrackList = JSON.parse(JSON.stringify(this.uniqueDataset));
+
   }
 
   doFilter(key: any, index: any) {
     const elList = document.getElementById(`div-${key}`)?.querySelectorAll('input');
-    if (!this.filterTrackList[key]) this.filterTrackList[key] = [];
+    // if (!this.filterTrackList[key]) this.filterTrackList[key] = [];
     let reFilter: Boolean = false;
     // console.log(key, elList);
     if (elList?.length) {
@@ -249,7 +251,6 @@ export class AdhocReportComponent {
           this.reportResData = this.tableData;
           this.resetFilter();
         }
-        
       } else {
         this.toastService.show('Select Column Name', {classname: 'bg-danger', delay: 3000});
       }
@@ -300,9 +301,10 @@ export class AdhocReportComponent {
     this.dateRangeList.push(dateObject);
   }
 
-  assignDateToVar(date: any, obj: any) {
-    obj.startDate= this.formatDate(date);
-  }
+  assignDateToVar(date: any, obj: any, flag:any) {
+    if(flag=='start') obj.startDate = this.formatDate(date);
+    else obj.endDate = this.formatDate(date);
+  }
 
 
   resetFilter() {
