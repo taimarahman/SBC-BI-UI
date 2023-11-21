@@ -26,7 +26,8 @@ export class ViewReportComponent {
   reportFields: any[] = [];
   reportName: any;
   pageWidth: number = 210;
-  pageHeigth: number = 197;
+  pageHeight: number = 197;
+  fieldset: any[] = [];
   constructor(private httpService: AppService, private toastService: ToastService, private route: ActivatedRoute, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
@@ -36,7 +37,9 @@ export class ViewReportComponent {
     });
     const storedData = localStorage.getItem('sharedData');
     if (storedData) {
-      this.reportResData = JSON.parse(storedData);
+      const retrieveData = JSON.parse(storedData);
+      this.reportResData = retrieveData.data;
+      this.fieldset = retrieveData.fieldset;
       // Do something with receivedData
       if (this.reportResData?.length) {
         this.reportFields = Object.keys(this.reportResData[0]);
@@ -44,7 +47,7 @@ export class ViewReportComponent {
           this.pageWidth = 312;
         } else if (this.reportFields.length > 20) {
           this.pageWidth = 407;
-          this.pageHeigth = 210;
+          this.pageHeight = 210;
         }
       }
     }
@@ -52,29 +55,11 @@ export class ViewReportComponent {
     // Clear the data from localStorage if needed
     localStorage.removeItem('sharedData');
 
-    // const listenerPromise = new Promise<void>((resolve) => {
-    //   window.addEventListener('message', (event) => {
-    //     if (!this.isEventListenerRegistered) {
-    //       console.log(event.data.data)
-    //       this.isEventListenerRegistered = true;
-          
-    //       resolve();
-    //     }
-    //   });
-    // });
-
-    // listenerPromise.then(() => {
-    //   this.retrieveData();
-    // });
   }
 
   retrieveData() {
     window.addEventListener('message', (event) => {
-      console.log("vfdfv")
-      console.log(event.data.data)
-
       this.reportResData = event.data.data;
-      
     }, {once: true});
   }
   
@@ -93,24 +78,39 @@ export class ViewReportComponent {
   
   public convetToPDF()
 {
-    // @ts-ignore
-
-    console.log("el",this.reportPage?.nativeElement)
-    // @ts-ignore
+    
     html2canvas(this.reportPage?.nativeElement).then(canvas => {
     // Few necessary setting options
     var imgWidth = this.pageWidth;
     var pageHeight = 295;
     var imgHeight = canvas.height * imgWidth / canvas.width;
-    console.log(canvas.width,"canvas.height", canvas.height, 'imgHeight', imgHeight)
     var heightLeft = imgHeight;
 
     const contentDataURL = canvas.toDataURL('image/png')
     if(this.reportFields.length < 11) var pdf = new jspdf('p', 'mm', 'a4'); // A4 size page of PDF
-    else var pdf = new jspdf('l', 'mm', [this.pageWidth, this.pageHeigth]); 
+    else var pdf = new jspdf('l', 'mm', [this.pageWidth, this.pageHeight]); 
     var position = 0;
-    pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight)
-    pdf.save(this.reportName + '.pdf'); // Generated PDF
+    // pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight)
+      // pdf.save(this.reportName + '.pdf'); // Generated PDF
+      const addPage = () => {
+        pdf.addPage();
+        position = 0;
+      };
+  
+      const addImageOnPage = (imgData: string) => {
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+  
+        if (heightLeft > 0) {
+          addPage();
+          addImageOnPage(canvas.toDataURL('image/png', 1.0)); // Continue adding images on new pages
+        } else {
+          pdf.save(this.reportName + '.pdf'); // Save PDF when all pages are added
+        }
+      };
+  
+      addImageOnPage(canvas.toDataURL('image/png', 1.0)); // Start adding images on pages
+    
     });
 }
   

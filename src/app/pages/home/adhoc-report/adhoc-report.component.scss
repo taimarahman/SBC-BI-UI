@@ -1,5 +1,9 @@
 table{
     border-bottom: 3px solid #0c4876a6;
+
+    input:focus {
+        outline: none;
+    }
 }
 
 
@@ -57,4 +61,34 @@ tbody{
     height: auto;
     max-height: 28rem;
     overflow-y: scroll;
+}
+
+.text-small{
+    font-size: 0.625rem;
+}
+
+
+#colList.dropdown-toggle:after{
+    display: none;
+}
+
+div[aria-labelledby="colList"]{
+    width: max-content;
+    max-width: 50vw;
+}
+
+.spin{
+    animation: spin360 0.5s linear forwards;
+    transform-origin: center; /* Set the transform origin to the center */
+    position: relative; /* Add position to enable transforms */
+    display: inline-block; /* Ensures proper space allocation */
+}
+
+@keyframes spin360 {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }

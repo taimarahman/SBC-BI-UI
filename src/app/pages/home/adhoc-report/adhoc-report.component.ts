@@ -1,9 +1,9 @@
-import { Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectorRef, Component, ElementRef, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
+import { Router } from '@angular/router';
 import { StringHelper } from '@helpers/string.helper';
+import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { AppService } from '@services/app.service';
 import { ToastService } from '@services/toast-service';
-import { truncate } from 'fs';
 
 @Component({
   selector: 'app-adhoc-report',
@@ -12,8 +12,16 @@ import { truncate } from 'fs';
 })
 export class AdhocReportComponent {
   @ViewChildren('checkBox') columnListEl: QueryList<ElementRef<HTMLInputElement>>;
-  
+  @ViewChildren('dcheck') ddCheckBox!: QueryList<ElementRef<HTMLInputElement>>;
+  @ViewChildren(NgbDropdown) dropdowns!: QueryList<NgbDropdown>;
+  @ViewChild('editField') editField!: ElementRef;
+
+  rotateIcon: boolean = false;
   hideSpinner: boolean = false;
+  loadIntf: boolean = false;
+  filterYN: boolean = false;
+  renameYN: boolean = false;
+  conditionYN: boolean = false;
   
   tableData: any[] = [];
 
@@ -21,6 +29,11 @@ export class AdhocReportComponent {
   columnList: any[] = [];
   colListS: any[] = [];
   conditionList: any[] = [];
+  dateRangeList: any[] = [];
+  uniqueDataset: any = {};
+  filterTrackList: { [key: string]: any } = {};
+  fieldList: any[] = [];
+  editing: boolean[] = [];
 
   reportResData: any[] = [];
 
@@ -30,6 +43,19 @@ export class AdhocReportComponent {
     conditions: [],
     conditionOperator: null
   }
+
+  date = {
+    start: {
+      year: 0,
+      month: 0,
+      day: 0,
+    },
+    end: {
+      year: 0,
+      month: 0,
+      day: 0,
+    },
+  };
 
   conditionObj: any =  {
     column: "",
@@ -59,7 +85,7 @@ export class AdhocReportComponent {
     { value: 'NOT', label: 'NOT' },
   ];
   
-  constructor(private httpService: AppService, private toastService: ToastService, private router: Router) {
+  constructor(private httpService: AppService, private toastService: ToastService, private router: Router,private cdr: ChangeDetectorRef) {
     this.columnListEl = new QueryList<ElementRef<HTMLInputElement>>();
   }
 
@@ -89,28 +115,35 @@ export class AdhocReportComponent {
 
   async loadInterface(tableName: any) {
     try {
-      this.colListS = []
-      this.conditionList = []
-      this.reqObj.columnNames = []
-      this.columnList = []
+      this.colListS = [];
+      this.conditionList = [];
+      this.reqObj.columnNames = [];
+      this.columnList = [];
+      this.uniqueDataset = [];
+      this.reportResData = [];
       this.hideSpinner = false;
       const response: any = await this.httpService.getAdhocDataList(tableName);
       this.hideSpinner = true;
 
       if (response?.data.length) {
         this.tableData = response?.data;
+        this.reportResData = this.tableData;
         this.columnList = Object.keys(response?.data[0]);
+        this.generateFilterringLists(this.tableData, this.columnList);
+        this.generateFieldList(this.columnList);
+        if (this.columnList.length) {
+          for (let column of this.columnList) {
+            this.reqObj.columnNames.push(column);
+            this.colListS.push({
+              value: column,
+              label: this.toReadableText(column)
+            });
+          }
+          this.loadIntf = true;
+          this.checkAll();
+        }
       } else {
         this.toastService.show('No Data Found', {classname: 'bg-danger', delay: 3000});
-      }
-      
-      if (this.columnList.length) {
-        for (let column of this.columnList) {
-          this.colListS.push({
-            value: column,
-            label: this.toReadableText(column)
-          });
-        }
       }
     } catch (error) {
       this.hideSpinner = true;
@@ -118,22 +151,87 @@ export class AdhocReportComponent {
     }
   }
 
+  checkAll() {
+    setTimeout(() => {
+      const checkboxes = this.columnListEl.toArray();
+      checkboxes.forEach(box => {
+        box.nativeElement.checked = true;
+     })
+    }, 100)
+  }
+
+  generateFilterringLists(tableData: any, keyList: any) {
+    for (let key of keyList) {
+      this.uniqueDataset[key] = Array.from(new Set(tableData.map((item: any) => item[key]))).sort();
+      // SORT LIST FOR BETTER READABILITY
+      this.uniqueDataset[key].sort((a:any, b:any) => {
+        const numA = Number(a);
+        const numB = Number(b);
+        if (!isNaN(numA) && !isNaN(numB)) {
+          return numA - numB;
+        } else {
+          return a.localeCompare(b); // If one or both values cannot be converted to numbers,sort them as strings
+        }
+      });
+    }
+  }
+
+  doFilter(key: any, index: any) {
+    const elList = document.getElementById(`div-${key}`)?.querySelectorAll('input');
+    if (!this.filterTrackList[key]) this.filterTrackList[key] = [];
+    let reFilter: Boolean = false;
+    // console.log(key, elList);
+    if (elList?.length) {
+      elList.forEach(el => {
+        if (el.checked && !this.filterTrackList[key].includes(el.value)) {
+          this.filterTrackList[key].push(el.value);
+          reFilter = true;
+        }
+        if (!el.checked && this.filterTrackList[key].includes(el.value)) {
+          this.filterTrackList[key] = this.filterTrackList[key].filter((item: any) => item != el.value);
+          reFilter = true;
+        }
+      })
+    }
+    if (reFilter) { //filterValueList.length && Object.keys(this.filterTrackList).length
+          this.reportResData = this.tableData.filter(item => {
+            return Object.keys(this.filterTrackList).every(key => {
+              const itemValue = String(item[key]);
+              const filterValues = this.filterTrackList[key];
+              console.log(filterValues)
+              return filterValues.length==0 || filterValues.some((value:any) => itemValue.includes(value));
+            });
+          });
+    }
+
+    
+    this.dropdowns.toArray()[index].close(); //CLOSE DROPDOWN
+    this.generateFilterringLists(this.reportResData, this.columnList); //GENERATE NEW FILTERING LIST
+  }
+
   async generateReport() {
     try {
-      if (this.reqObj.columnNames.length > 0) {
-        this.reqObj.conditions = this.conditionList;
-      const response: any = await this.httpService.generateAdhocReport(this.reqObj);
-      console.log(response.data);
-      this.reportResData = response.data;
-      console.log(this.reportResData.length)
-      if (this.reportResData.length) {
-        const newWindow = window.open(`/report/adhoc-report/${this.reqObj.tableName}`, '_blank');
-        newWindow?.addEventListener('load', () => {
-          newWindow.postMessage({ data: this.reportResData }, '*');
+      if (this.reqObj.columnNames.length > 0 && this.reportResData.length > 0) {
+        console.log(this.reportResData)
+        // ONLY SELECTED COLUMNS
+        const filteredData = this.reportResData.map(obj => {
+          const newObj: { [key: string]: any } = {};
+          this.reqObj.columnNames.forEach((prop:any) => {
+            if (obj.hasOwnProperty(prop)) {
+              newObj[prop] = obj[prop];
+            }
+          });
+          return newObj;
         });
-      }
+
+        const dataToTransfer: any = {
+          data: filteredData,
+          fieldset: this.fieldList
+        } 
+        localStorage.setItem('sharedData', JSON.stringify(dataToTransfer));
+        const newWindow = window.open(`/report/adhoc-report/${this.reqObj.tableName}`, '_blank');
       } else {
-        this.toastService.show('Select Column Name', {classname: 'bg-danger', delay: 3000});
+        this.toastService.show('No data to show', {classname: 'bg-danger', delay: 3000});
       }
       
     } catch (error) {
@@ -141,6 +239,24 @@ export class AdhocReportComponent {
     }
   }
 
+  async getConditionalData() {
+    try {
+      if (this.reqObj.columnNames.length > 0) {
+        this.reqObj.conditions = this.conditionList;
+        const response: any = await this.httpService.generateAdhocReport(this.reqObj);
+        if (response?.data.length) {
+          this.tableData = response.data;
+          this.reportResData = this.tableData;
+          this.resetFilter();
+        }
+        
+      } else {
+        this.toastService.show('Select Column Name', {classname: 'bg-danger', delay: 3000});
+      }
+    } catch (error) {
+      
+    }
+  }
 
 
   updateColList(el: any, column: any, all:any | undefined = null) {
@@ -166,23 +282,54 @@ export class AdhocReportComponent {
       }
     }
 
-    // console.log('csdc',this.reqObj.columnNames)
   }
 
 
   toggleCondition() {
     if (this.conditionList.length == 0) this.addConditionCount();
-    else this.conditionList = [];
+    else {
+      this.conditionList = [];
+      this.dateRangeList = [];
+    }
   }
 
-  addConditionCount()
-  {
+  addConditionCount(){
     const cloneObject = JSON.parse(JSON.stringify(this.conditionObj));
     this.conditionList.push(cloneObject);
+    const dateObject = JSON.parse(JSON.stringify(this.date));
+    this.dateRangeList.push(dateObject);
+  }
+
+  assignDateToVar(date: any, obj: any) {
+    obj.startDate= this.formatDate(date);
   }
 
 
+  resetFilter() {
+    this.reportResData = this.tableData;
+    this.reqObj.columnNames = this.columnList;
+    this.filterTrackList = {};
+    this.generateFilterringLists(this.tableData, this.columnList);
+    // FOR COLUMN LIST CHECK ALL 
+    this.checkAll();
+    // FOR DROPDOWN LIST UNCHECK ALL 
+    this.ddCheckBox.toArray().forEach(dropdown => dropdown.nativeElement.checked = false);
 
+    // FOR SPIN ICON ON REFRESH
+    this.rotateIcon = true;
+    setTimeout(() => {
+      this.rotateIcon = false;
+    }, 500);
+  }
+
+  generateFieldList(keyList:any) {
+    this.fieldList = keyList.map((key: any) => {
+      return {
+        key: key,
+        label: this.toReadableText(key)
+      };
+    });
+  }
   resetData() {
     this.colListS = [];
     this.columnList = [];
@@ -195,9 +342,24 @@ export class AdhocReportComponent {
     };
   }
 
+// FOR RENAMING
+  renameColumn(index: number) {
+    this.editing[index] = true;
+    setTimeout(() => {
+      this.editField.nativeElement.focus();
+    });
+  }
+  
+  stopEditing(index: number) {
+    this.editing[index] = false;
+  }
+
+  formatDate(date: any) {
+    return StringHelper.formatDateYYYYMMDD(date);
+  }
 
   toReadableText(inputString: any) {
-    if (inputString.includes('_'))  return this.removeUnderscore(inputString);
+    if (typeof inputString === 'string' && inputString.includes('_'))  return this.removeUnderscore(inputString);
     else return this.convertCapToTitleCase(inputString);
     
   }
@@ -207,4 +369,15 @@ export class AdhocReportComponent {
   removeUnderscore(inputString:any) {
     return StringHelper.convertSnakeToTitleCase(inputString);
   }
+
+// SCROLL TO ELEMENT
+  scroll(el: HTMLElement) {
+    setTimeout(() => {
+      el.scrollIntoView({ behavior: 'smooth' });   
+    }, 100)
+  }
+
+
 }
+
+

@@ -5,13 +5,13 @@
         </div>
     </div>
     
-    <div class="row row-cols-2 mx-0 g-2 g-xl-3 g-xxl-4 mb-5">
-        <div class="col " *ngIf="showRegionChart">
+    <div class="row row-cols-1 row-cols-xl-2 mx-0 g-2 g-xl-3 g-xxl-4 mb-5">
+        <div class="col" *ngIf="showRegionChart">
             <div class="chart bg-light shadow rounded p-4 p-xxl-5 clearfix">
                 <div class="mb-3">
                     <p class="h4">Region based Accident Summary</p>
                 </div>
-                <div class="col-11 mx-auto">
+                <div class="col-8 col-xl-11 mx-auto">
                     <apx-chart *ngIf="showRegionChart" class="cursor-pointer"
                         [series]="regionDonutChart.series"
                         [chart]="regionDonutChart.chart"
@@ -32,7 +32,7 @@
                 <div class="mb-3">
                     <p class="h4">Vehicle type based Accident Summary</p>
                 </div>
-                <div class="col-10 mx-auto">
+                <div class="col-7 col-xl-10 mx-auto">
                     <apx-chart *ngIf="showVehicleChart" class="cursor-pointer"
                         [series]="vehicleDonutChart.series"
                         [chart]="vehicleDonutChart.chart"
@@ -59,7 +59,7 @@
             <span class="close-btn" (click)="hideEl(region, 'region')"><i class="bi bi-x-lg"></i></span>
             </div>
             
-            <div class="row row-cols-2 mx-0 p-4">
+            <div class="row row-cols-1 row-cols-xl-2 mx-0 p-4">
                 <div>
                     <div class="mb-3">
                         <p class="h5">No. of Accident</p>
@@ -109,7 +109,7 @@
                 <p class="h3 fw-bold text-capitalize">Vehicle Type wise Claim Summary</p>
                 <span class="close-btn" (click)="hideEl(vehicle, 'vehicle')"><i class="bi bi-x-lg"></i></span>
             </div>
-            <div class="row row-cols-2 mx-0 p-4">
+            <div class="row row-cols-1 row-cols-xl-2 mx-0 p-4">
                 <div>
                     <div class="mb-3">
                         <p class="h5">No. of Accident</p>

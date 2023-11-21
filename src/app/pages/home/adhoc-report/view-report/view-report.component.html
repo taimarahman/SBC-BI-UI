@@ -23,7 +23,10 @@
             <table class="table w-100">
                 <thead >
                     <tr>
-                        <th *ngFor="let field of reportFields" class="text-break text-center">{{toReadableText(field)}}</th>
+                        <ng-container *ngFor="let field of fieldset">
+                            <th *ngIf="reportFields.includes(field.key)" class="text-wrap text-center">{{field.label}}</th>
+                        </ng-container>
+                        <!-- <th *ngFor="let field of reportFields" class="text-break text-center">{{toReadableText(field)}}</th> -->
                     </tr>
                 </thead>
                 <tbody>

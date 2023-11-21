@@ -3,7 +3,7 @@
     <div class="content-wrapper mt-3">
       <div class="row mb-5 bg-light shadow rounded p-4 mx-0">
           <div class="col">
-              <label for="userId" id="userId" class="col-form-label text-capitalize">Adhoc Report</label>
+              <label class="col-form-label text-capitalize">Adhoc Report</label>
               <select2
                 name="parentModuleId"
                 id=""
@@ -17,60 +17,270 @@
               </select2>
             </div>
       </div>
-
-      <div *ngIf="tableData">
-        <div class="mb-5">
-          <div class="scroll-table">
-              <table class="table nowrap w-100">
-                  <thead >
-                      <tr> 
-                          <!-- <th>Company Name</th> -->
-                          <th *ngFor="let f of columnList" class="text-break text-center"> {{toReadableText(f)}}</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                  <tr *ngFor="let data of tableData">
-                    <!-- <td class="text-center">{{data.companyName}}</td> -->
-                    <td *ngFor="let f of columnList" class="text-center" >{{data[f]}}</td>
-                  </tr>
-                  </tbody>
-              </table>
+      <div #table>
+        <div *ngIf="tableData && loadIntf" class="row mx-0 mb-5 p-0">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex">
+              <button *ngIf="filterYN" class="btn btn-sm btn-light shadow-sm mb-0 me-1 position-relative" (click)="resetFilter()">
+                <i class="bi bi-arrow-clockwise" [class.spin]="rotateIcon"></i>
+              </button>
+              <div *ngIf="filterYN" ngbDropdown class="d-inline-block me-1" autoClose="outside">
+                <button  class="btn btn-sm shadow-sm btn-light mb-0" id="colList" ngbDropdownToggle><i class="bi bi-list-task"></i></button>
+                <div ngbDropdownMenu aria-labelledby="colList" class="col-6">
+                  <!-- items as buttons -->
+                  <p class="h5 mb-3 py-2 px-3 border-bottom">Column List</p>
+                  <div class="px-2">
+                    <div class="form-check">
+                      <input #selectAll
+                        class="form-check-input"
+                        type="checkbox"
+                        name="selectAll"
+                        [checked]="columnList.length == reqObj.columnNames.length"
+                        (click)="updateColList($event, '', true)"/>
+                      <label class="form-check-label">Select All</label>
+                    </div>
+                  </div>
+                  <div *ngFor="let col of columnList" class="px-3">
+                    <div class="form-check">
+                      <input #checkBox
+                        class="form-check-input"
+                        type="checkbox"
+                        name="col"
+                        (click)="updateColList($event, col)"
+                      />
+                      <label class="form-check-label text-break">
+                        {{ this.toReadableText(col) }}</label
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <button class="btn btn-sm shadow-sm mb-0 me-1 position-relative" [ngClass]="conditionYN ? 'btn-success' : 'btn-light'" (click)="conditionYN=!conditionYN; filterYN=false; renameYN=false; scroll(conditionBlock)">
+                <i class="bi bi-plus-slash-minus me-2"></i>Apply Conditions
+              </button>
+              <button class="btn btn-sm shadow-sm mb-0 me-1 position-relative" [ngClass]="renameYN ? 'btn-success' : 'btn-light'" (click)="conditionYN=false; filterYN=false; renameYN=!renameYN">
+                <i class="bi bi-pencil-square me-2"></i>Enable Renaming
+              </button>
+              <button class="btn btn-sm shadow-sm mb-0 me-1 position-relative" [ngClass]="filterYN ? 'btn-success' : 'btn-light'"  (click)="conditionYN=false; filterYN=!filterYN; renameYN=false">
+                <i class="bi bi-sliders me-2"></i>Enable Filtering
+              </button>
+            </div>
+            
           </div>
-      </div>
-      </div>
-      <div *ngIf="columnList.length" class="mb-5 bg-light shadow rounded p-4 mx-0">
-        <p class="h4 border-bottom pb-3 mb-4">Configure Report</p>
-        <div class="row mx-0">
-          <div class="col-4 bg-white rounded p-0 card">
-            <p class="h5 mb-3 card-header bg-theme">Column List</p>
-            <div class="px-2">
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  name="selectAll"
-                  [checked]="columnList.length == reqObj.columnNames.length"
-                  (click)="updateColList($event, '', true)"/>
-                <label class="form-check-label">Select All</label>
+          
+          <!-- <div class="col-3 px-0">
+            <div class="bg-white pb-3 rounded-3 shadow-sm overflow-hidden">
+              <p class="h5 mb-3 card-header bg-theme py-3 px-3">Column List</p>
+              <div class="px-2">
+                <div class="form-check">
+                  <input #selectAll
+                    class="form-check-input"
+                    type="checkbox"
+                    name="selectAll"
+                    [checked]="columnList.length == reqObj.columnNames.length"
+                    (click)="updateColList($event, '', true)"/>
+                  <label class="form-check-label">Select All</label>
+                </div>
+              </div>
+              
+              <div *ngFor="let col of columnList" class="px-3">
+                <div class="form-check">
+                  <input #checkBox
+                    class="form-check-input"
+                    type="checkbox"
+                    name="col"
+                    (click)="updateColList($event, col)"
+                  />
+                  <label class="form-check-label text-break">
+                    {{ this.toReadableText(col) }}</label
+                  >
+                </div>
               </div>
             </div>
             
-            <div *ngFor="let col of columnList" class="px-3">
-              <div class="form-check">
-                <input #checkBox
-                  class="form-check-input"
-                  type="checkbox"
-                  name="col"
-                  (click)="updateColList($event, col)"
-                />
-                <label class="form-check-label text-break">
-                  {{ this.toReadableText(col) }}</label
-                >
-              </div>
+          </div> -->
+          <div class="col-12 px-0 ps-2">
+            <div class="scroll-table">
+                <table class="table nowrap w-100">
+                    <thead >
+                        <!-- <tr *ngIf="!filterYN; else filter"> 
+                          <ng-container *ngFor="let field of fieldList; let i = index">
+                            <th *ngIf="reqObj.columnNames.includes(field.key)" class="text-break text-center">{{field.label}}</th>
+                          </ng-container>
+                        </tr> -->
+                        <tr *ngIf="!filterYN; else filter"> 
+                          <ng-container *ngFor="let field of fieldList; let i = index">
+                            <th *ngIf="reqObj.columnNames.includes(field.key)" class="text-break text-center" >
+                              <ng-container *ngIf="!renameYN">
+                                {{field.label}} 
+                              </ng-container>
+                              <ng-container *ngIf="renameYN && !editing[i]">
+                                {{field.label}} <br><i class="bi bi-pencil-square text-small" (click)="renameColumn(i)"></i> 
+                              </ng-container>
+                              <ng-container *ngIf="renameYN && editing[i]">
+                                <input type="text" #editField [(ngModel)]="fieldList[i].label" (blur)="stopEditing(i)">
+                              </ng-container>
+                            </th>
+                          </ng-container>
+                        </tr>
+                        <ng-template #filter>
+                          <tr>
+                            <th ngbDropdown *ngFor="let col of reqObj.columnNames; let i = index" autoClose="outside" #dropdownRef> 
+                              <p ngbDropdownToggle [id]="'p-'+col" class="w-100 text-wrap text-center mb-0 p-0">{{toReadableText(col)}}</p>
+                              <div ngbDropdownMenu  [attr.aria-labelledby]="'#p-{{col}}'" class="px-2 clearfix" [id]="'div-'+col">
+                                <div *ngFor="let item of uniqueDataset[col]" ngbDropdownItem class="py-0" >
+                                  <div class="form-check mb-0">
+                                    <input #dcheck
+                                      class="form-check-input"
+                                      type="checkbox"
+                                      [id]= item
+                                      [value]="item"
+                                    />
+                                    <label class="form-check-label text-break text-small" [for]="item">
+                                      {{ item }}</label
+                                    >
+                                  </div>
+                                </div>
+                                <button class="btn btn-sm bg-theme float-end text-small" (click)="doFilter(col, i)">OK</button>
+                              </div>
+                            </th>
+                          </tr>
+                          
+                        </ng-template>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let data of reportResData">
+                      <td *ngFor="let f of reqObj.columnNames" class="text-center" >{{data[f]}}</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
           </div>
+          <button type="button" class="btn btn w-25 ms-auto bg-theme shadow mt-4" (click)="generateReport()">Generate Report</button>
+        </div>
+      </div>
+      
+
+
+      <!-- APPLY CONDITION -->
+      <div class="" #conditionBlock>
+        <div *ngIf="conditionYN" class="row mb-5 bg-light shadow rounded p-4 mx-0">
+          <p class="h5 border-bottom pb-3 mb-4">Apply Conditions</p>
+          <div class="mb-3">
+            <button class="btn bg-theme shadow text-capitalize" (click)="toggleCondition()" *ngIf="conditionList.length == 0; else removeBtn"><i class="bi bi-plus-lg"></i> add condition</button>
+            <ng-template #removeBtn>
+              <button class="btn bg-danger shadow text-white text-capitalize" (click)="toggleCondition()"><i class="bi bi-dash-lg"></i> delete condition</button>
+            </ng-template>
+          </div>
+          
+          <div *ngIf="conditionList.length > 0">
+            <div *ngFor="let condition of conditionList; let i = index;" class="row bg-white rounded p-3 mb-3">
+              <p>Condition: {{i+1}}</p>
+              <div class="col-8">
+                <label class="col-form-label text-capitalize">Column Name</label>
+                <select2
+                  name="column"
+                  id=""
+                  class="form-control p-0 border-0 text-break"
+                  placeholder="Select Column Name"
+                  [(ngModel)]="condition.column"
+                  [data]="colListS"
+                >
+                </select2>
+              </div>
+              <div class="col-4">
+                <label class="col-form-label text-capitalize">Operator</label>
+                <select2
+                  name="operator"
+                  id=""
+                  class="form-control p-0 border-0"
+                  placeholder="Select Operator"
+                  [(ngModel)]="condition.operator"
+                  [data]="operatorList"
+                >
+                </select2>
+              </div>
+              <div *ngIf="condition.operator != 'BETWEEN'; else DateRange" class="col-12">
+                <label class="col-form-label text-capitalize">Value</label>
+                <input type="text" class="form-control" [(ngModel)]="condition.value" name="value" placeholder="Enter Value">
+              </div>
+              <ng-template #DateRange>
+                <div class="col-6">
+                  <label class="col-form-label text-capitalize">Start Date</label>
+                  <div class="input-group">
+                    <input
+                      name="startDate"
+                      [id]="'sd'+i"
+                      ngbDatepicker
+                      #dStart="ngbDatepicker"
+                      [ngModelOptions]="{ standalone: true }"
+                      [(ngModel)]="dateRangeList[i].start"
+                      [minDate]="{ year: 2015, month: 07, day: 01 }"
+                      [maxDate]="{ year: 2030, month: 06, day: 31 }"
+                      class="form-control"
+                      placeholder="YYYY-MM-DD"
+                      autocomplete="off"
+                      (ngModelChange)="assignDateToVar(dateRangeList[i].start, condition)"
+                    />
+                    <button
+                      class="btn btn-outline-secondary bi bi-calendar3"
+                      (click)="dStart.toggle()"
+                      type="button"
+                    ></button>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <label class="col-form-label text-capitalize">End Date</label>
+                  <div class="input-group">
+                    <input
+                      name="endDate"
+                      ngbDatepicker
+                      #dEnd="ngbDatepicker"
+                      [ngModelOptions]="{ standalone: true }"
+                      [(ngModel)]="dateRangeList[i].end"
+                      [minDate]="{ year: 2015, month: 07, day: 01 }"
+                      [maxDate]="{ year: 2030, month: 06, day: 31 }"
+                      class="form-control"
+                      placeholder="DD/MM/YYYY"
+                      autocomplete="off"
+                      (ngModelChange)="assignDateToVar(dateRangeList[i].end, condition)"
+                    />
+                    <button
+                      class="btn btn-outline-secondary bi bi-calendar3"
+                      (click)="dEnd.toggle()"
+                      type="button"
+                    ></button>
+                  </div>
+                  
+                </div>
+              </ng-template>
+            </div>
+            <button type="button" class="btn btn bg-theme shadow me-3 mt-4" (click)="addConditionCount()">Add</button>
+          </div>
+          
+
+          <div *ngIf="conditionList.length > 1">
+            <label class="col-form-label text-capitalize">Conditional Operator</label>
+            <select2
+                name="conditionOperator"
+                class="mt-4"
+                class="form-control p-0 border-0"
+                placeholder="Select..."
+                [(ngModel)]="reqObj.conditionOperator"
+                [data]="conditionOperatorList"
+              >
+              </select2>
+          </div>
+          <button type="button" class="btn btn w-25 ms-auto bg-theme shadow mt-4" (click)="getConditionalData(); scroll(table)">Apply</button>
+        </div>
+      </div>
+
+      <!-- <div *ngIf="columnList.length" class="mb-5 bg-light shadow rounded p-4 mx-0">
+        <p class="h4 border-bottom pb-3 mb-4">Configure Report</p>
+        <div class="row mx-0">
           <div class="col-8">
-            <!-- BUTTON -->
             <div class="mb-3">
               <button class="btn bg-theme shadow text-capitalize" (click)="toggleCondition()" *ngIf="conditionList.length == 0; else removeBtn"><i class="bi bi-plus-lg"></i> add condition</button>
               <ng-template #removeBtn>
@@ -78,12 +288,11 @@
               </ng-template>
             </div>
             
-            <!-- CONDITION  -->
             <div *ngIf="conditionList.length > 0">
               <div *ngFor="let condition of conditionList; let i = index;" class="row bg-white rounded p-3 mb-3">
                 <p>Condition: {{i+1}}</p>
                 <div class="col-8">
-                  <label for="userId" id="userId" class="col-form-label text-capitalize">Column Name</label>
+                  <label class="col-form-label text-capitalize">Column Name</label>
                   <select2
                     name="column"
                     id=""
@@ -95,7 +304,7 @@
                   </select2>
                 </div>
                 <div class="col-4">
-                  <label for="userId" id="userId" class="col-form-label text-capitalize">Operator</label>
+                  <label class="col-form-label text-capitalize">Operator</label>
                   <select2
                     name="operator"
                     id=""
@@ -107,11 +316,58 @@
                   </select2>
                 </div>
                 <div *ngIf="condition.operator != 'BETWEEN'; else DateRange" class="col-12">
-                  <label for="userId" id="userId" class="col-form-label text-capitalize">Value</label>
+                  <label class="col-form-label text-capitalize">Value</label>
                   <input type="text" class="form-control" [(ngModel)]="condition.value" name="value" placeholder="Enter Value">
                 </div>
                 <ng-template #DateRange>
-                  
+                  <div class="col-6">
+                    <label class="col-form-label text-capitalize">Start Date</label>
+                    <div class="input-group">
+                      <input
+                        name="startDate"
+                        [id]="'sd'+i"
+                        ngbDatepicker
+                        #dStart="ngbDatepicker"
+                        [ngModelOptions]="{ standalone: true }"
+                        [(ngModel)]="dateRangeList[i].start"
+                        [minDate]="{ year: 2015, month: 07, day: 01 }"
+                        [maxDate]="{ year: 2030, month: 06, day: 31 }"
+                        class="form-control"
+                        placeholder="YYYY-MM-DD"
+                        autocomplete="off"
+                        (ngModelChange)="assignDateToVar(dateRangeList[i].start, condition)"
+                      />
+                      <button
+                        class="btn btn-outline-secondary bi bi-calendar3"
+                        (click)="dStart.toggle()"
+                        type="button"
+                      ></button>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <label class="col-form-label text-capitalize">End Date</label>
+                    <div class="input-group">
+                      <input
+                        name="endDate"
+                        ngbDatepicker
+                        #dEnd="ngbDatepicker"
+                        [ngModelOptions]="{ standalone: true }"
+                        [(ngModel)]="dateRangeList[i].end"
+                        [minDate]="{ year: 2015, month: 07, day: 01 }"
+                        [maxDate]="{ year: 2030, month: 06, day: 31 }"
+                        class="form-control"
+                        placeholder="DD/MM/YYYY"
+                        autocomplete="off"
+                        (ngModelChange)="assignDateToVar(dateRangeList[i].end, condition)"
+                      />
+                      <button
+                        class="btn btn-outline-secondary bi bi-calendar3"
+                        (click)="dEnd.toggle()"
+                        type="button"
+                      ></button>
+                    </div>
+                    
+                  </div>
                 </ng-template>
               </div>
               <button type="button" class="btn btn bg-theme shadow me-3 mt-4" (click)="addConditionCount()">Add</button>
@@ -119,7 +375,7 @@
             
 
             <div *ngIf="conditionList.length > 1">
-              <label for="userId" id="userId" class="col-form-label text-capitalize">Adhoc Report</label>
+              <label class="col-form-label text-capitalize">Adhoc Report</label>
               <select2
                   name="conditionOperator"
                   class="mt-4"
@@ -134,6 +390,7 @@
           </div>
           <button type="button" class="btn btn w-25 ms-auto bg-theme shadow mt-4" (click)="generateReport()">Generate Report</button>
         </div>
-      </div>
+      </div> -->
+      
     </div>
 </app-page-layout>
