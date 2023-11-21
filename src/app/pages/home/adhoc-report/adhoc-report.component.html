@@ -46,6 +46,7 @@
                         class="form-check-input"
                         type="checkbox"
                         name="col"
+                        [checked]="reqObj.columnNames.includes(col)"
                         (click)="updateColList($event, col)"
                       />
                       <label class="form-check-label text-break">
@@ -61,10 +62,10 @@
                 <i class="bi bi-plus-slash-minus me-2"></i>Apply Conditions
               </button>
               <button class="btn btn-sm shadow-sm mb-0 me-1 position-relative" [ngClass]="renameYN ? 'btn-success' : 'btn-light'" (click)="conditionYN=false; filterYN=false; renameYN=!renameYN">
-                <i class="bi bi-pencil-square me-2"></i>Enable Renaming
+                <i class="bi bi-pencil-square me-2"></i>Rename
               </button>
               <button class="btn btn-sm shadow-sm mb-0 me-1 position-relative" [ngClass]="filterYN ? 'btn-success' : 'btn-light'"  (click)="conditionYN=false; filterYN=!filterYN; renameYN=false">
-                <i class="bi bi-sliders me-2"></i>Enable Filtering
+                <i class="bi bi-sliders me-2"></i>Filter
               </button>
             </div>
             
@@ -127,32 +128,39 @@
                         </tr>
                         <ng-template #filter>
                           <tr>
-                            <th ngbDropdown *ngFor="let col of reqObj.columnNames; let i = index" autoClose="outside" #dropdownRef> 
-                              <p ngbDropdownToggle [id]="'p-'+col" class="w-100 text-wrap text-center mb-0 p-0">{{toReadableText(col)}}</p>
-                              <div ngbDropdownMenu  [attr.aria-labelledby]="'#p-{{col}}'" class="px-2 clearfix" [id]="'div-'+col">
-                                <div *ngFor="let item of uniqueDataset[col]" ngbDropdownItem class="py-0" >
-                                  <div class="form-check mb-0">
-                                    <input #dcheck
-                                      class="form-check-input"
-                                      type="checkbox"
-                                      [id]= item
-                                      [value]="item"
-                                    />
-                                    <label class="form-check-label text-break text-small" [for]="item">
-                                      {{ item }}</label
-                                    >
+                            <ng-container *ngFor="let field of fieldList; let i = index">
+                              <th ngbDropdown container="body" *ngIf="reqObj.columnNames.includes(field.key)" autoClose="outside" #dropdownRef="ngbDropdown"> 
+                                <p ngbDropdownToggle [id]="'p-'+field.key" class="w-100 text-wrap text-center mb-0 p-0">{{field.label}}</p>
+                                <div ngbDropdownMenu [attr.aria-labelledby]="'#p-'+field.key" class="px-2 clearfix" [id]="'div-'+field.key">
+                                  <div *ngFor="let item of uniqueDataset[field.key]" ngbDropdownItem class="py-0" >
+                                    <div class="form-check mb-0">
+                                      <input #dcheck
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        [id]= field.key+item
+                                        [value]="item"
+                                        [checked]="filterTrackList[field.key].includes(item)"
+                                      />
+                                      <label class="form-check-label text-break text-small" [for]="field.key+item">
+                                        {{ item }}</label
+                                      >
+                                    </div>
                                   </div>
+                                  <button class="btn btn-sm bg-theme float-end text-small" (click)="doFilter(field.key);$event.stopPropagation()">OK</button>
                                 </div>
-                                <button class="btn btn-sm bg-theme float-end text-small" (click)="doFilter(col, i)">OK</button>
-                              </div>
-                            </th>
+                              </th>
+                            </ng-container>
+                            
                           </tr>
                           
                         </ng-template>
                     </thead>
                     <tbody>
                     <tr *ngFor="let data of reportResData">
-                      <td *ngFor="let f of reqObj.columnNames" class="text-center" >{{data[f]}}</td>
+                      <ng-container *ngFor="let field of fieldList; let i = index">
+                        <td *ngIf="reqObj.columnNames.includes(field.key)" class="text-center" >{{data[field.key]}}</td>
+                      
+                      </ng-container>
                     </tr>
                     </tbody>
                 </table>

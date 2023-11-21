@@ -11,9 +11,9 @@ import { ToastService } from '@services/toast-service';
   styleUrls: ['./adhoc-report.component.scss']
 })
 export class AdhocReportComponent {
-  @ViewChildren('checkBox') columnListEl: QueryList<ElementRef<HTMLInputElement>>;
+  @ViewChildren('checkBox') columnListEl!: QueryList<ElementRef<HTMLInputElement>>;
   @ViewChildren('dcheck') ddCheckBox!: QueryList<ElementRef<HTMLInputElement>>;
-  @ViewChildren(NgbDropdown) dropdowns!: QueryList<NgbDropdown>;
+  @ViewChildren('dropdownRef') dropdowns!: QueryList<NgbDropdown>;
   @ViewChild('editField') editField!: ElementRef;
 
   rotateIcon: boolean = false;
@@ -85,8 +85,8 @@ export class AdhocReportComponent {
     { value: 'NOT', label: 'NOT' },
   ];
   
-  constructor(private httpService: AppService, private toastService: ToastService, private router: Router,private cdr: ChangeDetectorRef) {
-    this.columnListEl = new QueryList<ElementRef<HTMLInputElement>>();
+  constructor(private httpService: AppService, private toastService: ToastService, private cdr: ChangeDetectorRef) {
+    // this.columnListEl = new QueryList<ElementRef<HTMLInputElement>>();
   }
 
   ngOnInit() {
@@ -140,6 +140,7 @@ export class AdhocReportComponent {
             });
           }
           this.loadIntf = true;
+          console.log("checkalll")
           this.checkAll();
         }
       } else {
@@ -162,7 +163,7 @@ export class AdhocReportComponent {
 
   generateFilterringLists(tableData: any, keyList: any) {
     for (let key of keyList) {
-      this.uniqueDataset[key] = Array.from(new Set(tableData.map((item: any) => item[key]))).sort();
+      this.uniqueDataset[key] = Array.from(new Set(tableData.map((item: any) => String(item[key])))).sort();
       // SORT LIST FOR BETTER READABILITY
       this.uniqueDataset[key].sort((a:any, b:any) => {
         const numA = Number(a);
@@ -174,11 +175,11 @@ export class AdhocReportComponent {
         }
       });
     }
-    this.filterTrackList = JSON.parse(JSON.stringify(this.uniqueDataset));
+    this.filterTrackList = { ...this.uniqueDataset };
 
   }
 
-  doFilter(key: any, index: any) {
+  doFilter(key: any) {
     const elList = document.getElementById(`div-${key}`)?.querySelectorAll('input');
     // if (!this.filterTrackList[key]) this.filterTrackList[key] = [];
     let reFilter: Boolean = false;
@@ -206,8 +207,10 @@ export class AdhocReportComponent {
           });
     }
 
-    
+    const index = this.reqObj.columnNames.indexOf(key);
+    console.log(this.reqObj.columnNames,"sdcs", this.dropdowns.toArray()[index], index)
     this.dropdowns.toArray()[index].close(); //CLOSE DROPDOWN
+
     this.generateFilterringLists(this.reportResData, this.columnList); //GENERATE NEW FILTERING LIST
   }
 
@@ -250,6 +253,8 @@ export class AdhocReportComponent {
           this.tableData = response.data;
           this.reportResData = this.tableData;
           this.resetFilter();
+        } else {
+          this.toastService.show('No Data Found', {classname: 'bg-danger', delay: 3000});
         }
       } else {
         this.toastService.show('Select Column Name', {classname: 'bg-danger', delay: 3000});
@@ -310,7 +315,8 @@ export class AdhocReportComponent {
   resetFilter() {
     this.reportResData = this.tableData;
     this.reqObj.columnNames = this.columnList;
-    this.filterTrackList = {};
+    // RESET FILTER TRACK
+    this.filterTrackList = { ...this.uniqueDataset };
     this.generateFilterringLists(this.tableData, this.columnList);
     // FOR COLUMN LIST CHECK ALL 
     this.checkAll();
