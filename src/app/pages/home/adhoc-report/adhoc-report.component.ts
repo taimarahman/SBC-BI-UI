@@ -30,9 +30,11 @@ export class AdhocReportComponent {
   colListS: any[] = [];
   conditionList: any[] = [];
   dateRangeList: any[] = [];
-  uniqueDataset: any = {};
   filterTrackList: { [key: string]: any } = {};
   fieldList: any[] = [];
+  checkList: { [key: string]: any } = {
+    exclude: [],
+  };
   editing: boolean[] = [];
 
   reportResData: any[] = [];
@@ -119,7 +121,6 @@ export class AdhocReportComponent {
       this.conditionList = [];
       this.reqObj.columnNames = [];
       this.columnList = [];
-      this.uniqueDataset = [];
       this.reportResData = [];
       this.hideSpinner = false;
       const response: any = await this.httpService.getAdhocDataList(tableName);
@@ -129,7 +130,10 @@ export class AdhocReportComponent {
         this.tableData = response?.data;
         this.reportResData = this.tableData;
         this.columnList = Object.keys(response?.data[0]);
-        this.generateFilterringLists(this.tableData, this.columnList);
+        // console.log("here")
+        this.generateUniqueItemList(this.tableData, this.columnList);
+        // console.log("here2222222222222", this.filterTrackList)
+        this.regenerateFilterCheckList(this.tableData, '');
         this.generateFieldList(this.columnList);
         if (this.columnList.length) {
           for (let column of this.columnList) {
@@ -140,7 +144,7 @@ export class AdhocReportComponent {
             });
           }
           this.loadIntf = true;
-          console.log("checkalll")
+          // console.log("checkalll")
           this.checkAll();
         }
       } else {
@@ -161,11 +165,19 @@ export class AdhocReportComponent {
     }, 100)
   }
 
-  generateFilterringLists(tableData: any, keyList: any) {
+  generateUniqueItemList(tableData: any, keyList: any) {
     for (let key of keyList) {
-      this.uniqueDataset[key] = Array.from(new Set(tableData.map((item: any) => String(item[key])))).sort();
-      // SORT LIST FOR BETTER READABILITY
-      this.uniqueDataset[key].sort((a:any, b:any) => {
+      this.filterTrackList[key] = Array.from(new Set(tableData.map((item: any) => String(item[key])))); 
+    }
+  }
+
+  regenerateFilterCheckList(data: any, key: any) {
+    key!='' && this.checkList['exclude'].push(key);
+    for (let col of this.columnList) {
+      if (!this.checkList['exclude'].includes(col)) {
+        this.checkList[col] = Array.from(new Set(data.map((item: any) => String(item[col]))));        
+      }
+      this.checkList[col].sort((a:any, b:any) => {
         const numA = Number(a);
         const numB = Number(b);
         if (!isNaN(numA) && !isNaN(numB)) {
@@ -175,8 +187,13 @@ export class AdhocReportComponent {
         }
       });
     }
-    this.filterTrackList = { ...this.uniqueDataset };
-
+    if (key != '') {
+      const elList = document.getElementById(`div-${key}`)?.querySelectorAll<HTMLInputElement>('input');
+    // @ts-ignore
+      if (Array.from(elList).every(input => input.checked)) {
+        this.checkList['exclude'] = this.checkList['exclude'].filter((item:any) => item != key);}
+      }
+    
   }
 
   doFilter(key: any) {
@@ -201,23 +218,24 @@ export class AdhocReportComponent {
             return Object.keys(this.filterTrackList).every(key => {
               const itemValue = String(item[key]);
               const filterValues = this.filterTrackList[key];
-              console.log(filterValues)
+              // console.log(key, filterValues)
               return filterValues.length==0 || filterValues.some((value:any) => itemValue.includes(value));
             });
           });
     }
 
     const index = this.reqObj.columnNames.indexOf(key);
-    console.log(this.reqObj.columnNames,"sdcs", this.dropdowns.toArray()[index], index)
     this.dropdowns.toArray()[index].close(); //CLOSE DROPDOWN
+    // if(this.filterTrackList[key])
+    // this.generateUniqueItemList(this.reportResData, this.columnList); //GENERATE NEW FILTERING LIST
+    this.regenerateFilterCheckList(this.reportResData, key);
 
-    this.generateFilterringLists(this.reportResData, this.columnList); //GENERATE NEW FILTERING LIST
   }
 
   async generateReport() {
     try {
       if (this.reqObj.columnNames.length > 0 && this.reportResData.length > 0) {
-        console.log(this.reportResData)
+        // console.log(this.reportResData)
         // ONLY SELECTED COLUMNS
         const filteredData = this.reportResData.map(obj => {
           const newObj: { [key: string]: any } = {};
@@ -313,11 +331,14 @@ export class AdhocReportComponent {
 
 
   resetFilter() {
+
     this.reportResData = this.tableData;
     this.reqObj.columnNames = this.columnList;
     // RESET FILTER TRACK
-    this.filterTrackList = { ...this.uniqueDataset };
-    this.generateFilterringLists(this.tableData, this.columnList);
+    this.checkList['exclude'] = [];
+    this.regenerateFilterCheckList(this.tableData, '');
+    // this.filterTrackList = {}
+    this.generateUniqueItemList(this.tableData, this.columnList);
     // FOR COLUMN LIST CHECK ALL 
     this.checkAll();
     // FOR DROPDOWN LIST UNCHECK ALL 
@@ -327,7 +348,8 @@ export class AdhocReportComponent {
     this.rotateIcon = true;
     setTimeout(() => {
       this.rotateIcon = false;
-    }, 500);
+    }, 300);
+
   }
 
   generateFieldList(keyList:any) {

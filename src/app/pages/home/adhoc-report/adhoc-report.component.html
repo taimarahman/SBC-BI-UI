@@ -3,10 +3,10 @@
     <div class="content-wrapper mt-3">
       <div class="row mb-5 bg-light shadow rounded p-4 mx-0">
           <div class="col">
-              <label class="col-form-label text-capitalize">Adhoc Report</label>
+              <label for="adh" class="col-form-label text-capitalize">Adhoc Report</label>
               <select2
                 name="parentModuleId"
-                id=""
+                id="adh"
                 class="mt-4"
                 class="form-control p-0 border-0"
                 placeholder="Select Report"
@@ -131,8 +131,8 @@
                             <ng-container *ngFor="let field of fieldList; let i = index">
                               <th ngbDropdown container="body" *ngIf="reqObj.columnNames.includes(field.key)" autoClose="outside" #dropdownRef="ngbDropdown"> 
                                 <p ngbDropdownToggle [id]="'p-'+field.key" class="w-100 text-wrap text-center mb-0 p-0">{{field.label}}</p>
-                                <div ngbDropdownMenu [attr.aria-labelledby]="'#p-'+field.key" class="px-2 clearfix" [id]="'div-'+field.key">
-                                  <div *ngFor="let item of uniqueDataset[field.key]" ngbDropdownItem class="py-0" >
+                                <div ngbDropdownMenu *ngIf="!rotateIcon" [attr.aria-labelledby]="'#p-'+field.key" class="px-2 clearfix" [id]="'div-'+field.key">
+                                  <div *ngFor="let item of checkList[field.key]" ngbDropdownItem class="py-0" >
                                     <div class="form-check mb-0">
                                       <input #dcheck
                                         class="form-check-input"
@@ -141,6 +141,8 @@
                                         [value]="item"
                                         [checked]="filterTrackList[field.key].includes(item)"
                                       />
+                                      
+
                                       <label class="form-check-label text-break text-small" [for]="field.key+item">
                                         {{ item }}</label
                                       >

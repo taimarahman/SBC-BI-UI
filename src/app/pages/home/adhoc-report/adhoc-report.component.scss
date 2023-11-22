@@ -78,7 +78,7 @@ div[aria-labelledby="colList"]{
 }
 
 .spin{
-    animation: spin360 0.5s linear forwards;
+    animation: spin360 0.3s linear forwards;
     transform-origin: center; /* Set the transform origin to the center */
     position: relative; /* Add position to enable transforms */
     display: inline-block; /* Ensures proper space allocation */
