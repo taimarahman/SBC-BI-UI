@@ -123,6 +123,11 @@ export class AdhocReportComponent {
       this.columnList = [];
       this.reportResData = [];
       this.hideSpinner = false;
+      this.filterTrackList = {};
+      this.checkList = {
+        exclude: [],
+      };
+
       const response: any = await this.httpService.getAdhocDataList(tableName);
       this.hideSpinner = true;
 
@@ -130,9 +135,7 @@ export class AdhocReportComponent {
         this.tableData = response?.data;
         this.reportResData = this.tableData;
         this.columnList = Object.keys(response?.data[0]);
-        // console.log("here")
         this.generateUniqueItemList(this.tableData, this.columnList);
-        // console.log("here2222222222222", this.filterTrackList)
         this.regenerateFilterCheckList(this.tableData, '');
         this.generateFieldList(this.columnList);
         if (this.columnList.length) {
@@ -144,7 +147,6 @@ export class AdhocReportComponent {
             });
           }
           this.loadIntf = true;
-          // console.log("checkalll")
           this.checkAll();
         }
       } else {
@@ -197,10 +199,9 @@ export class AdhocReportComponent {
   }
 
   doFilter(key: any) {
+    console.log('start',key, 'filter list',this.filterTrackList)
     const elList = document.getElementById(`div-${key}`)?.querySelectorAll('input');
-    // if (!this.filterTrackList[key]) this.filterTrackList[key] = [];
     let reFilter: Boolean = false;
-    // console.log(key, elList);
     if (elList?.length) {
       elList.forEach(el => {
         if (el.checked && !this.filterTrackList[key].includes(el.value)) {
@@ -216,12 +217,13 @@ export class AdhocReportComponent {
     if (reFilter) { //filterValueList.length && Object.keys(this.filterTrackList).length
           this.reportResData = this.tableData.filter(item => {
             return Object.keys(this.filterTrackList).every(key => {
+              console.log(key)
               const itemValue = String(item[key]);
               const filterValues = this.filterTrackList[key];
-              // console.log(key, filterValues)
               return filterValues.length==0 || filterValues.some((value:any) => itemValue.includes(value));
             });
           });
+      console.log(this.reportResData)
     }
 
     const index = this.reqObj.columnNames.indexOf(key);
@@ -235,7 +237,6 @@ export class AdhocReportComponent {
   async generateReport() {
     try {
       if (this.reqObj.columnNames.length > 0 && this.reportResData.length > 0) {
-        // console.log(this.reportResData)
         // ONLY SELECTED COLUMNS
         const filteredData = this.reportResData.map(obj => {
           const newObj: { [key: string]: any } = {};
