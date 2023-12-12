@@ -62,6 +62,11 @@ export class ViewReportComponent {
       this.reportResData = event.data.data;
     }, {once: true});
   }
+
+  findLabelByKey(keyToFind: string): string | undefined {
+    const foundItem = this.fieldset.find(item => item.key === keyToFind);
+    return foundItem ? foundItem.label : undefined;
+  }
   
   toReadableText(inputString: any) {
     if (inputString.includes('_'))  return this.removeUnderscore(inputString);

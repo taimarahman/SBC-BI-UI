@@ -132,6 +132,20 @@
                               <th ngbDropdown container="body" *ngIf="reqObj.columnNames.includes(field.key)" autoClose="outside" #dropdownRef="ngbDropdown"> 
                                 <p ngbDropdownToggle [id]="'p-'+field.key" class="w-100 text-wrap text-center mb-0 p-0">{{field.label}}</p>
                                 <div ngbDropdownMenu *ngIf="!rotateIcon" [attr.aria-labelledby]="'#p-'+field.key" class="px-2 clearfix" [id]="'div-'+field.key">
+                                  <!-- <div>
+                                    <div class="form-check mb-0">
+                                      <input 
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        [id]= "field.key+'select'"
+                                        
+                                        (click)="selectAll($event, field.key)"
+                                      />
+                                      <label class="form-check-label text-break text-small" [for]="field.key+'select'">
+                                        Select all</label
+                                      >
+                                    </div>
+                                  </div> -->
                                   <div *ngFor="let item of checkList[field.key]" ngbDropdownItem class="py-0" >
                                     <div class="form-check mb-0">
                                       <input #dcheck
@@ -141,8 +155,6 @@
                                         [value]="item"
                                         [checked]="filterTrackList[field.key].includes(item)"
                                       />
-                                      
-
                                       <label class="form-check-label text-break text-small" [for]="field.key+item">
                                         {{ item }}</label
                                       >

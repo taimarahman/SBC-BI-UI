@@ -167,6 +167,12 @@ export class AdhocReportComponent {
     }, 100)
   }
 
+  selectAll(event:any, key: any) {
+    const elList = document.getElementById(`div-${key}`)?.querySelectorAll('input');
+    if(event.target.checked) elList?.forEach(el => el.checked = true)
+    else elList?.forEach(el => el.checked = false)
+  }
+
   generateUniqueItemList(tableData: any, keyList: any) {
     for (let key of keyList) {
       this.filterTrackList[key] = Array.from(new Set(tableData.map((item: any) => String(item[key])))); 
@@ -199,7 +205,6 @@ export class AdhocReportComponent {
   }
 
   doFilter(key: any) {
-    console.log('start',key, 'filter list',this.filterTrackList)
     const elList = document.getElementById(`div-${key}`)?.querySelectorAll('input');
     let reFilter: Boolean = false;
     if (elList?.length) {
@@ -217,13 +222,11 @@ export class AdhocReportComponent {
     if (reFilter) { //filterValueList.length && Object.keys(this.filterTrackList).length
           this.reportResData = this.tableData.filter(item => {
             return Object.keys(this.filterTrackList).every(key => {
-              console.log(key)
               const itemValue = String(item[key]);
               const filterValues = this.filterTrackList[key];
               return filterValues.length==0 || filterValues.some((value:any) => itemValue.includes(value));
             });
           });
-      console.log(this.reportResData)
     }
 
     const index = this.reqObj.columnNames.indexOf(key);
@@ -252,6 +255,7 @@ export class AdhocReportComponent {
           data: filteredData,
           fieldset: this.fieldList
         } 
+        console.log(dataToTransfer)
         localStorage.setItem('sharedData', JSON.stringify(dataToTransfer));
         const newWindow = window.open(`/report/adhoc-report/${this.reqObj.tableName}`, '_blank');
       } else {

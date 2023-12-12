@@ -48,16 +48,36 @@ export class ReportsComponent {
       const reportFormat = this.fileFormat.find(format => format.value === this.selectedFileFormat);
       const response: any = await this.httpService.print(this.paramReport.reportId);
 
-      let url = response.data+'/'+reportFormat?.label;
+
+      let url = response.data.url+'/'+reportFormat?.label;
       if(this.parameters.length>0){url = url+"?"}
       for(let param of this.parameters){
         url = url + param.paramName + "=" + param.value + "&"
       }
       if(this.parameters.length>0){url = url.slice(0, -1);}
-      if(response?.status === 200)
-      {
-        window.open(url,"_blank")
-      }
+
+      // UNSMART_BI
+      let JSESSIONID = response.data.JSESSIONID;
+      if(response?.status === 200 )
+      { 
+        if (JSESSIONID) {
+          let url = response.data.url;
+          const newWindow = window.open(url, "_blank")
+        if (newWindow) {
+          const cookieName = 'JSESSIONID';
+          const cookieValue = JSESSIONID;
+        
+          newWindow.document.cookie = `${cookieName}=${cookieValue};`;
+        
+        } else {
+          console.error('Could not open the new window.');
+        }
+        } else {
+          window.open(url, "_blank")
+        }
+        
+        
+      } 
     }catch (e){}
   }
 

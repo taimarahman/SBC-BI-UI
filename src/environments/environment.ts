@@ -9,7 +9,7 @@ import { EnvName } from '@enums/environment.enum';
 import packageInfo from '../../package.json';
 
 const scheme = 'http://';
-const host   = '192.168.78.99';
+const host   = '192.168.78.148';
 const port   = ':8090';
 const path   = '/SBC-BI';
 
